@@ -1,5 +1,5 @@
 {
-  "name": "scrooge-server",
+  "name": "@scrooge/server",
   "version": "0.1.0",
   "main": "dist/index.js",
   "author": "xkcm",
