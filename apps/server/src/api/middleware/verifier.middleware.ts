@@ -1,6 +1,6 @@
 import { ZodSchema } from "zod";
 
-import { ApiError } from "#shared/errors/ApiError.class.js";
+import { ApiError } from "@scrooge/shared";
 import {
   ApiNextFunc,
   ApiRequest,

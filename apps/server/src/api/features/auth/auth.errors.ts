@@ -1,5 +1,5 @@
 import { withCode, withMessage, withMetadata } from "@xkcm/better-errors";
-import { ApiError } from "#shared/errors/ApiError.class.js";
+import { ApiError } from "@scrooge/shared";
 
 @withMessage("Login attempt failed, email or password is incorrect")
 @withCode("api.user.login_attempt_failed")

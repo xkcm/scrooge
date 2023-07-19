@@ -1,7 +1,7 @@
 import express from "express";
 
-import { createRequestBodyVerifier, createRequestParamsVerifier, createRequestQueryVerifier } from "#root/api/middleware/verifier.middleware.js";
 import { wrapExpressErrorHandler } from "#root/api/errors/errors.utils.js";
+import { createRequestBodyVerifier, createRequestParamsVerifier, createRequestQueryVerifier } from "#root/api/middleware/verifier.middleware.js";
 
 import tokenMiddleware from "#root/api/features/auth/middleware/token/token.middleware.js";
 import operationController from "./operation.controller.js";

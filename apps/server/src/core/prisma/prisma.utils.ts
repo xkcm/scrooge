@@ -1,6 +1,6 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library.js";
 import { Constructor } from "#core/utils/utils.types.js";
-import { ApiError, ApiErrorAttachment } from "#shared/errors/ApiError.class.js";
+import { ApiError, ApiErrorAttachment } from "@scrooge/shared";
 
 import { UnknownPrismaError } from "./prisma.errors.js";
 

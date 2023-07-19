@@ -1,5 +1,5 @@
 import { withCode, withMessage, withMetadata } from "@xkcm/better-errors";
-import { ApiError } from "#shared/errors/ApiError.class.js";
+import { ApiError } from "@scrooge/shared";
 
 @withMessage("Operation with id '%{metadata.operationId}' doesn't exist")
 @withCode("api.operation.invalid_operation")

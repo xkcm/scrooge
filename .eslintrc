@@ -47,7 +47,8 @@
           "FunctionExpression[params]:has(Identifier[decorators])"
         ]
       }
-    ]
+    ],
+    "import/no-named-as-default": 0
   },
   "settings": {
     "import/parsers": {
@@ -55,13 +56,6 @@
     },
     "import/resolver": {
       "typescript": {
-        "project": [
-          "./tsconfig.eslint.json",
-          "./packages/*/tsconfig.json",
-          "./apps/*/tsconfig.json"
-        ]
-      },
-      "node": {
         "project": [
           "./tsconfig.eslint.json",
           "./packages/*/tsconfig.json",

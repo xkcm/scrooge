@@ -1,5 +1,5 @@
 import logger from "#core/logger/logger.js";
-import { ApiError } from "#shared/errors/ApiError.class.js";
+import { ApiError } from "@scrooge/shared";
 
 import {
   ApiHandler,

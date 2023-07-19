@@ -1,5 +1,5 @@
 import { withCode, withMessage, withMetadata } from "@xkcm/better-errors";
-import { ApiError } from "#shared/errors/ApiError.class.js";
+import { ApiError } from "@scrooge/shared";
 
 @withMessage("User with id %{metadata.userId} does not exist")
 @withCode("api.user.user_with_given_id_not_found")
