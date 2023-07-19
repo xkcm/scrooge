@@ -1,0 +1,73 @@
+{
+  "extends": [
+    "airbnb-base",
+    "airbnb-typescript/base",
+    "plugin:import/recommended",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "root": true,
+  "parserOptions": {
+    "project": [
+      "./tsconfig.eslint.json",
+      "./packages/*/tsconfig.json",
+      "./apps/*/tsconfig.json"
+    ]
+  },
+  "ignorePatterns": [
+    ".eslintrc*",
+    "**/dist/**/*"
+  ],
+  "rules": {
+    "curly": ["error", "all"],
+    "no-console": ["error", { "allow": ["info", "warn", "error"] }],
+    "no-use-before-define": "off",
+    "import/prefer-default-export": "off",
+    "max-classes-per-file": "off",
+    "import/extensions": "off",
+    "import/no-extraneous-dependencies": "off",
+    "@typescript-eslint/quotes": ["error", "double"],
+    "@typescript-eslint/no-use-before-define": [
+      "error",
+      { "functions": false, "classes": false, "typedefs": false }
+    ],
+    "@typescript-eslint/brace-style": [
+      "error",
+      "1tbs",
+      { "allowSingleLine": false }
+    ],
+    "@typescript-eslint/indent": [
+      "error",
+      2,
+      {
+        "ignoredNodes": [
+          "TSTypeParameterInstantiation",
+          "TSIntersectionType",
+          "FunctionExpression[params]:has(Identifier[decorators])"
+        ]
+      }
+    ]
+  },
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": {
+        "project": [
+          "./tsconfig.eslint.json",
+          "./packages/*/tsconfig.json",
+          "./apps/*/tsconfig.json"
+        ]
+      },
+      "node": {
+        "project": [
+          "./tsconfig.eslint.json",
+          "./packages/*/tsconfig.json",
+          "./apps/*/tsconfig.json"
+        ]
+      }
+    }
+  }
+}

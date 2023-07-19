@@ -9,20 +9,12 @@
     "skipLibCheck": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
-    "outDir": "dist/",
-    "baseUrl": "./src",
-    "rootDir": "./src",
     "resolveJsonModule": true,
+    "incremental": true
   },
   "references": [
-    {
-      "path": "apps/client"
-    },
-    {
-      "path": "apps/server"
-    },
-    {
-      "path": "packages/shared"
-    }
+    { "path": "apps/client" },
+    { "path": "apps/server" },
+    { "path": "packages/shared" }
   ]
 }

@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.14",
+    "@scrooge/shared": "workspace:^",
     "@vueuse/core": "^10.2.1",
-    "@xkcm/better-errors": "^2.1.1",
     "hash.js": "^1.1.7",
     "pinia": "^2.1.4",
     "sha.js": "^2.4.11",

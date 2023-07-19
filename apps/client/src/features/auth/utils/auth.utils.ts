@@ -1,5 +1,5 @@
 import apiClient from "@/utils/api-client/api-client";
-import { useAuthStore } from "../stores/auth.store";
+import { useAuthStore } from "../stores/auth.store.js";
 import { revalidateCurrentRoute } from "@/router/router.utils";
 
 export function isUserAuthenticated() {

@@ -1,17 +1,11 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "lib": ["ESNext", "DOM"],
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "target": "ES2017",
-    "sourceMap": true,
     "composite": true,
-    "strict": true,
     "declaration": true,
-    "outDir": "./dist/",
     "rootDir": "./src/",
-    "experimentalDecorators": true,
-    "skipLibCheck": true
+    "baseUrl": "./src/",
+    "outDir": "dist"
   },
   "include": ["./src/**/*"]
 }

@@ -1,13 +1,13 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "composite": true,
     "useDefineForClassFields": true,
     "jsx": "preserve",
     "declaration": true,
     "isolatedModules": true,
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": false,
-    "noEmit": true,
     "paths": {
       "@/*": ["./src/*"],
       "@icons/*": ["./src/assets/icons/*"],
@@ -17,7 +17,5 @@
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
-  "references": [
-    { "path": "./tsconfig.node.json" }
-  ]
+  "references": [{ "path": "./tsconfig.node.json" }]
 }
