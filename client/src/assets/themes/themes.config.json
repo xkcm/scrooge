@@ -1,0 +1,10 @@
+[
+  {
+    "id": "light",
+    "displayName": "Light"
+  },
+  {
+    "id": "dark",
+    "displayName": "Dark"
+  }
+]

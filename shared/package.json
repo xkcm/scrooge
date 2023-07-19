@@ -1,0 +1,24 @@
+{
+  "name": "scrooge-shared",
+  "version": "0.1.0",
+  "main": "dist/",
+  "author": "xkcm",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -b",
+    "lint": "pnpm exec eslint . --fix"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.44.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "@xkcm/better-errors": "^2.1.1"
+  }
+}
