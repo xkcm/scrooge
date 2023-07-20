@@ -1,5 +1,5 @@
-import sessionRedisService from "#api:auth/services/session-redis/session-redis.service.js";
 import sessionService from "#api:auth/services/session/session.service.js";
+import sessionRedisService from "#api:auth/services/session-redis/session-redis.service.js";
 import { AuthTokenPayload } from "#api:auth/services/token/token.service.types.js";
 
 export async function verifySession(

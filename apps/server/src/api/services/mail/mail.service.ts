@@ -1,6 +1,7 @@
-import { SendMailOptions, createTransport } from "nodemailer";
+import { createTransport,SendMailOptions } from "nodemailer";
 
 import { env } from "#core/config/env.config.js";
+
 import {
   buildUrl,
   config,

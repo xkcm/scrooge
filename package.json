@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "frontend": "pnpm --filter @scrooge/client",
-    "backend": "pnpm --filter @scrooge/server",
-    "shared": "pnpm --filter @scrooge/shared"
+    "@client": "pnpm --filter @scrooge/client",
+    "@server": "pnpm --filter @scrooge/server",
+    "@shared": "pnpm --filter @scrooge/shared",
+    "lint": "pnpm exec eslint ."
   },
   "keywords": [],
   "author": "",

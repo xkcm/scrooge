@@ -4,7 +4,6 @@ import type {
   ApiResponse,
 } from "#root/api/api.types.js";
 import type { AuthLocals } from "#root/api/features/auth/middleware/token/token.middleware.types.js";
-
 import sessionService from "#root/api/features/auth/services/session/session.service.js";
 
 import { InvalidateSessionParams } from "../../auth.schemas.js";

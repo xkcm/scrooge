@@ -1,8 +1,8 @@
-import { createPrismaErrorParser } from "#core/prisma/prisma.utils.js";
-
 import serverConfig from "#core/config/server.config.js";
 import prismaClient from "#core/prisma/prisma.js";
+import { createPrismaErrorParser } from "#core/prisma/prisma.utils.js";
 import { UserWithGivenIdNotFoundError } from "#root/api/features/auth/services/user/user.service.errors.js";
+
 import { UndefinedTagError } from "../../tags.errors.js";
 import { Tag, TagsService } from "./tags.service.types.js";
 import {

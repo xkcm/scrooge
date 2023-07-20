@@ -1,6 +1,7 @@
 import ipAddr from "ipaddr.js";
 
 import { env } from "#core/config/env.config.js";
+
 import { UnsupportedGeolocationServiceError } from "./geolocation.service.errors.js";
 import ipstackGeolocationService from "./services/ipstack.geolocation.service.js";
 

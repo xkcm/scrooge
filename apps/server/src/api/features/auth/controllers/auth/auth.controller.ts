@@ -1,15 +1,10 @@
-import { bindObjectMethods } from "#root/core/utils/utils.js";
+import { AuthLocals } from "#api:auth/middleware/token/token.middleware.types.js";
+import { env } from "#core/config/env.config.js";
 import {
   ApiControllerObject,
   ApiRequest,
   ApiResponse,
 } from "#root/api/api.types.js";
-
-import sessionService from "#root/api/features/auth/services/session/session.service.js";
-import tokenService from "#root/api/features/auth/services/token/token.service.js";
-import userService from "#root/api/features/auth/services/user/user.service.js";
-import mailService from "#root/api/services/mail/mail.service.js";
-
 import { LoginAttemptFailedError } from "#root/api/features/auth/auth.errors.js";
 import {
   BeginRegistrationBody,
@@ -17,9 +12,12 @@ import {
   RefreshBody,
   RegisterUser,
 } from "#root/api/features/auth/auth.schemas.js";
+import sessionService from "#root/api/features/auth/services/session/session.service.js";
+import tokenService from "#root/api/features/auth/services/token/token.service.js";
+import userService from "#root/api/features/auth/services/user/user.service.js";
+import mailService from "#root/api/services/mail/mail.service.js";
+import { bindObjectMethods } from "#root/core/utils/utils.js";
 
-import { AuthLocals } from "#api:auth/middleware/token/token.middleware.types.js";
-import { env } from "#core/config/env.config.js";
 import { prepareCreateSessionPayload } from "./auth.controller.utils.js";
 
 const authController = bindObjectMethods({

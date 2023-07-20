@@ -1,7 +1,7 @@
 import express, { Router } from "express";
 
-import { createRequestBodyVerifier, createRequestParamsVerifier, createRequestQueryVerifier } from "#root/api/middleware/verifier.middleware.js";
 import { wrapExpressErrorHandler } from "#root/api/errors/errors.utils.js";
+import { createRequestBodyVerifier, createRequestParamsVerifier, createRequestQueryVerifier } from "#root/api/middleware/verifier.middleware.js";
 
 import {
   BeginRegistrationSchema,
@@ -10,7 +10,6 @@ import {
   RefreshSchema,
   RegisterUserSchema,
 } from "./auth.schemas.js";
-
 import authController from "./controllers/auth/auth.controller.js";
 import { sessionController } from "./controllers/session/session.controller.js";
 import { haltAuthenticatedUsers } from "./guards/auth.guards.js";

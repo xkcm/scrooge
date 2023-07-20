@@ -1,6 +1,6 @@
+import { ApiError } from "@scrooge/shared";
 import { ZodSchema } from "zod";
 
-import { ApiError } from "@scrooge/shared";
 import {
   ApiNextFunc,
   ApiRequest,

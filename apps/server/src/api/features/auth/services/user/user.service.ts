@@ -1,9 +1,10 @@
 import crypto from "node:crypto";
+
 import bcrypt from "bcrypt";
 
-import { createPrismaErrorParser } from "#core/prisma/prisma.utils.js";
-import prismaClient from "#core/prisma/prisma.js";
 import serverConfig from "#core/config/server.config.js";
+import prismaClient from "#core/prisma/prisma.js";
+import { createPrismaErrorParser } from "#core/prisma/prisma.utils.js";
 
 import {
   UserExistsError,

@@ -1,7 +1,8 @@
-import { Constructor } from "#core/utils/utils.types.js";
 import { ApiError, ApiErrorAttachment } from "@scrooge/shared";
-
 import { BetterError } from "@xkcm/better-errors";
+
+import { Constructor } from "#core/utils/utils.types.js";
+
 import { UnknownPrismaError } from "./prisma.errors.js";
 
 export function parsePrismaError<

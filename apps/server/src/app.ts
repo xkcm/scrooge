@@ -1,6 +1,7 @@
 import { setDefaultMergingBehavior } from "@xkcm/better-errors";
-import * as server from "#core/server/server.js";
+
 import logger from "#core/logger/logger.js";
+import * as server from "#core/server/server.js";
 
 setDefaultMergingBehavior("compromise:submissive");
 

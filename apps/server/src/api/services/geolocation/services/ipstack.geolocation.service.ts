@@ -1,5 +1,7 @@
 import axios from "axios";
+
 import { env } from "#core/config/env.config.js";
+
 import { IpStackApiKeyUndefinedError } from "../geolocation.service.errors.js";
 import { IpStackResponseData } from "./ipstack.geolocation.service.types.js";
 

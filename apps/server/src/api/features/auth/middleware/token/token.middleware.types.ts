@@ -1,5 +1,6 @@
 import { User } from "@prisma/client";
 import type { ApiError } from "@scrooge/shared";
+
 import { AuthTokenPayload } from "../../services/token/token.service.types.js";
 
 type AuthenticatedLocals = {

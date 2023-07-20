@@ -6,7 +6,6 @@ import {
 import { AuthLocals } from "#root/api/features/auth/middleware/token/token.middleware.types.js";
 
 import tagsService from "./services/tags/tags.service.js";
-
 import {
   AddTagBody,
   DeleteTagQuery,

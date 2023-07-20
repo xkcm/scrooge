@@ -1,15 +1,15 @@
 import { Prisma } from "@prisma/client";
-import { createPrismaErrorParser } from "#core/prisma/prisma.utils.js";
-import { removeDuplicates } from "#root/core/utils/utils.js";
 
 import prismaClient from "#core/prisma/prisma.js";
+import { createPrismaErrorParser } from "#core/prisma/prisma.utils.js";
 import { UserWithGivenIdNotFoundError } from "#root/api/features/auth/services/user/user.service.errors.js";
 import tagsService from "#root/api/features/tags/services/tags/tags.service.js";
+import { removeDuplicates } from "#root/core/utils/utils.js";
+
 import {
   CantDeleteOperationError,
   InvalidOperationIdError,
 } from "../operation.errors.js";
-
 import { OperationService } from "./operation.service.types.js";
 import { createFullDayDatePrismaFilter, mapToPublicOperation } from "./operation.service.utils.js";
 

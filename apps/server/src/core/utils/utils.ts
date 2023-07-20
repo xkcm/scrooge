@@ -1,6 +1,7 @@
 import { BetterError } from "@xkcm/better-errors";
 import fs from "fs";
 import { access } from "fs/promises";
+
 import { Constructor } from "./utils.types.js";
 
 export function getEnvVariableOrThrow<Type = any>(key: string) {

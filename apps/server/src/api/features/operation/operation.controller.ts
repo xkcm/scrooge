@@ -5,14 +5,13 @@ import {
 } from "#root/api/api.types.js";
 import { AuthLocals } from "#root/api/features/auth/middleware/token/token.middleware.types.js";
 
-import operationService from "./services/operation.service.js";
-
 import {
   AddOperationBody,
   DeleteOperationParams,
   ModifyOperation,
   OperationDateFilter,
 } from "./operation.schemas.js";
+import operationService from "./services/operation.service.js";
 
 export const operationController = {
   async addExpense(

@@ -1,8 +1,8 @@
 import {
   BetterError,
   InferMetadata,
-  SupportedMetadata,
   setDefaultMergingBehavior,
+  SupportedMetadata,
   withCode,
   withMessage,
   withMetadata,

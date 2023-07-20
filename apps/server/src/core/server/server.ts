@@ -1,16 +1,17 @@
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import { promisify } from "util";
-import cookieParser from "cookie-parser";
 
 import { env } from "#core/config/env.config.js";
 import logger from "#core/logger/logger.js";
 import morganMiddleware from "#core/middleware/morgan.middleware.js";
 import prismaClient from "#core/prisma/prisma.js";
-import redisClient from "#core/redis/redis.js";
-import { apiRouter } from "#root/api/api.js";
 import { createPrismaErrorParser } from "#core/prisma/prisma.utils.js";
+import redisClient from "#core/redis/redis.js";
 import { createErrorParser } from "#core/utils/utils.js";
+import { apiRouter } from "#root/api/api.js";
+
 import { DatabaseUnavailableError, HttpServerNotRunningError, RedisUnavailableError } from "./server.errors.js";
 
 let httpServer: ReturnType<typeof express["application"]["listen"]> | undefined;

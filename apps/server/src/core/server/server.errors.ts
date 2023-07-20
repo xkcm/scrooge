@@ -1,10 +1,11 @@
-import { env } from "#core/config/env.config.js";
 import {
   BetterError,
   withCode,
   withMessage,
   withMetadata,
 } from "@xkcm/better-errors";
+
+import { env } from "#core/config/env.config.js";
 
 @withCode("core.server.failed_database_check")
 @withMessage("Failed to check connection with the database")

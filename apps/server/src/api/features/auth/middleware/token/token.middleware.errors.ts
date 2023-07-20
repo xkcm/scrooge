@@ -1,5 +1,5 @@
-import { withCode, withMessage, withMetadata } from "@xkcm/better-errors";
 import { ApiError } from "@scrooge/shared";
+import { withCode, withMessage, withMetadata } from "@xkcm/better-errors";
 
 @withMessage("Auth cookie is required")
 @withCode("api.auth.token.no_auth_cookie")

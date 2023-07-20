@@ -1,10 +1,10 @@
+import { ApiError } from "@scrooge/shared";
 import {
   BetterError,
   withCode,
   withMessage,
   withMetadata,
 } from "@xkcm/better-errors";
-import { ApiError } from "@scrooge/shared";
 
 @withMessage("Authenticated users are not allowed at this route")
 @withCode("api.auth.authenticated_users_not_allowed")

@@ -1,9 +1,11 @@
+import queryString from "node:querystring";
+
 import { readFile } from "fs/promises";
 import mustache from "mustache";
-import queryString from "node:querystring";
 import path from "path";
 
 import config from "#assets/mail/config.json" assert { type: "json" };
+
 import { ConfigSchema } from "./mail.service.schemas.js";
 
 type BuildTemplateOptions = {

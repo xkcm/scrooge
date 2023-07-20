@@ -1,4 +1,4 @@
-import { User, Session } from "@prisma/client";
+import { Session,User } from "@prisma/client";
 
 export interface SessionInputInfo {
   geolocation?: [number, number];

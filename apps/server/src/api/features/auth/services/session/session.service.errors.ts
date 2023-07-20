@@ -1,9 +1,9 @@
+import { ApiError } from "@scrooge/shared";
 import {
   withCode,
   withMessage,
   withMetadata,
 } from "@xkcm/better-errors";
-import { ApiError } from "@scrooge/shared";
 
 @withMessage("Session with id '%{metadata.sessionId}' can't be invalidated")
 @withCode("api.auth.session.cant_invalidate_session")

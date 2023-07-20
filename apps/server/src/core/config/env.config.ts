@@ -2,7 +2,6 @@ import dotenv from "dotenv";
 import path from "path";
 
 import { assertPath, getEnvVariableOrThrow } from "../utils/utils.js";
-
 import { EnvParserError } from "./config.errors.js";
 import { EnvConfigSchema, EnvMode, EnvModeSchema } from "./config.schemas.js";
 
@@ -26,7 +25,7 @@ if (error) {
 const config = EnvConfigSchema.parse(parsed);
 
 export {
+  appPath,
   config as env,
   envMode,
-  appPath,
 };

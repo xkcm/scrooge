@@ -1,4 +1,5 @@
 import { Operation } from "@prisma/client";
+
 import { PublicOperation } from "./operation.service.types.js";
 
 export const mapToPublicOperation = <

@@ -1,5 +1,5 @@
-import { withCode, withMessage, withMetadata } from "@xkcm/better-errors";
 import { ApiError } from "@scrooge/shared";
+import { withCode, withMessage, withMetadata } from "@xkcm/better-errors";
 
 @withMessage("Request body is invalid")
 @withCode("api.invalid_request_body")

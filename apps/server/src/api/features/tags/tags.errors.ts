@@ -1,5 +1,5 @@
-import { withCode, withMessage, withMetadata } from "@xkcm/better-errors";
 import { ApiError } from "@scrooge/shared";
+import { withCode, withMessage, withMetadata } from "@xkcm/better-errors";
 
 @withMessage("Undefined tag(s): %{metadata.tags}")
 @withCode("api.operation.undefined_tag")

@@ -1,4 +1,5 @@
 import morgan from "morgan";
+
 import logger from "#core/logger/logger.js";
 
 const morganMiddleware = morgan(

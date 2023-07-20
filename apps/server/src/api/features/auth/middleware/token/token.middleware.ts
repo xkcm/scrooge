@@ -1,6 +1,5 @@
 import sessionRedisService from "#api:auth/services/session-redis/session-redis.service.js";
 import tokenService from "#api:auth/services/token/token.service.js";
-
 import type { ApiHandler } from "#root/api/api.types.js";
 import { wrapMiddlewareWithSafeVariant } from "#root/api/utils/middleware.utils.js";
 
