@@ -3,7 +3,7 @@ import { createApp } from "vue";
 
 import AppWrapper from "@core/layouts/AppWrapperLayout.vue";
 import "./assets/styles/global.scss";
-import { router } from "./router/router.js";
+import { router } from "./router/router";
 
 async function start() {
   const vueApp = createApp(AppWrapper);

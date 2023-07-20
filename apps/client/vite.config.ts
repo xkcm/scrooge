@@ -29,7 +29,6 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
       "@icons": path.resolve(__dirname, "./src/assets/icons"),
       "@features": path.resolve(__dirname, "./src/features"),
-      "@shared": path.resolve(__dirname, "../shared/src/"),
       "@core": path.resolve(__dirname, "./src/features/core"),
     },
   },

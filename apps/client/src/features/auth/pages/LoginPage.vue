@@ -52,7 +52,7 @@ import FilledButton from "@core/components/Buttons/FilledButton.vue";
 
 import MessageIcon from "@icons/Message_light.svg";
 import KeyIcon from "@icons/Key_light.svg";
-import { ApiError } from "@shared/errors/ApiError.class";
+import { ApiError } from "@scrooge/shared";
 
 import { useAuthStore } from "../stores/auth.store";
 

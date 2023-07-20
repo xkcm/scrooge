@@ -1,4 +1,4 @@
-import { ApiError } from "@shared/errors/ApiError.class";
+import { ApiError } from "@scrooge/shared";
 import { withCode, withMessage } from "@xkcm/better-errors";
 
 @withMessage("Request failed")

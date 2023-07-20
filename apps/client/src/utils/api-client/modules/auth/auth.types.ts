@@ -1,4 +1,4 @@
-import { ApiErrorResponseBody } from "@shared/errors/ApiError.class";
+import { ApiErrorResponseBody } from "@scrooge/shared";
 
 export type GetAuthInfoResponse =
   | {

@@ -1,4 +1,9 @@
 {
+  "env": {
+    "node": true,
+    "es2021": true,
+    "browser": true
+  },
   "extends": [
     "airbnb-base",
     "airbnb-typescript/base",
@@ -6,17 +11,20 @@
     "prettier"
   ],
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "simple-import-sort"],
   "root": true,
   "parserOptions": {
     "project": [
       "./tsconfig.eslint.json",
       "./packages/*/tsconfig.json",
       "./apps/*/tsconfig.json"
-    ]
+    ],
+    "ecmaVersion": "latest",
+    "sourceType": "module"
   },
   "ignorePatterns": [
     ".eslintrc*",
+    "vite.config.ts",
     "**/dist/**/*"
   ],
   "rules": {
@@ -48,11 +56,14 @@
         ]
       }
     ],
-    "import/no-named-as-default": 0
+    "import/no-named-as-default": 0,
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error"
   },
   "settings": {
     "import/parsers": {
-      "@typescript-eslint/parser": [".ts", ".tsx", ".json"]
+      "@typescript-eslint/parser": [".ts", ".tsx", ".json"],
+      "vue-eslint-parser": [".vue"]
     },
     "import/resolver": {
       "typescript": {

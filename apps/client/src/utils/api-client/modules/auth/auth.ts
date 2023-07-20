@@ -2,7 +2,7 @@ import hashJs from "hash.js";
 
 import { sendApiRequest } from "../../api-client.utils";
 import type { JwtTokensState } from "../../api-client.types";
-import { ApiError } from "@shared/errors/ApiError.class";
+import { ApiError } from "@scrooge/shared";
 import { GetAuthInfoResponse } from "./auth.types";
 
 export async function login(

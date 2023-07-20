@@ -2,7 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 
 import DashboardPage from "@/features/app/pages/DashboardPage.vue";
 import LoginPage from "@/features/auth/pages/LoginPage.vue";
-import { validateRoute } from "./router.utils.js";
+import { validateRoute } from "./router.utils";
 
 const routes: RouteRecordRaw[] = [
   {
