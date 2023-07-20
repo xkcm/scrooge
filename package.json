@@ -10,6 +10,7 @@
     "lint": "pnpm exec eslint .",
     "dev": "pnpm --recursive --parallel --stream run dev",
     "start-dbs": "./development/start-databases.sh",
+    "stop-dbs": "./development/stop-databases.sh",
     "prettier": "pnpm exec prettier apps/*/src/**/* packages/*/src/**/* --write"
   },
   "keywords": [],
