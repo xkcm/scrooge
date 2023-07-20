@@ -6,16 +6,16 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "prod:build": "rm -rf ./dist && SCROOGE_CWD=$PWD NODE_ENV=prod tsc",
-    "prod:run": "SCROOGE_CWD=$PWD NODE_ENV=production node dist/app.js",
-    "dev:run-build": "SCROOGE_CWD=$PWD NODE_ENV=development node dist/app.js",
-    "dev:run": "SCROOGE_CWD=$PWD NODE_ENV=development node --loader tsx src/app.ts",
-    "dev:build": "sh ./devtools/dev:build.sh",
-    "dev:watch": "nodemon -x \"pnpm dev:run\" -w \"./src/**/*\" -w \"../shared/src/**/*\" -e \"ts js json\"",
-    "dev:migrate": "dotenv -e .env.dev -- pnpm exec prisma migrate dev --name postgress-init",
+    "prod:build": "rm -rf ./dist && NODE_ENV=production tsc",
+    "prod:run": "NODE_ENV=production node dist/app.js",
+    "dev:run-build": "NODE_ENV=development node dist/app.js",
+    "dev:build": "sh ./development/dev-build.sh",
+    "dev:run": "NODE_ENV=development node --loader tsx src/app.ts",
+    "dev": "nodemon",
+    "dev:migrate": "dotenv -e .env.development -- pnpm exec prisma migrate dev --name postgress-init",
     "dev:migrate/reset": "rm -rf ./prisma/migrations && pnpm dev:migrate",
-    "dev:generate-prisma-client": "dotenv -e .env.dev -- pnpm exec prisma generate",
-    "dev:integrate-path-aliases": "node ./devtools/dev:integrate-path-aliases.js",
+    "dev:generate-prisma-client": "dotenv -e .env.development -- pnpm exec prisma generate",
+    "dev:integrate-path-aliases": "node ./development/integrate-path-aliases.cjs",
     "lint": "pnpm exec eslint .",
     "lint:fix": "pnpm exec eslint . --fix"
   },
@@ -60,6 +60,14 @@
     "nodemon": "^2.0.20",
     "prisma": "5.0.0",
     "tsx": "^3.12.7"
+  },
+  "nodemonConfig": {
+    "exec": "pnpm dev:run",
+    "ext": "js,ts,json",
+    "watch": [
+      "./src/**/*",
+      "../../packages/shared/dist/**/*"
+    ]
   },
   "imports": {
     "#core/*": "./dist/core/*",

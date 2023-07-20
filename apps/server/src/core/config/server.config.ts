@@ -1,12 +1,14 @@
 import { readFile } from "fs/promises";
 import path from "path";
+import { fileURLToPath } from "url";
 import yamljs from "yamljs";
 
-import { assertPath, getEnvVariableOrThrow } from "../utils/utils.js";
+import { assertPath } from "../utils/utils.js";
 import { ServerConfigSchema } from "./config.schemas.js";
 
 const serverConfigPath = path.resolve(
-  getEnvVariableOrThrow("SCROOGE_CWD"),
+  fileURLToPath(import.meta.url),
+  "../../../..",
   "config.yml",
 );
 await assertPath(serverConfigPath);

@@ -7,7 +7,7 @@
       "group": "build",
       "problemMatcher": [],
       "label": "npm: dev:build",
-      "detail": "rm -rf ./dist && SCROOGE_CWD=$PWD NODE_ENV=dev tsc"
+      "detail": "rm -rf ./dist && NODE_ENV=dev tsc"
     }
   ]
 }

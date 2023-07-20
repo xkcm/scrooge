@@ -5,9 +5,7 @@ const tsconfigJson = require("../tsconfig.json");
 const packageJson = require("../package.json");
 
 const IGNORED_ALIASES = [];
-const CUSTOM_PATHS = {
-  "#shared/*": "./dist/shared/*"
-}
+const CUSTOM_PATHS = {};
 
 const { outDir } = tsconfigJson.compilerOptions;
 packageJson.imports = {

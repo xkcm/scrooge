@@ -7,7 +7,9 @@
     "@client": "pnpm --filter @scrooge/client",
     "@server": "pnpm --filter @scrooge/server",
     "@shared": "pnpm --filter @scrooge/shared",
-    "lint": "pnpm exec eslint ."
+    "lint": "pnpm exec eslint .",
+    "dev": "pnpm --recursive --parallel --stream run dev",
+    "start-dbs": "./development/start-databases.sh"
   },
   "keywords": [],
   "author": "",

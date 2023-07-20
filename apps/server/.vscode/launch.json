@@ -17,7 +17,6 @@
         "module-alias/register"
       ],
       "env": {
-        "SCROOGE_CWD": "${workspaceFolder}",
         "NODE_ENV": "development"
       },
       "outputCapture": "std",
