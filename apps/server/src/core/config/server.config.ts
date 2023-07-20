@@ -2,7 +2,7 @@ import { readFile } from "fs/promises";
 import path from "path";
 import yamljs from "yamljs";
 
-import { assertPath, getEnvVariableOrThrow } from "../utils/index.js";
+import { assertPath, getEnvVariableOrThrow } from "../utils/utils.js";
 import { ServerConfigSchema } from "./config.schemas.js";
 
 const serverConfigPath = path.resolve(

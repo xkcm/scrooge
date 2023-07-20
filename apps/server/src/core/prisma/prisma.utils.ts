@@ -1,4 +1,3 @@
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library.js";
 import { Constructor } from "#core/utils/utils.types.js";
 import { ApiError, ApiErrorAttachment } from "@scrooge/shared";
 
@@ -6,18 +5,16 @@ import { BetterError } from "@xkcm/better-errors";
 import { UnknownPrismaError } from "./prisma.errors.js";
 
 export function parsePrismaError<
-  T extends Constructor<BetterError, ConstructorParameters<typeof BetterError>>>(
+  T extends Constructor<BetterError, ConstructorParameters<typeof BetterError>>
+>(
   error: any,
   errorCodeMap: Record<string, T>,
 ) {
-  let ErrorClass;
-  if (error instanceof PrismaClientKnownRequestError && errorCodeMap[error.code]) {
-    ErrorClass = errorCodeMap[error.code];
-  } else {
-    ErrorClass = errorCodeMap?.default || UnknownPrismaError;
-  }
-
-  console.info(ErrorClass)
+  const ErrorClass = (
+    errorCodeMap[error.code || error.errorCode]
+      ?? errorCodeMap?.default
+      ?? UnknownPrismaError
+  );
 
   if (!(ErrorClass.prototype instanceof ApiError)) {
     return new ErrorClass({ cause: error });

@@ -9,6 +9,7 @@ export const EnvConfigSchema = z.object({
   APP_NAME: z.string(),
   SERVER_APP_NAME: z.string(),
   PORT: NumericStringSchema,
+  DATABASE_NAME: z.string(),
   FRONTEND_URL: z.string().url(),
   BACKEND_DOMAIN: z.string(),
 

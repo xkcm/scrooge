@@ -1,4 +1,4 @@
-import { bindObjectMethods } from "#core/utils/index.js";
+import { bindObjectMethods } from "#root/core/utils/utils.js";
 import {
   ApiControllerObject,
   ApiRequest,

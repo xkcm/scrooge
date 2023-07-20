@@ -10,7 +10,8 @@ import prismaClient from "#core/prisma/prisma.js";
 import redisClient from "#core/redis/redis.js";
 import { apiRouter } from "#root/api/api.js";
 import { createPrismaErrorParser } from "#core/prisma/prisma.utils.js";
-import { DatabaseUnavailableError, HttpServerNotRunningError } from "./server.errors.js";
+import { createErrorParser } from "#core/utils/utils.js";
+import { DatabaseUnavailableError, HttpServerNotRunningError, RedisUnavailableError } from "./server.errors.js";
 
 let httpServer: ReturnType<typeof express["application"]["listen"]> | undefined;
 const expressApp = express();
@@ -37,7 +38,7 @@ export async function assertDatabaseConnection() {
   }));
   logger.info("PostgreSQL connection estabilished");
 
-  await redisClient.connect();
+  await redisClient.connect().catch(createErrorParser(RedisUnavailableError));
   logger.info("Redis connection estabilished");
 }
 

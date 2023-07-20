@@ -1,3 +1,4 @@
+import { env } from "#core/config/env.config.js";
 import {
   BetterError,
   withCode,
@@ -23,5 +24,9 @@ export class ExpressIsNotInitializedError extends BetterError {}
 
 @withCode("core.server.database_unavailable")
 @withMessage("Failed to connect to %{metadata.databaseName} database")
-@withMetadata({ databaseName: "PostgreSQL" })
+@withMetadata({ databaseName: env.DATABASE_NAME })
 export class DatabaseUnavailableError extends BetterError<{ databaseName?: string }> {}
+
+@withCode("core.server.redis_unavailable")
+@withMessage("Failed to connect to Redis")
+export class RedisUnavailableError extends BetterError {}

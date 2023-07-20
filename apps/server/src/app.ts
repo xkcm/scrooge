@@ -6,8 +6,8 @@ setDefaultMergingBehavior("compromise:submissive");
 
 async function start() {
   await server.bootstrap();
-  await server.assertDatabaseConnection().catch(logger.error);
+  await server.assertDatabaseConnection();
   server.start();
 }
 
-start().catch(console.error);
+start().catch(logger.error);

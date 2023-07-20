@@ -1,5 +1,7 @@
+import { BetterError } from "@xkcm/better-errors";
 import fs from "fs";
 import { access } from "fs/promises";
+import { Constructor } from "./utils.types.js";
 
 export function getEnvVariableOrThrow<Type = any>(key: string) {
   const value = process.env[key];
@@ -37,4 +39,10 @@ export function bindObjectMethods<T extends Record<string | symbol, any>>(
   });
 
   return newObject;
+}
+
+export function createErrorParser(RethrownError: Constructor<BetterError>) {
+  return (error: any) => {
+    throw new RethrownError({ cause: error });
+  }
 }
