@@ -20,7 +20,11 @@ export const operationController = {
   ) {
     const { userId } = res.locals.auth;
 
-    const createdOperation = await operationService.addOperation(userId, "EXPENSE", req.body);
+    const createdOperation = await operationService.addOperation(
+      userId,
+      "EXPENSE",
+      req.body,
+    );
 
     return res.json(createdOperation);
   },
@@ -31,7 +35,11 @@ export const operationController = {
   ) {
     const { userId } = res.locals.auth;
 
-    const createdOperation = await operationService.addOperation(userId, "INCOME", req.body);
+    const createdOperation = await operationService.addOperation(
+      userId,
+      "INCOME",
+      req.body,
+    );
 
     return res.json(createdOperation);
   },
@@ -43,7 +51,11 @@ export const operationController = {
     const { userId } = res.locals.auth;
     const { from, to } = req.query;
 
-    const foundOperations = await operationService.getOperationsByDate(userId, from, to);
+    const foundOperations = await operationService.getOperationsByDate(
+      userId,
+      from,
+      to,
+    );
 
     return res.json(foundOperations);
   },
@@ -55,7 +67,10 @@ export const operationController = {
     const { operationId } = req.params;
     const { userId } = res.locals.auth;
 
-    const deletedOperationId = await operationService.deleteOperation(userId, operationId);
+    const deletedOperationId = await operationService.deleteOperation(
+      userId,
+      operationId,
+    );
 
     res.json({ id: deletedOperationId });
   },
@@ -67,7 +82,11 @@ export const operationController = {
     const { userId } = res.locals.auth;
     const { operationId } = req.params;
 
-    const updatedOperation = await operationService.modifyOperation(operationId, userId, req.body);
+    const updatedOperation = await operationService.modifyOperation(
+      operationId,
+      userId,
+      req.body,
+    );
 
     res.json(updatedOperation);
   },
@@ -79,7 +98,11 @@ export const operationController = {
     const { userId } = res.locals.auth;
     const { from, to } = req.query;
 
-    const operationsSum = await operationService.getOperationsSum(userId, from, to);
+    const operationsSum = await operationService.getOperationsSum(
+      userId,
+      from,
+      to,
+    );
 
     res.json(operationsSum);
   },

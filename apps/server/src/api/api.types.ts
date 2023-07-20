@@ -5,7 +5,10 @@ export type ApiRequest<
   Params = any,
   Query = any,
 > = express.Request<Params, any, RequestBody, Query>;
-export type ApiResponse<Locals extends Record<string, any> = any> = express.Response<any, Locals>;
+export type ApiResponse<
+  ResponseBody = any,
+  Locals extends Record<string, any> = any,
+> = express.Response<ResponseBody, Locals>;
 export type ApiNextFunc = express.NextFunction;
 
 export type ApiHandler<
@@ -33,6 +36,6 @@ export type ApiErrorHandler<
 export type ApiControllerObject = Record<string, ApiHandler>;
 
 export interface SafeApiMiddleware {
-  safe: ApiHandler,
-  strict: ApiHandler,
+  safe: ApiHandler;
+  strict: ApiHandler;
 }

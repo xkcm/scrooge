@@ -25,7 +25,11 @@ const tokenMiddlewareRequestHandler: ApiHandler = async (req, res, next) => {
     return next(error);
   }
 
-  await sessionRedisService.saveSessionInfo(tokenPayload.sessionId, "last_used", Date.now());
+  await sessionRedisService.saveSessionInfo(
+    tokenPayload.sessionId,
+    "last_used",
+    Date.now(),
+  );
 
   res.locals.auth = {
     userId: tokenPayload.userId,

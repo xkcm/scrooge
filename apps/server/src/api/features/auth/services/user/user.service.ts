@@ -15,51 +15,65 @@ import { UserService } from "./user.service.types.js";
 
 const userService: UserService = {
   async createUser(payload) {
-    const {
-      email,
-      password,
-      username,
-    } = payload;
+    const { email, password, username } = payload;
 
-    return prismaClient.user.create({
-      data: {
-        email,
-        password,
-        username,
-      },
-    }).catch(createPrismaErrorParser({
-      P2002: UserExistsError.withMetadata({ email }),
-    }));
+    return prismaClient.user
+      .create({
+        data: {
+          email,
+          password,
+          username,
+        },
+      })
+      .catch(
+        createPrismaErrorParser({
+          P2002: UserExistsError.withMetadata({ email }),
+        }),
+      );
   },
 
   async findUserByEmail(email) {
-    return prismaClient.user.findFirstOrThrow({
-      where: { email },
-    }).catch(createPrismaErrorParser({
-      P2025: UserWithEmailNotFoundError.withMetadata({ email }),
-    }));
+    return prismaClient.user
+      .findFirstOrThrow({
+        where: { email },
+      })
+      .catch(
+        createPrismaErrorParser({
+          P2025: UserWithEmailNotFoundError.withMetadata({ email }),
+        }),
+      );
   },
 
   async findUserById(
     userId,
     select = { email: true, username: true, id: true },
   ) {
-    return prismaClient.user.findFirstOrThrow({
-      where: { id: userId },
-      select,
-    }).catch(createPrismaErrorParser({
-      P2025: UserWithGivenIdNotFoundError.withMetadata({ userId }),
-    }));
+    return prismaClient.user
+      .findFirstOrThrow({
+        where: { id: userId },
+        select,
+      })
+      .catch(
+        createPrismaErrorParser({
+          P2025: UserWithGivenIdNotFoundError.withMetadata({ userId }),
+        }),
+      );
   },
 
   async hashUserPassword(value) {
-    const sha256Hash = crypto.createHash("sha256").update(value, "ascii").digest("base64");
+    const sha256Hash = crypto
+      .createHash("sha256")
+      .update(value, "ascii")
+      .digest("base64");
     const hashRounds = serverConfig.service_configs.user.hash_rounds;
     return bcrypt.hash(sha256Hash, hashRounds);
   },
 
   async compareUserPassword(value, encrypted) {
-    const sha256Hash = crypto.createHash("sha256").update(value, "ascii").digest("base64");
+    const sha256Hash = crypto
+      .createHash("sha256")
+      .update(value, "ascii")
+      .digest("base64");
     return bcrypt.compare(sha256Hash, encrypted);
   },
 };

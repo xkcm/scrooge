@@ -6,7 +6,9 @@ import { IpStackApiKeyUndefinedError } from "../geolocation.service.errors.js";
 import { IpStackResponseData } from "./ipstack.geolocation.service.types.js";
 
 const ipstackGeolocationService = {
-  async getGeolocation(ipAddress: string): Promise<{ lat: number; long: number; } | null> {
+  async getGeolocation(
+    ipAddress: string,
+  ): Promise<{ lat: number; long: number } | null> {
     if (!env.IP_STACK_API_KEY) {
       throw new IpStackApiKeyUndefinedError();
     }

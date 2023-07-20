@@ -1,9 +1,5 @@
 import { ApiError } from "@scrooge/shared";
-import {
-  withCode,
-  withMessage,
-  withMetadata,
-} from "@xkcm/better-errors";
+import { withCode, withMessage, withMetadata } from "@xkcm/better-errors";
 
 @withMessage("Token is invalid")
 @withCode("api.auth.token.invalid_token")

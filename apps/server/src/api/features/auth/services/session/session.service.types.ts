@@ -1,4 +1,5 @@
-import { Session,User } from "@prisma/client";
+import { Session, User } from "@prisma/client";
+import { schemas } from "@scrooge/shared";
 
 export interface SessionInputInfo {
   geolocation?: [number, number];
@@ -6,21 +7,33 @@ export interface SessionInputInfo {
   sourceIp?: string;
 }
 
-export type PublicSession = Pick<Session, "agent" | "createdAt" | "expiresAt" | "geolocation" | "id" | "sourceIp">;
-
 export interface SessionService {
-  createSession(userId: User["id"], sessionInfo: SessionInputInfo): Promise<Session>;
+  createSession(
+    userId: User["id"],
+    sessionInfo: SessionInputInfo,
+  ): Promise<Session>;
 
-  getSessionsByUserId(userId: User["id"]): Promise<PublicSession[]>;
+  getSessionsByUserId(
+    userId: User["id"],
+  ): Promise<schemas.session.PublicSession[]>;
 
   getSessionById(sessionId: Session["id"]): Promise<Session>;
 
-  invalidateSession(userId: User["id"], sessionId: Session["id"]): Promise<{
+  invalidateSession(
+    userId: User["id"],
+    sessionId: Session["id"],
+  ): Promise<{
     count: number;
     invalidated: true;
   }>;
 
-  refreshSession(userId: User["id"], sessionId: Session["id"]): Promise<Session>;
+  refreshSession(
+    userId: User["id"],
+    sessionId: Session["id"],
+  ): Promise<Session>;
 
-  verifySessionById(userId: User["id"], sessionId: Session["id"]): Promise<boolean>;
+  verifySessionById(
+    userId: User["id"],
+    sessionId: Session["id"],
+  ): Promise<boolean>;
 }

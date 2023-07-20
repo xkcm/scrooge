@@ -5,28 +5,22 @@ module.exports = {
   root: true,
   parserOptions: {
     tsconfigRootDir: __dirname,
-    project: "./tsconfig.json"
+    project: "./tsconfig.json",
   },
-  ignorePatterns: [
-    "vite.config.ts"
-  ],
+  ignorePatterns: ["vite.config.ts"],
   parser: "vue-eslint-parser",
-  plugins: [
-    "vue",
-    "@typescript-eslint",
-    "simple-import-sort"
-  ],
+  plugins: ["vue", "@typescript-eslint", "simple-import-sort"],
   extends: [
     "plugin:vue/vue3-recommended",
     "eslint:recommended",
     "@vue/typescript/recommended",
-    "prettier"
+    "prettier",
   ],
   rules: {
     "vue/no-setup-props-destructure": "off",
-    "import/named": "off"
+    "import/named": "off",
   },
   globals: {
-    defineModel: "readonly"
-  }
+    defineModel: "readonly",
+  },
 };

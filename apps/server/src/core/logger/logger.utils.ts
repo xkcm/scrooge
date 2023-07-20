@@ -42,7 +42,8 @@ export const CONSOLE_DEBUG_FORMAT = winston.format.printf((info) => {
     message += chalk.red(stringifyScroogeError(info.error));
   }
 
-  const colorFormatter = COLOR_FORMATTERS.get(info.level) || DEFAULT_COLOR_FORMATTER;
+  const colorFormatter =
+    COLOR_FORMATTERS.get(info.level) || DEFAULT_COLOR_FORMATTER;
   const colorizedLevelLabel = colorFormatter(info.level.padEnd(8, " "));
   const timestamp = chalk.gray(`[${info.timestamp}]`);
 

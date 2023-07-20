@@ -1,7 +1,4 @@
-import {
-  ApiHandler,
-  ApiResponse,
-} from "#root/api/api.types.js";
+import { ApiHandler, ApiResponse } from "#root/api/api.types.js";
 import { AuthLocals } from "#root/api/features/auth/middleware/token/token.middleware.types.js";
 
 import {

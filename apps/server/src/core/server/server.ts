@@ -12,19 +12,27 @@ import redisClient from "#core/redis/redis.js";
 import { createErrorParser } from "#core/utils/utils.js";
 import { apiRouter } from "#root/api/api.js";
 
-import { DatabaseUnavailableError, HttpServerNotRunningError, RedisUnavailableError } from "./server.errors.js";
+import {
+  DatabaseUnavailableError,
+  HttpServerNotRunningError,
+  RedisUnavailableError,
+} from "./server.errors.js";
 
-let httpServer: ReturnType<typeof express["application"]["listen"]> | undefined;
+let httpServer:
+  | ReturnType<(typeof express)["application"]["listen"]>
+  | undefined;
 const expressApp = express();
 
 export async function bootstrap() {
   expressApp.set("x-powered-by", false);
   expressApp.set("trust proxy", true);
 
-  expressApp.use(cors({
-    origin: env.FRONTEND_URL,
-    credentials: true,
-  }));
+  expressApp.use(
+    cors({
+      origin: env.FRONTEND_URL,
+      credentials: true,
+    }),
+  );
   expressApp.use(cookieParser());
   expressApp.use(morganMiddleware);
 
@@ -34,9 +42,11 @@ export async function bootstrap() {
 }
 
 export async function assertDatabaseConnection() {
-  await prismaClient.$connect().catch(createPrismaErrorParser({
-    P1001: DatabaseUnavailableError,
-  }));
+  await prismaClient.$connect().catch(
+    createPrismaErrorParser({
+      P1001: DatabaseUnavailableError,
+    }),
+  );
   logger.info("PostgreSQL connection estabilished");
 
   await redisClient.connect().catch(createErrorParser(RedisUnavailableError));
@@ -66,5 +76,5 @@ export async function stop() {
 }
 
 export function isListening() {
-  return (httpServer !== undefined) && httpServer.listening;
+  return httpServer !== undefined && httpServer.listening;
 }

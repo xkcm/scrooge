@@ -1,7 +1,4 @@
-import {
-  ApiControllerObject,
-  ApiResponse,
-} from "#root/api/api.types.js";
+import { ApiControllerObject, ApiResponse } from "#root/api/api.types.js";
 import { AuthLocals } from "#root/api/features/auth/middleware/token/token.middleware.types.js";
 import userService from "#root/api/features/auth/services/user/user.service.js";
 

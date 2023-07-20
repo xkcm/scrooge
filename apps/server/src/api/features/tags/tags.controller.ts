@@ -6,11 +6,7 @@ import {
 import { AuthLocals } from "#root/api/features/auth/middleware/token/token.middleware.types.js";
 
 import tagsService from "./services/tags/tags.service.js";
-import {
-  AddTagBody,
-  DeleteTagQuery,
-  ModifyTag,
-} from "./tags.schemas.js";
+import { AddTagBody, DeleteTagQuery, ModifyTag } from "./tags.schemas.js";
 
 export const tagsController = {
   async getTags(req, res: ApiResponse<AuthLocals>) {
@@ -47,7 +43,11 @@ export const tagsController = {
     const { tagLabel } = req.query;
     const payload = req.body;
 
-    const updatedTags = await tagsService.modifyUserTag(userId, tagLabel, payload);
+    const updatedTags = await tagsService.modifyUserTag(
+      userId,
+      tagLabel,
+      payload,
+    );
     res.json({ tags: updatedTags });
   },
 } satisfies ApiControllerObject;

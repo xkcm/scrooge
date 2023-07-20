@@ -9,13 +9,8 @@
       "request": "launch",
       "name": "Launch Program",
       "runtimeExecutable": "/home/xkcm/.nvm/versions/node/v17.5.0/bin/node",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-      "runtimeArgs": [
-        "-r",
-        "module-alias/register"
-      ],
+      "skipFiles": ["<node_internals>/**"],
+      "runtimeArgs": ["-r", "module-alias/register"],
       "env": {
         "NODE_ENV": "development"
       },

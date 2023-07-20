@@ -13,10 +13,7 @@ packageJson.imports = {
     Object.entries(tsconfigJson.compilerOptions.paths)
       .filter(([a]) => !IGNORED_ALIASES.includes(a))
       .map(([alias, [aliasRelativePath]]) => {
-        return [
-          alias,
-          "./" + path.join(outDir, aliasRelativePath),
-        ];
+        return [alias, "./" + path.join(outDir, aliasRelativePath)];
       }),
   ),
   ...CUSTOM_PATHS,

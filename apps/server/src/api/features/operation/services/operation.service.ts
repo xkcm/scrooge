@@ -11,7 +11,10 @@ import {
   InvalidOperationIdError,
 } from "../operation.errors.js";
 import { OperationService } from "./operation.service.types.js";
-import { createFullDayDatePrismaFilter, mapToPublicOperation } from "./operation.service.utils.js";
+import {
+  createFullDayDatePrismaFilter,
+  mapToPublicOperation,
+} from "./operation.service.utils.js";
 
 const PUBLIC_OPERATION_SELECT = {
   id: true,
@@ -28,38 +31,48 @@ const operationService: OperationService = {
       await tagsService.assertUserTags(ownerId, payload.tags);
     }
 
-    const createdOperation = await prismaClient.operation.create({
-      data: {
-        description: payload.description,
-        amount: payload.amount,
-        tags: payload.tags,
-        type,
-        owner: {
-          connect: {
-            id: ownerId,
+    const createdOperation = await prismaClient.operation
+      .create({
+        data: {
+          description: payload.description,
+          amount: payload.amount,
+          tags: payload.tags,
+          type,
+          owner: {
+            connect: {
+              id: ownerId,
+            },
           },
         },
-      },
-      select: PUBLIC_OPERATION_SELECT,
-    }).catch(createPrismaErrorParser({
-      P2025: UserWithGivenIdNotFoundError.withMetadata({ userId: ownerId }),
-    }));
+        select: PUBLIC_OPERATION_SELECT,
+      })
+      .catch(
+        createPrismaErrorParser({
+          P2025: UserWithGivenIdNotFoundError.withMetadata({ userId: ownerId }),
+        }),
+      );
 
     return mapToPublicOperation(createdOperation);
   },
 
   async getAllOperations(ownerId, filters = {}) {
-    const operations = await prismaClient.operation.findMany({
-      where: {
-        ...filters,
-        ownerId,
-      },
-      select: PUBLIC_OPERATION_SELECT,
-    }).catch(createPrismaErrorParser({
-      P2025: UserWithGivenIdNotFoundError.withMetadata({ userId: ownerId }),
-    }));
+    const operations = await prismaClient.operation
+      .findMany({
+        where: {
+          ...filters,
+          ownerId,
+        },
+        select: PUBLIC_OPERATION_SELECT,
+      })
+      .catch(
+        createPrismaErrorParser({
+          P2025: UserWithGivenIdNotFoundError.withMetadata({ userId: ownerId }),
+        }),
+      );
 
-    const parsedOperations = operations.map((operation) => mapToPublicOperation(operation));
+    const parsedOperations = operations.map((operation) =>
+      mapToPublicOperation(operation),
+    );
 
     return parsedOperations;
   },
@@ -91,10 +104,8 @@ const operationService: OperationService = {
       },
     });
 
-    const [
-      expenseAggregation,
-      incomeAggregation,
-    ] = await prismaClient.$transaction([expenseSumQuery, incomeSumQuery]);
+    const [expenseAggregation, incomeAggregation] =
+      await prismaClient.$transaction([expenseSumQuery, incomeSumQuery]);
 
     /* eslint-disable no-underscore-dangle */
     const expenseSum = +(expenseAggregation._sum.amount ?? 0);
@@ -110,11 +121,15 @@ const operationService: OperationService = {
   },
 
   async getOperationById(operationId) {
-    const operation = await prismaClient.operation.findFirstOrThrow({
-      where: { id: operationId },
-    }).catch(createPrismaErrorParser({
-      P2025: InvalidOperationIdError.withMetadata({ operationId }),
-    }));
+    const operation = await prismaClient.operation
+      .findFirstOrThrow({
+        where: { id: operationId },
+      })
+      .catch(
+        createPrismaErrorParser({
+          P2025: InvalidOperationIdError.withMetadata({ operationId }),
+        }),
+      );
 
     return mapToPublicOperation(operation);
   },

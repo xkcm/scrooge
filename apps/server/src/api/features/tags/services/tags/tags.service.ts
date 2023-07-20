@@ -14,12 +14,16 @@ import {
 
 const tagsService: TagsService = {
   async getUserTags(userId) {
-    const { definedTags } = await prismaClient.user.findFirstOrThrow({
-      where: { id: userId },
-      select: { definedTags: true },
-    }).catch(createPrismaErrorParser({
-      P2025: UserWithGivenIdNotFoundError.withMetadata({ userId }),
-    }));
+    const { definedTags } = await prismaClient.user
+      .findFirstOrThrow({
+        where: { id: userId },
+        select: { definedTags: true },
+      })
+      .catch(
+        createPrismaErrorParser({
+          P2025: UserWithGivenIdNotFoundError.withMetadata({ userId }),
+        }),
+      );
 
     return parseTags(definedTags);
   },
@@ -48,7 +52,9 @@ const tagsService: TagsService = {
 
   async deleteUserTag(userId, tagLabel) {
     const userTags = await this.getUserTags(userId);
-    const updatedTags = userTags.filter((userTag) => userTag.label !== tagLabel);
+    const updatedTags = userTags.filter(
+      (userTag) => userTag.label !== tagLabel,
+    );
 
     if (userTags.length === updatedTags.length) {
       return userTags;
@@ -69,7 +75,10 @@ const tagsService: TagsService = {
     const tags = Array.isArray(paramTags) ? paramTags : [paramTags];
     const userTags = await this.getUserTags(userId);
 
-    const newTags = findNewTags(userTags, tags.map((label) => ({ label })));
+    const newTags = findNewTags(
+      userTags,
+      tags.map((label) => ({ label })),
+    );
     if (newTags.length === 0) {
       return userTags;
     }
@@ -93,7 +102,9 @@ const tagsService: TagsService = {
 
   async modifyUserTag(userId, tagLabel, tagPayload) {
     const userTags = await this.getUserTags(userId);
-    const matchingTagIndex = userTags.findIndex((tag) => tag.label === tagLabel);
+    const matchingTagIndex = userTags.findIndex(
+      (tag) => tag.label === tagLabel,
+    );
 
     if (matchingTagIndex === -1) {
       throw new UndefinedTagError({

@@ -12,7 +12,7 @@ const sessionRedisService: SessionRedisService = {
   },
 
   async getAllSessionInfo(sessionId) {
-    const lastUsed = await this.getSessionInfo(sessionId, "last_used") || 0;
+    const lastUsed = (await this.getSessionInfo(sessionId, "last_used")) || 0;
     return {
       lastUsed: new Date(+lastUsed),
     };

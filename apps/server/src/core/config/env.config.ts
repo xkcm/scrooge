@@ -12,7 +12,7 @@ const fileName = `.env.${envMode}`;
 const envFilePath = path.resolve(
   fileURLToPath(import.meta.url),
   "../../../../",
-  fileName
+  fileName,
 );
 await assertPath(envFilePath);
 
@@ -23,7 +23,4 @@ if (error) {
 
 const config = EnvConfigSchema.parse(parsed);
 
-export {
-  config as env,
-  envMode,
-};
+export { config as env, envMode };

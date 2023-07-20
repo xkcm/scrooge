@@ -16,9 +16,11 @@ const CONSOLE_FORMAT = winston.format.combine(
 const logger = winston.createLogger();
 
 logger.level = "silly";
-logger.add(new winston.transports.Console({
-  format: CONSOLE_FORMAT,
-}));
+logger.add(
+  new winston.transports.Console({
+    format: CONSOLE_FORMAT,
+  }),
+);
 
 // TODO: Add file transport for prod mode
 export default logger;

@@ -1,6 +1,9 @@
 import { Prisma, User } from "@prisma/client";
 
-type RegisterUserPayload = Pick<Prisma.UserCreateInput, "email" | "password" | "username">;
+type RegisterUserPayload = Pick<
+  Prisma.UserCreateInput,
+  "email" | "password" | "username"
+>;
 
 export interface UserService {
   createUser(payload: RegisterUserPayload): Promise<User>;
@@ -9,7 +12,7 @@ export interface UserService {
 
   findUserById(
     userId: User["id"],
-    select?: Prisma.UserSelect
+    select?: Prisma.UserSelect,
   ): Promise<Partial<User>>;
 
   hashUserPassword(value: string): Promise<string>;

@@ -12,7 +12,14 @@ export interface TagsService {
 
   deleteUserTag(userId: User["id"], tag: Tag["label"]): Promise<Tag[]>;
 
-  assertUserTags(userId: User["id"], tags: Tag["label"] | Tag["label"][]): Promise<Tag[]>;
+  assertUserTags(
+    userId: User["id"],
+    tags: Tag["label"] | Tag["label"][],
+  ): Promise<Tag[]>;
 
-  modifyUserTag(userId: User["id"], tagLabel: Tag["label"], tagPayload: Partial<Tag>): Promise<Tag[]>;
+  modifyUserTag(
+    userId: User["id"],
+    tagLabel: Tag["label"],
+    tagPayload: Partial<Tag>,
+  ): Promise<Tag[]>;
 }

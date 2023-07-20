@@ -42,5 +42,7 @@ export interface TokenService {
 
   createRegistrationToken(tokenPayload: RegistrationTokenPayload): string;
 
-  decodeRegistrationToken(token: string): RegistrationTokenPayload & GenericTokenPayload;
+  decodeRegistrationToken(
+    token: string,
+  ): RegistrationTokenPayload & GenericTokenPayload;
 }

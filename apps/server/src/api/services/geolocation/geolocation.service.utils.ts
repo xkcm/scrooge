@@ -14,18 +14,23 @@ export const getGeolocationService = () => {
     throw new UnsupportedGeolocationServiceError({
       metadata: {
         geolocationService: "undefined",
-        supportedGeolocationServices: Object.keys(SUPPORTED_GEOLOCATION_SERVICES).join(", "),
+        supportedGeolocationServices: Object.keys(
+          SUPPORTED_GEOLOCATION_SERVICES,
+        ).join(", "),
       },
     });
   }
 
-  const definedGeolocationService = SUPPORTED_GEOLOCATION_SERVICES[env.GEOLOCATION_SERVICE];
+  const definedGeolocationService =
+    SUPPORTED_GEOLOCATION_SERVICES[env.GEOLOCATION_SERVICE];
 
   if (!definedGeolocationService) {
     throw new UnsupportedGeolocationServiceError({
       metadata: {
         geolocationService: env.GEOLOCATION_SERVICE,
-        supportedGeolocationServices: Object.keys(SUPPORTED_GEOLOCATION_SERVICES).join(", "),
+        supportedGeolocationServices: Object.keys(
+          SUPPORTED_GEOLOCATION_SERVICES,
+        ).join(", "),
       },
     });
   }

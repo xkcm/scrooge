@@ -21,12 +21,10 @@ type BuildUrlOptions = {
 
 const mailConfig = ConfigSchema.parse(config);
 
-export async function renderTemplate(options: BuildTemplateOptions): Promise<string> {
-  const {
-    templateFile,
-    template,
-    data,
-  } = options;
+export async function renderTemplate(
+  options: BuildTemplateOptions,
+): Promise<string> {
+  const { templateFile, template, data } = options;
 
   let rawTemplate = "";
 
@@ -53,6 +51,4 @@ export function buildUrl(base: string, options: BuildUrlOptions): string {
   return url.toString();
 }
 
-export {
-  mailConfig as config,
-};
+export { mailConfig as config };

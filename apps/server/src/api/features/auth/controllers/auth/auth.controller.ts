@@ -1,3 +1,5 @@
+import { schemas } from "@scrooge/shared";
+
 import { AuthLocals } from "#api:auth/middleware/token/token.middleware.types.js";
 import { env } from "#core/config/env.config.js";
 import {
@@ -6,12 +8,6 @@ import {
   ApiResponse,
 } from "#root/api/api.types.js";
 import { LoginAttemptFailedError } from "#root/api/features/auth/auth.errors.js";
-import {
-  BeginRegistrationBody,
-  LoginBody,
-  RefreshBody,
-  RegisterUser,
-} from "#root/api/features/auth/auth.schemas.js";
 import sessionService from "#root/api/features/auth/services/session/session.service.js";
 import tokenService from "#root/api/features/auth/services/token/token.service.js";
 import userService from "#root/api/features/auth/services/user/user.service.js";
@@ -21,8 +17,10 @@ import { bindObjectMethods } from "#root/core/utils/utils.js";
 import { prepareCreateSessionPayload } from "./auth.controller.utils.js";
 
 const authController = bindObjectMethods({
-
-  async beginRegistration(req: ApiRequest<BeginRegistrationBody>, res: ApiResponse) {
+  async beginRegistration(
+    req: ApiRequest<schemas.auth.BeginRegistrationBody>,
+    res: ApiResponse<schemas.auth.BeginRegistrationResponse>,
+  ) {
     const { email } = req.body;
     const token = tokenService.createGenericToken({ email });
 
@@ -32,8 +30,12 @@ const authController = bindObjectMethods({
   },
 
   async register(
-    req: ApiRequest<RegisterUser.BODY, {}, RegisterUser.QUERY>,
-    res: ApiResponse,
+    req: ApiRequest<
+      schemas.auth.RegisterUserBody,
+      {},
+      schemas.auth.RegisterUserQuery
+    >,
+    res: ApiResponse<schemas.auth.RegisterUserResponse>,
     next,
   ) {
     const decodedToken = tokenService.decodeGenericToken<{ email: string }>(
@@ -47,7 +49,7 @@ const authController = bindObjectMethods({
       username: req.body.username,
     });
 
-    const newReq = (req as unknown) as ApiRequest<LoginBody>;
+    const newReq = req as unknown as ApiRequest<schemas.auth.LoginBody>;
     newReq.body = {
       email: decodedToken.email,
       password: req.body.password,
@@ -56,21 +58,32 @@ const authController = bindObjectMethods({
     return this.login(newReq, res, next);
   },
 
-  async login(req: ApiRequest<LoginBody>, res) {
-    const user = await userService.findUserByEmail(req.body.email).catch((error) => {
-      if (error?.cause?.code === "P2025") {
-        throw new LoginAttemptFailedError();
-      }
-      throw error;
-    });
+  async login(
+    req: ApiRequest<schemas.auth.LoginBody>,
+    res: ApiResponse<schemas.auth.LoginResponse>,
+  ) {
+    const user = await userService
+      .findUserByEmail(req.body.email)
+      .catch((error) => {
+        if (error?.cause?.code === "P2025") {
+          throw new LoginAttemptFailedError();
+        }
+        throw error;
+      });
 
-    const passwordMatches = await userService.compareUserPassword(req.body.password, user.password);
+    const passwordMatches = await userService.compareUserPassword(
+      req.body.password,
+      user.password,
+    );
     if (!passwordMatches) {
       throw new LoginAttemptFailedError();
     }
 
     const createSessionPayload = await prepareCreateSessionPayload(req);
-    const session = await sessionService.createSession(user.id, createSessionPayload);
+    const session = await sessionService.createSession(
+      user.id,
+      createSessionPayload,
+    );
 
     const tokenPayload = {
       userId: user.id,
@@ -94,7 +107,10 @@ const authController = bindObjectMethods({
     });
   },
 
-  async refresh(req: ApiRequest<RefreshBody>, res) {
+  async refresh(
+    req: ApiRequest<schemas.auth.RefreshBody>,
+    res: ApiResponse<schemas.auth.RefreshResponse>,
+  ) {
     // todo: refactor refresh flow
     const refreshToken = req.cookies?.refreshToken;
 
@@ -106,10 +122,25 @@ const authController = bindObjectMethods({
       sessionId,
     });
 
-    res.json({ authToken, refreshToken });
+    res.cookie("authToken", authToken, {
+      httpOnly: true,
+      domain: env.BACKEND_DOMAIN,
+    });
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      domain: env.BACKEND_DOMAIN,
+    });
+
+    return res.json({
+      isAuthTokenSet: true,
+      isRefreshTokenSet: true,
+    });
   },
 
-  async getAuthState(req, res: ApiResponse<AuthLocals<"safe">>) {
+  async getAuthState(
+    req,
+    res: ApiResponse<schemas.auth.GetAuthStateResponse, AuthLocals<"safe">>,
+  ) {
     if (!res.locals.auth.isAuthenticated) {
       return res.status(401).json({
         isAuthenticated: false,

@@ -4,7 +4,9 @@ import { PublicOperation } from "./operation.service.types.js";
 
 export const mapToPublicOperation = <
   T extends { [K in keyof PublicOperation]: Operation[K] },
->(operation: T): PublicOperation => ({
+>(
+  operation: T,
+): PublicOperation => ({
   ...operation,
   amount: operation.amount.toNumber(),
   createdAt: operation.createdAt.getTime(),

@@ -22,11 +22,7 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "ignorePatterns": [
-    ".eslintrc*",
-    "vite.config.ts",
-    "**/dist/**/*"
-  ],
+  "ignorePatterns": [".eslintrc*", "vite.config.ts", "**/dist/**/*"],
   "rules": {
     "curly": ["error", "all"],
     "no-console": ["error", { "allow": ["info", "warn", "error"] }],

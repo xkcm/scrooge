@@ -45,5 +45,5 @@ export function bindObjectMethods<T extends Record<string | symbol, any>>(
 export function createErrorParser(RethrownError: Constructor<BetterError>) {
   return (error: any) => {
     throw new RethrownError({ cause: error });
-  }
+  };
 }

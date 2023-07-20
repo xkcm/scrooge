@@ -7,7 +7,11 @@ import { InvalidTokenError } from "./token.service.errors.js";
 import { TokenService } from "./token.service.types.js";
 
 const tokenService: TokenService = {
-  createGenericToken(tokenPayload, additionalClaims = {}, key = env.AUTH_TOKEN_SECRET): string {
+  createGenericToken(
+    tokenPayload,
+    additionalClaims = {},
+    key = env.AUTH_TOKEN_SECRET,
+  ): string {
     return jwt.sign(tokenPayload, key, {
       issuer: env.SERVER_APP_NAME,
       audience: env.SERVER_APP_NAME,
@@ -48,9 +52,13 @@ const tokenService: TokenService = {
   },
 
   createRefreshToken(tokenPayload) {
-    return this.createGenericToken(tokenPayload, {
-      subject: tokenPayload.userId,
-    }, env.REFRESH_TOKEN_SECRET);
+    return this.createGenericToken(
+      tokenPayload,
+      {
+        subject: tokenPayload.userId,
+      },
+      env.REFRESH_TOKEN_SECRET,
+    );
   },
 
   decodeRefreshToken(token) {
@@ -58,9 +66,13 @@ const tokenService: TokenService = {
   },
 
   createRegistrationToken(tokenPayload) {
-    return this.createGenericToken(tokenPayload, {
-      expiresIn: serverConfig.service_configs.token.registration_expire_time,
-    }, env.REGISTRATION_TOKEN_SECRET);
+    return this.createGenericToken(
+      tokenPayload,
+      {
+        expiresIn: serverConfig.service_configs.token.registration_expire_time,
+      },
+      env.REGISTRATION_TOKEN_SECRET,
+    );
   },
 
   decodeRegistrationToken(token) {

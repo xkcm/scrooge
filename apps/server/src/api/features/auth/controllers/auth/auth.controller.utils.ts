@@ -10,7 +10,9 @@ export async function prepareCreateSessionPayload(req: ApiRequest) {
   };
 
   if (env.ENABLE_SESSION_GEOLOCATION) {
-    const geolocation = await geolocationService.getGeolocation(createSessionPayload.sourceIp);
+    const geolocation = await geolocationService.getGeolocation(
+      createSessionPayload.sourceIp,
+    );
     if (geolocation !== null) {
       createSessionPayload.geolocation = [geolocation.lat, geolocation.long];
     }

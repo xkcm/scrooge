@@ -26,7 +26,9 @@ export class ExpressIsNotInitializedError extends BetterError {}
 @withCode("core.server.database_unavailable")
 @withMessage("Failed to connect to %{metadata.databaseName} database")
 @withMetadata({ databaseName: env.DATABASE_NAME })
-export class DatabaseUnavailableError extends BetterError<{ databaseName?: string }> {}
+export class DatabaseUnavailableError extends BetterError<{
+  databaseName?: string;
+}> {}
 
 @withCode("core.server.redis_unavailable")
 @withMessage("Failed to connect to Redis")

@@ -11,5 +11,8 @@
   ],
   "scripts": {
     "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.0.0"
   }
 }

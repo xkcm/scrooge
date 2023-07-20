@@ -6,16 +6,12 @@ import { Constructor } from "#core/utils/utils.types.js";
 import { UnknownPrismaError } from "./prisma.errors.js";
 
 export function parsePrismaError<
-  T extends Constructor<BetterError, ConstructorParameters<typeof BetterError>>
->(
-  error: any,
-  errorCodeMap: Record<string, T>,
-) {
-  const ErrorClass = (
-    errorCodeMap[error.code || error.errorCode]
-      ?? errorCodeMap?.default
-      ?? UnknownPrismaError
-  );
+  T extends Constructor<BetterError, ConstructorParameters<typeof BetterError>>,
+>(error: any, errorCodeMap: Record<string, T>) {
+  const ErrorClass =
+    errorCodeMap[error.code || error.errorCode] ??
+    errorCodeMap?.default ??
+    UnknownPrismaError;
 
   if (!(ErrorClass.prototype instanceof ApiError)) {
     return new ErrorClass({ cause: error });

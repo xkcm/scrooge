@@ -1,12 +1,8 @@
-import { createTransport,SendMailOptions } from "nodemailer";
+import { createTransport, SendMailOptions } from "nodemailer";
 
 import { env } from "#core/config/env.config.js";
 
-import {
-  buildUrl,
-  config,
-  renderTemplate,
-} from "./mail.service.utils.js";
+import { buildUrl, config, renderTemplate } from "./mail.service.utils.js";
 
 const transporter = createTransport({
   host: env.MAIL_HOST,
@@ -23,7 +19,10 @@ const mailService = {
     return true;
   },
 
-  async sendConfirmRegistrationMail(email: string, registrationToken: string): Promise<boolean> {
+  async sendConfirmRegistrationMail(
+    email: string,
+    registrationToken: string,
+  ): Promise<boolean> {
     const { mailConfigurations } = config;
 
     const url = buildUrl(env.FRONTEND_URL, {
@@ -46,7 +45,6 @@ const mailService = {
       from: env.MAIL_FROM,
     });
   },
-
 };
 
 export default mailService;

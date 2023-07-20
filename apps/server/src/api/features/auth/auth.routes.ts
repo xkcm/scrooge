@@ -1,15 +1,13 @@
+import { schemas } from "@scrooge/shared";
 import express, { Router } from "express";
 
 import { wrapExpressErrorHandler } from "#root/api/errors/errors.utils.js";
-import { createRequestBodyVerifier, createRequestParamsVerifier, createRequestQueryVerifier } from "#root/api/middleware/verifier.middleware.js";
-
 import {
-  BeginRegistrationSchema,
-  InvalidateSessionSchema,
-  LoginSchema,
-  RefreshSchema,
-  RegisterUserSchema,
-} from "./auth.schemas.js";
+  createRequestBodyVerifier,
+  createRequestParamsVerifier,
+  createRequestQueryVerifier,
+} from "#root/api/middleware/verifier.middleware.js";
+
 import authController from "./controllers/auth/auth.controller.js";
 import { sessionController } from "./controllers/session/session.controller.js";
 import { haltAuthenticatedUsers } from "./guards/auth.guards.js";
@@ -26,27 +24,29 @@ authRouter.post(
   "/register/begin",
   tokenMiddleware.safe,
   haltAuthenticatedUsers,
-  createRequestBodyVerifier({ schema: BeginRegistrationSchema }),
+  createRequestBodyVerifier({
+    schema: schemas.auth.BeginRegistrationBodySchema,
+  }),
   wrapExpressErrorHandler(authController.beginRegistration),
 );
 authRouter.post(
   "/register",
   tokenMiddleware.safe,
   haltAuthenticatedUsers,
-  createRequestBodyVerifier({ schema: RegisterUserSchema.BODY }),
-  createRequestQueryVerifier({ schema: RegisterUserSchema.QUERY }),
+  createRequestBodyVerifier({ schema: schemas.auth.RegisterUserBodySchema }),
+  createRequestQueryVerifier({ schema: schemas.auth.RegisterUserQuerySchema }),
   wrapExpressErrorHandler(authController.register),
 );
 authRouter.post(
   "/login",
   tokenMiddleware.safe,
   haltAuthenticatedUsers,
-  createRequestBodyVerifier({ schema: LoginSchema }),
+  createRequestBodyVerifier({ schema: schemas.auth.LoginBodySchema }),
   wrapExpressErrorHandler(authController.login),
 );
 authRouter.post(
   "/refresh",
-  createRequestBodyVerifier({ schema: RefreshSchema }),
+  createRequestBodyVerifier({ schema: schemas.auth.RefreshBodySchema }),
   wrapExpressErrorHandler(authController.refresh),
 );
 
@@ -58,7 +58,9 @@ authRouter.get(
 authRouter.delete(
   "/session/:sessionId",
   tokenMiddleware.strict,
-  createRequestParamsVerifier({ schema: InvalidateSessionSchema }),
+  createRequestParamsVerifier({
+    schema: schemas.auth.InvalidateSessionBodySchema,
+  }),
   wrapExpressErrorHandler(sessionController.invalidateSession),
 );
 authRouter.patch(

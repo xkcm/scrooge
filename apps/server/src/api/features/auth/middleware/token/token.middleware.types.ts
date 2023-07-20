@@ -12,13 +12,17 @@ type AuthenticatedLocals = {
   userId: User["id"];
 };
 
-export type AuthLocals<TokenValidationMode extends "safe" | "strict" = "strict"> = {
+export type AuthLocals<
+  TokenValidationMode extends "safe" | "strict" = "strict",
+> = {
   auth: TokenValidationMode extends "strict"
     ? AuthenticatedLocals
-    : (AuthenticatedLocals | {
-      error: ApiError;
-      isAuthenticated: false;
-    });
+    :
+        | AuthenticatedLocals
+        | {
+            error: ApiError;
+            isAuthenticated: false;
+          };
 };
 
 export type UserDataLocals = {

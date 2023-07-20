@@ -2,10 +2,17 @@ import express, { Router } from "express";
 
 import { wrapExpressErrorHandler } from "#root/api/errors/errors.utils.js";
 import tokenMiddleware from "#root/api/features/auth/middleware/token/token.middleware.js";
-import { createRequestBodyVerifier, createRequestQueryVerifier } from "#root/api/middleware/verifier.middleware.js";
+import {
+  createRequestBodyVerifier,
+  createRequestQueryVerifier,
+} from "#root/api/middleware/verifier.middleware.js";
 
 import tagsController from "./tags.controller.js";
-import { AddTagSchema, DeleteTagSchema, ModifyTagSchema } from "./tags.schemas.js";
+import {
+  AddTagSchema,
+  DeleteTagSchema,
+  ModifyTagSchema,
+} from "./tags.schemas.js";
 
 const tagsRouter: Router = express.Router();
 

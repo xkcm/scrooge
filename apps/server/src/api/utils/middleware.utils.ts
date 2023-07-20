@@ -1,4 +1,8 @@
-import { ApiErrorHandler, ApiHandler, SafeApiMiddleware } from "#root/api/api.types.js";
+import {
+  ApiErrorHandler,
+  ApiHandler,
+  SafeApiMiddleware,
+} from "#root/api/api.types.js";
 
 type WrapMiddlewareWithSafeVariantOptions = {
   strictHandler: ApiHandler;
@@ -8,10 +12,7 @@ type WrapMiddlewareWithSafeVariantOptions = {
 export const wrapMiddlewareWithSafeVariant = (
   options: WrapMiddlewareWithSafeVariantOptions,
 ): SafeApiMiddleware => {
-  const {
-    strictHandler,
-    errorCallback,
-  } = options;
+  const { strictHandler, errorCallback } = options;
 
   const safeHandler: ApiHandler = async (req, res, next) => {
     const mockedNext = (possibleError?: any) => {
