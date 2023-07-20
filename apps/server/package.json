@@ -12,9 +12,9 @@
     "dev:run": "SCROOGE_CWD=$PWD NODE_ENV=development node --loader tsx src/app.ts",
     "dev:build": "sh ./devtools/dev:build.sh",
     "dev:watch": "nodemon -x \"pnpm dev:run\" -w \"./src/**/*\" -w \"../shared/src/**/*\" -e \"ts js json\"",
-    "migrate": "dotenv -e .env.dev -- pnpm exec prisma migrate dev --name postgress-init",
-    "migrate/reset": "rm -rf ./prisma/migrations && pnpm dev:migrate",
-    "generate-prisma-client": "dotenv -e .env.dev -- pnpm exec prisma generate",
+    "dev:migrate": "dotenv -e .env.dev -- pnpm exec prisma migrate dev --name postgress-init",
+    "dev:migrate/reset": "rm -rf ./prisma/migrations && pnpm dev:migrate",
+    "dev:generate-prisma-client": "dotenv -e .env.dev -- pnpm exec prisma generate",
     "dev:integrate-path-aliases": "node ./devtools/dev:integrate-path-aliases.js",
     "lint": "pnpm exec eslint .",
     "lint:fix": "pnpm exec eslint . --fix"
