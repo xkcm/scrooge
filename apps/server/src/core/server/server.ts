@@ -9,7 +9,8 @@ import morganMiddleware from "#core/middleware/morgan.middleware.js";
 import prismaClient from "#core/prisma/prisma.js";
 import redisClient from "#core/redis/redis.js";
 import { apiRouter } from "#root/api/api.js";
-import { HttpServerNotRunningError } from "./server.errors.js";
+import { createPrismaErrorParser } from "#core/prisma/prisma.utils.js";
+import { DatabaseUnavailableError, HttpServerNotRunningError } from "./server.errors.js";
 
 let httpServer: ReturnType<typeof express["application"]["listen"]> | undefined;
 const expressApp = express();
@@ -31,8 +32,11 @@ export async function bootstrap() {
 }
 
 export async function assertDatabaseConnection() {
-  await prismaClient.$connect();
+  await prismaClient.$connect().catch(createPrismaErrorParser({
+    P1001: DatabaseUnavailableError,
+  }));
   logger.info("PostgreSQL connection estabilished");
+
   await redisClient.connect();
   logger.info("Redis connection estabilished");
 }

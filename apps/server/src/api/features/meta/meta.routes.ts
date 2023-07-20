@@ -1,7 +1,7 @@
-import express from "express";
+import express, { Router } from "express";
 import metaController from "./meta.controller.js";
 
-const metaRouter = express.Router();
+const metaRouter: Router = express.Router();
 
 metaRouter.get("/config", metaController.getServerConfig);
 

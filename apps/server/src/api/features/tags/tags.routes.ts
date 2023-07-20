@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Router } from "express";
 
 import { createRequestBodyVerifier, createRequestQueryVerifier } from "#root/api/middleware/verifier.middleware.js";
 import { wrapExpressErrorHandler } from "#root/api/errors/errors.utils.js";
@@ -7,7 +7,7 @@ import tokenMiddleware from "#root/api/features/auth/middleware/token/token.midd
 import tagsController from "./tags.controller.js";
 import { AddTagSchema, DeleteTagSchema, ModifyTagSchema } from "./tags.schemas.js";
 
-const tagsRouter = express.Router();
+const tagsRouter: Router = express.Router();
 
 tagsRouter.get(
   "/",

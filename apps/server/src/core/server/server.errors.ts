@@ -2,6 +2,7 @@ import {
   BetterError,
   withCode,
   withMessage,
+  withMetadata,
 } from "@xkcm/better-errors";
 
 @withCode("core.server.failed_database_check")
@@ -19,3 +20,8 @@ export class HttpServerNotRunningError extends BetterError {}
 @withCode("core.server.express_is_not_initialized")
 @withMessage("Express instance has not been yet initialized")
 export class ExpressIsNotInitializedError extends BetterError {}
+
+@withCode("core.server.database_unavailable")
+@withMessage("Failed to connect to %{metadata.databaseName} database")
+@withMetadata({ databaseName: "PostgreSQL" })
+export class DatabaseUnavailableError extends BetterError<{ databaseName?: string }> {}

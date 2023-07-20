@@ -1,6 +1,6 @@
 import { User, Session } from "@prisma/client";
 
-interface SessionInputInfo {
+export interface SessionInputInfo {
   geolocation?: [number, number];
   agent?: string;
   sourceIp?: string;

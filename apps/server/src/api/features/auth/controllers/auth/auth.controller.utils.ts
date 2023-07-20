@@ -1,10 +1,10 @@
+import { SessionInputInfo } from "#api:auth/services/session/session.service.types.js";
 import { env } from "#core/config/env.config.js";
 import { ApiRequest } from "#root/api/api.types.js";
-import sessionService from "#root/api/features/auth/services/session/session.service.js";
 import geolocationService from "#root/api/services/geolocation/geolocation.service.js";
 
 export async function prepareCreateSessionPayload(req: ApiRequest) {
-  const createSessionPayload: Parameters<typeof sessionService["createSession"]>[1] = {
+  const createSessionPayload: SessionInputInfo = {
     sourceIp: req.ip,
     agent: req.headers["user-agent"],
   };

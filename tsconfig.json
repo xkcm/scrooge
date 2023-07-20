@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "lib": ["ESNext"],
-    "preserveSymlinks": true,
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "target": "ES2017",

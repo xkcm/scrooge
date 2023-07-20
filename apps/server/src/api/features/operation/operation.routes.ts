@@ -1,7 +1,12 @@
 import express from "express";
+import type { Router } from "express";
 
 import { wrapExpressErrorHandler } from "#root/api/errors/errors.utils.js";
-import { createRequestBodyVerifier, createRequestParamsVerifier, createRequestQueryVerifier } from "#root/api/middleware/verifier.middleware.js";
+import {
+  createRequestBodyVerifier, 
+  createRequestParamsVerifier,
+  createRequestQueryVerifier,
+} from "#root/api/middleware/verifier.middleware.js";
 
 import tokenMiddleware from "#root/api/features/auth/middleware/token/token.middleware.js";
 import operationController from "./operation.controller.js";
@@ -12,7 +17,7 @@ import {
   OperationDateFilterSchema,
 } from "./operation.schemas.js";
 
-const operationRouter = express.Router();
+const operationRouter: Router = express.Router();
 
 operationRouter.get(
   "/",

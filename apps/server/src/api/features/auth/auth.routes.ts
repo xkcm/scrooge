@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Router } from "express";
 
 import { createRequestBodyVerifier, createRequestParamsVerifier, createRequestQueryVerifier } from "#root/api/middleware/verifier.middleware.js";
 import { wrapExpressErrorHandler } from "#root/api/errors/errors.utils.js";
@@ -16,7 +16,7 @@ import { sessionController } from "./controllers/session/session.controller.js";
 import { haltAuthenticatedUsers } from "./guards/auth.guards.js";
 import tokenMiddleware from "./middleware/token/token.middleware.js";
 
-const authRouter = express.Router();
+const authRouter: Router = express.Router();
 
 authRouter.get(
   "/state",

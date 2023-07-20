@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Router } from "express";
 
 import authRouter from "#api:auth/auth.routes.js";
 import metaRouter from "./features/meta/meta.routes.js";
@@ -9,7 +9,7 @@ import userRouter from "./features/user/user.routes.js";
 import { GLOBAL_ERROR_HANDLER } from "./errors/errors.utils.js";
 import { ENDPOINT_NOT_FOUND_HANDLER } from "./utils/not-found-handler.util.js";
 
-const apiRouter = express.Router();
+const apiRouter: Router = express.Router();
 apiRouter.use(express.json());
 
 apiRouter.use("/meta", metaRouter);

@@ -4,12 +4,9 @@ importers:
 
   .:
     dependencies:
-      '@prisma/client':
-        specifier: ^5.0.0
-        version: 5.0.0(prisma@5.0.0)
       '@xkcm/better-errors':
-        specifier: ^2.1.1
-        version: 2.1.1
+        specifier: ^2.1.2
+        version: 2.1.2
     devDependencies:
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.1.0
@@ -1333,8 +1330,8 @@ packages:
       - vue
     dev: false
 
-  /@xkcm/better-errors@2.1.1:
-    resolution: {integrity: sha512-GCDlNKzO2KJPtpVb6rJlhAe9OkLrNzhsbbD4q6RGhqzQLfJ3WLueoK6Czt0yFhl3Uvv/IyI5yoGt7g2+Ln/NiA==}
+  /@xkcm/better-errors@2.1.2:
+    resolution: {integrity: sha512-2D5iPQu8yYSfpP2vOVBMs2z9DYobm6UhP9RT38ruYmjNH+qd3Dbv59fDuihp7xTrYHA6oIeWY9RrDJIMG54G+w==}
     dependencies:
       reflect-metadata: 0.1.13
     dev: false

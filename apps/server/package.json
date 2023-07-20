@@ -66,6 +66,7 @@
     "#api:auth/*": "./dist/api/features/auth/*",
     "#api/*": "./dist/api/*",
     "#root/*": "./dist/*",
-    "#assets/*": "./dist/assets/*"
+    "#assets/*": "./dist/assets/*",
+    "#shared/*": "./dist/shared/*"
   }
 }
