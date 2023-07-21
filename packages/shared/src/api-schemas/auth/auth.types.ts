@@ -18,7 +18,6 @@ export type LoginBody = z.infer<typeof LoginBodySchema>;
 export type RefreshBody = z.infer<typeof RefreshBodySchema>;
 
 // Response types
-export type RegisterUserResponse = LoginResponse;
 export type BeginRegistrationResponse = {
   mailSent: boolean;
 };
@@ -26,6 +25,7 @@ export type LoginResponse = {
   isAuthTokenSet: boolean;
   isRefreshTokenSet: boolean;
 };
+export type RegisterUserResponse = LoginResponse;
 export type RefreshResponse = LoginResponse;
 export type GetAuthStateResponse =
   | {

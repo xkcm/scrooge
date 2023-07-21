@@ -41,17 +41,7 @@
       "1tbs",
       { "allowSingleLine": false }
     ],
-    "@typescript-eslint/indent": [
-      "error",
-      2,
-      {
-        "ignoredNodes": [
-          "TSTypeParameterInstantiation",
-          "TSIntersectionType",
-          "FunctionExpression[params]:has(Identifier[decorators])"
-        ]
-      }
-    ],
+    "@typescript-eslint/indent": "off",
     "import/no-named-as-default": 0,
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error"

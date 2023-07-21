@@ -1,3 +1,5 @@
+import { schemas } from "@scrooge/shared";
+
 import {
   ApiControllerObject,
   ApiRequest,
@@ -5,18 +7,12 @@ import {
 } from "#root/api/api.types.js";
 import { AuthLocals } from "#root/api/features/auth/middleware/token/token.middleware.types.js";
 
-import {
-  AddOperationBody,
-  DeleteOperationParams,
-  ModifyOperation,
-  OperationDateFilter,
-} from "./operation.schemas.js";
 import operationService from "./services/operation.service.js";
 
 export const operationController = {
   async addExpense(
-    req: ApiRequest<AddOperationBody>,
-    res: ApiResponse<AuthLocals>,
+    req: ApiRequest<schemas.operation.AddOperationBody>,
+    res: ApiResponse<schemas.operation.PublicOperation, AuthLocals>,
   ) {
     const { userId } = res.locals.auth;
 
@@ -30,8 +26,8 @@ export const operationController = {
   },
 
   async addIncome(
-    req: ApiRequest<AddOperationBody>,
-    res: ApiResponse<AuthLocals>,
+    req: ApiRequest<schemas.operation.AddOperationBody>,
+    res: ApiResponse<schemas.operation.PublicOperation, AuthLocals>,
   ) {
     const { userId } = res.locals.auth;
 
@@ -45,8 +41,8 @@ export const operationController = {
   },
 
   async getOperations(
-    req: ApiRequest<{}, {}, OperationDateFilter>,
-    res: ApiResponse<AuthLocals>,
+    req: ApiRequest<{}, {}, schemas.operation.GetOperationsQuery>,
+    res: ApiResponse<schemas.operation.PublicOperation[], AuthLocals>,
   ) {
     const { userId } = res.locals.auth;
     const { from, to } = req.query;
@@ -61,8 +57,8 @@ export const operationController = {
   },
 
   async deleteOperation(
-    req: ApiRequest<{}, DeleteOperationParams>,
-    res: ApiResponse<AuthLocals>,
+    req: ApiRequest<{}, schemas.operation.DeleteOperationParams>,
+    res: ApiResponse<schemas.operation.DeleteOperationResponse, AuthLocals>,
   ) {
     const { operationId } = req.params;
     const { userId } = res.locals.auth;
@@ -76,8 +72,11 @@ export const operationController = {
   },
 
   async modifyOperation(
-    req: ApiRequest<ModifyOperation.BODY, ModifyOperation.PARAMS>,
-    res: ApiResponse<AuthLocals>,
+    req: ApiRequest<
+      schemas.operation.ModifyOperationBody,
+      schemas.operation.ModifyOperationParams
+    >,
+    res: ApiResponse<schemas.operation.PublicOperation, AuthLocals>,
   ) {
     const { userId } = res.locals.auth;
     const { operationId } = req.params;
@@ -92,8 +91,8 @@ export const operationController = {
   },
 
   async getOperationsSum(
-    req: ApiRequest<{}, {}, OperationDateFilter>,
-    res: ApiResponse<AuthLocals>,
+    req: ApiRequest<{}, {}, schemas.operation.GetOperationsQuery>,
+    res: ApiResponse<schemas.operation.GetOperationsSumResponse, AuthLocals>,
   ) {
     const { userId } = res.locals.auth;
     const { from, to } = req.query;

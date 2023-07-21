@@ -1,6 +1,6 @@
+import { utils } from "@scrooge/shared";
+import { NumericStringSchema } from "@scrooge/shared/dist/api-schemas/api-schemas.utils.js";
 import { z } from "zod";
-
-import { NumericStringSchema } from "#core/utils/schemas.utils.js";
 
 const SEMANTIC_VERSION_REGEX =
   /(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?/gm;
@@ -11,7 +11,7 @@ export const EnvConfigSchema = z
   .object({
     APP_NAME: z.string(),
     SERVER_APP_NAME: z.string(),
-    PORT: NumericStringSchema,
+    PORT: utils.schema.NumericStringSchema,
     DATABASE_NAME: z.string(),
     FRONTEND_URL: z.string().url(),
     BACKEND_DOMAIN: z.string(),

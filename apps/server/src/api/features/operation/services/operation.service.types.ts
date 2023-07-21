@@ -1,4 +1,5 @@
 import { Operation, Prisma } from "@prisma/client";
+import { schemas } from "@scrooge/shared";
 
 export interface OperationService {
   addOperation(
@@ -10,7 +11,7 @@ export interface OperationService {
     > & {
       tags?: Operation["tags"];
     },
-  ): Promise<PublicOperation>;
+  ): Promise<schemas.operation.PublicOperation>;
 
   getAllOperations(
     ownerId: Operation["ownerId"],
@@ -18,15 +19,17 @@ export interface OperationService {
       NonNullable<Prisma.OperationFindManyArgs["where"]>,
       "ownerId"
     >,
-  ): Promise<PublicOperation[]>;
+  ): Promise<schemas.operation.PublicOperation[]>;
 
   getOperationsByDate(
     ownerId: Operation["ownerId"],
     from: number,
     to: number,
-  ): Promise<PublicOperation[]>;
+  ): Promise<schemas.operation.PublicOperation[]>;
 
-  getOperationById(operationId: Operation["id"]): Promise<PublicOperation>;
+  getOperationById(
+    operationId: Operation["id"],
+  ): Promise<schemas.operation.PublicOperation>;
 
   deleteOperation(
     operationId: Operation["id"],
@@ -41,19 +44,11 @@ export interface OperationService {
     > & {
       tags?: Operation["tags"];
     },
-  ): Promise<PublicOperation>;
+  ): Promise<schemas.operation.PublicOperation>;
 
   getOperationsSum(
     ownerId: Operation["ownerId"],
     from: number,
     to: number,
-  ): Promise<{
-    incomeSum: number;
-    expenseSum: number;
-  }>;
+  ): Promise<schemas.operation.GetOperationsSumResponse>;
 }
-
-export type PublicOperation = Pick<Operation, "id" | "tags" | "description"> & {
-  amount: number;
-  createdAt: number;
-};

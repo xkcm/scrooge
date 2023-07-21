@@ -1,12 +1,11 @@
 import { Operation } from "@prisma/client";
-
-import { PublicOperation } from "./operation.service.types.js";
+import { schemas } from "@scrooge/shared";
 
 export const mapToPublicOperation = <
-  T extends { [K in keyof PublicOperation]: Operation[K] },
+  T extends { [K in keyof schemas.operation.PublicOperation]: Operation[K] },
 >(
   operation: T,
-): PublicOperation => ({
+): schemas.operation.PublicOperation => ({
   ...operation,
   amount: operation.amount.toNumber(),
   createdAt: operation.createdAt.getTime(),

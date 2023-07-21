@@ -67,7 +67,8 @@
     "watch": [
       "./src/**/*",
       "../../packages/shared/dist/**/*"
-    ]
+    ],
+    "delay": 500
   },
   "imports": {
     "#core/*": "./dist/core/*",

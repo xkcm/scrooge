@@ -244,6 +244,9 @@ importers:
       '@prisma/client':
         specifier: ^5.0.0
         version: 5.0.0(prisma@5.0.0)
+      moment:
+        specifier: ^2.29.4
+        version: 2.29.4
 
 packages:
 

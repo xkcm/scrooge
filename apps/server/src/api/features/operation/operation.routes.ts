@@ -1,3 +1,4 @@
+import { schemas } from "@scrooge/shared";
 import type { Router } from "express";
 import express from "express";
 
@@ -10,12 +11,6 @@ import {
 } from "#root/api/middleware/verifier.middleware.js";
 
 import operationController from "./operation.controller.js";
-import {
-  AddOperationSchema,
-  DeleteOperationSchema,
-  ModifyOperationSchema,
-  OperationDateFilterSchema,
-} from "./operation.schemas.js";
 
 const operationRouter: Router = express.Router();
 
@@ -23,7 +18,7 @@ operationRouter.get(
   "/",
   tokenMiddleware.strict,
   createRequestQueryVerifier({
-    schema: OperationDateFilterSchema,
+    schema: schemas.operation.GetOperationsQuerySchema,
     allowEmptyObject: true,
   }),
   wrapExpressErrorHandler(operationController.getOperations),
@@ -31,21 +26,27 @@ operationRouter.get(
 operationRouter.delete(
   "/:operationId",
   tokenMiddleware.strict,
-  createRequestParamsVerifier({ schema: DeleteOperationSchema }),
+  createRequestParamsVerifier({
+    schema: schemas.operation.DeleteOperationParamsSchema,
+  }),
   wrapExpressErrorHandler(operationController.deleteOperation),
 );
 operationRouter.put(
   "/:operationId",
   tokenMiddleware.strict,
-  createRequestBodyVerifier({ schema: ModifyOperationSchema.BODY }),
-  createRequestParamsVerifier({ schema: ModifyOperationSchema.PARAMS }),
+  createRequestBodyVerifier({
+    schema: schemas.operation.ModifyOperationBodySchema,
+  }),
+  createRequestParamsVerifier({
+    schema: schemas.operation.ModifyOperationParamsSchema,
+  }),
   wrapExpressErrorHandler(operationController.modifyOperation),
 );
 operationRouter.get(
   "/sum",
   tokenMiddleware.strict,
   createRequestQueryVerifier({
-    schema: OperationDateFilterSchema,
+    schema: schemas.operation.GetOperationsQuerySchema,
     allowEmptyObject: true,
   }),
   wrapExpressErrorHandler(operationController.getOperationsSum),
@@ -54,13 +55,17 @@ operationRouter.get(
 operationRouter.post(
   "/expense/add",
   tokenMiddleware.strict,
-  createRequestBodyVerifier({ schema: AddOperationSchema }),
+  createRequestBodyVerifier({
+    schema: schemas.operation.AddOperationBodySchema,
+  }),
   wrapExpressErrorHandler(operationController.addExpense),
 );
 operationRouter.post(
   "/income/add",
   tokenMiddleware.strict,
-  createRequestBodyVerifier({ schema: AddOperationSchema }),
+  createRequestBodyVerifier({
+    schema: schemas.operation.AddOperationBodySchema,
+  }),
   wrapExpressErrorHandler(operationController.addIncome),
 );
 
