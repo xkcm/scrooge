@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const InvalidateSessionBodySchema = z
+export const InvalidateSessionParamsSchema = z
   .object({
     sessionId: z.string().uuid(),
   })

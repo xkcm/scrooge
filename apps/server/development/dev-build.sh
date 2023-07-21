@@ -1,5 +1,6 @@
 #!/bin/sh
 NODE_ENV=development
 
+rm -f tsconfig.tsbuildinfo
 rm -rf ./dist
-tsc -b && node ./devtools/dev:integrate-path-aliases.cjs
+pnpm exec tsc --build --verbose && node ./development/integrate-path-aliases.cjs

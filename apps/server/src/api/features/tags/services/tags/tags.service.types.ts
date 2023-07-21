@@ -1,25 +1,27 @@
 import { User } from "@prisma/client";
+import { schemas } from "@scrooge/shared";
 
-export interface Tag {
-  label: string;
-  icon: string;
-  color: string;
-}
 export interface TagsService {
-  getUserTags(userId: User["id"]): Promise<Tag[]>;
+  getUserTags(userId: User["id"]): Promise<schemas.tags.Tag[]>;
 
-  addUserTags(userId: User["id"], tags: Tag[] | Tag): Promise<Tag[]>;
+  addUserTags(
+    userId: User["id"],
+    tags: schemas.tags.Tag[] | schemas.tags.Tag,
+  ): Promise<schemas.tags.Tag[]>;
 
-  deleteUserTag(userId: User["id"], tag: Tag["label"]): Promise<Tag[]>;
+  deleteUserTag(
+    userId: User["id"],
+    tag: schemas.tags.Tag["label"],
+  ): Promise<schemas.tags.Tag[]>;
 
   assertUserTags(
     userId: User["id"],
-    tags: Tag["label"] | Tag["label"][],
-  ): Promise<Tag[]>;
+    tags: schemas.tags.Tag["label"] | schemas.tags.Tag["label"][],
+  ): Promise<schemas.tags.Tag[]>;
 
   modifyUserTag(
     userId: User["id"],
-    tagLabel: Tag["label"],
-    tagPayload: Partial<Tag>,
-  ): Promise<Tag[]>;
+    tagLabel: schemas.tags.Tag["label"],
+    tagPayload: Partial<schemas.tags.Tag>,
+  ): Promise<schemas.tags.Tag[]>;
 }

@@ -1,22 +1,29 @@
+import { schemas } from "@scrooge/shared";
+
 import {
   ApiControllerObject,
   ApiRequest,
   ApiResponse,
-} from "#root/api/api.types.js";
-import { AuthLocals } from "#root/api/features/auth/middleware/token/token.middleware.types.js";
+} from "#api/api.types.js";
+import { AuthLocals } from "#api:auth/middleware/token/token.middleware.types.js";
 
 import tagsService from "./services/tags/tags.service.js";
-import { AddTagBody, DeleteTagQuery, ModifyTag } from "./tags.schemas.js";
 
 export const tagsController = {
-  async getTags(req, res: ApiResponse<AuthLocals>) {
+  async getTags(
+    req,
+    res: ApiResponse<schemas.tags.GetTagsResponse, AuthLocals>,
+  ) {
     const { userId } = res.locals.auth;
 
     const tags = await tagsService.getUserTags(userId);
     res.json({ tags });
   },
 
-  async addTag(req: ApiRequest<AddTagBody>, res: ApiResponse<AuthLocals>) {
+  async addTag(
+    req: ApiRequest<schemas.tags.AddTagBody>,
+    res: ApiResponse<schemas.tags.AddTagResponse, AuthLocals>,
+  ) {
     const { userId } = res.locals.auth;
     const { tag } = req.body;
 
@@ -25,8 +32,8 @@ export const tagsController = {
   },
 
   async deleteTag(
-    req: ApiRequest<{}, {}, DeleteTagQuery>,
-    res: ApiResponse<AuthLocals>,
+    req: ApiRequest<{}, {}, schemas.tags.DeleteTagQuery>,
+    res: ApiResponse<schemas.tags.DeleteTagResponse, AuthLocals>,
   ) {
     const { userId } = res.locals.auth;
     const { tagLabel } = req.query;
@@ -36,8 +43,12 @@ export const tagsController = {
   },
 
   async modifyTag(
-    req: ApiRequest<ModifyTag.BODY, {}, ModifyTag.QUERY>,
-    res: ApiResponse<AuthLocals>,
+    req: ApiRequest<
+      schemas.tags.ModifyTagBody,
+      {},
+      schemas.tags.ModifyTagQuery
+    >,
+    res: ApiResponse<schemas.tags.ModifyTagResponse, AuthLocals>,
   ) {
     const { userId } = res.locals.auth;
     const { tagLabel } = req.query;

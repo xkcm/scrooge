@@ -59,7 +59,7 @@ authRouter.delete(
   "/session/:sessionId",
   tokenMiddleware.strict,
   createRequestParamsVerifier({
-    schema: schemas.auth.InvalidateSessionBodySchema,
+    schema: schemas.session.InvalidateSessionParamsSchema,
   }),
   wrapExpressErrorHandler(sessionController.invalidateSession),
 );

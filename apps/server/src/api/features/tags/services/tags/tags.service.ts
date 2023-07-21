@@ -1,10 +1,12 @@
+import { schemas } from "@scrooge/shared";
+
 import serverConfig from "#core/config/server.config.js";
 import prismaClient from "#core/prisma/prisma.js";
 import { createPrismaErrorParser } from "#core/prisma/prisma.utils.js";
 import { UserWithGivenIdNotFoundError } from "#root/api/features/auth/services/user/user.service.errors.js";
 
 import { UndefinedTagError } from "../../tags.errors.js";
-import { Tag, TagsService } from "./tags.service.types.js";
+import { TagsService } from "./tags.service.types.js";
 import {
   findNewTags,
   mergeTags,
@@ -91,11 +93,13 @@ const tagsService: TagsService = {
       });
     }
 
-    const newTagsWithDefaults: Tag[] = newTags.map(({ label }) => ({
-      label,
-      color: serverConfig.service_configs.tags.default_tag_color,
-      icon: serverConfig.service_configs.tags.default_tag_icon,
-    }));
+    const newTagsWithDefaults: schemas.tags.Tag[] = newTags.map(
+      ({ label }) => ({
+        label,
+        color: serverConfig.service_configs.tags.default_tag_color,
+        icon: serverConfig.service_configs.tags.default_tag_icon,
+      }),
+    );
 
     return this.addUserTags(userId, newTagsWithDefaults);
   },

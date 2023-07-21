@@ -1,9 +1,11 @@
 import { Session } from "@prisma/client";
 import { z } from "zod";
 
-import { InvalidateSessionBodySchema } from "./session.schemas.js";
+import { InvalidateSessionParamsSchema } from "./session.schemas.js";
 
-export type InvalidateSessionBody = z.infer<typeof InvalidateSessionBodySchema>;
+export type InvalidateSessionBody = z.infer<
+  typeof InvalidateSessionParamsSchema
+>;
 
 export type RefreshSessionResponse = {
   newExpiryDate: string;

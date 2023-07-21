@@ -1,3 +1,4 @@
+import { schemas } from "@scrooge/shared";
 import express, { Router } from "express";
 
 import { wrapExpressErrorHandler } from "#root/api/errors/errors.utils.js";
@@ -8,11 +9,6 @@ import {
 } from "#root/api/middleware/verifier.middleware.js";
 
 import tagsController from "./tags.controller.js";
-import {
-  AddTagSchema,
-  DeleteTagSchema,
-  ModifyTagSchema,
-} from "./tags.schemas.js";
 
 const tagsRouter: Router = express.Router();
 
@@ -24,20 +20,20 @@ tagsRouter.get(
 tagsRouter.post(
   "/",
   tokenMiddleware.strict,
-  createRequestBodyVerifier({ schema: AddTagSchema }),
+  createRequestBodyVerifier({ schema: schemas.tags.AddTagBodySchema }),
   wrapExpressErrorHandler(tagsController.addTag),
 );
 tagsRouter.delete(
   "/",
   tokenMiddleware.strict,
-  createRequestQueryVerifier({ schema: DeleteTagSchema }),
+  createRequestQueryVerifier({ schema: schemas.tags.DeleteTagQuerySchema }),
   wrapExpressErrorHandler(tagsController.deleteTag),
 );
 tagsRouter.put(
   "/",
   tokenMiddleware.strict,
-  createRequestBodyVerifier({ schema: ModifyTagSchema.BODY }),
-  createRequestQueryVerifier({ schema: ModifyTagSchema.QUERY }),
+  createRequestBodyVerifier({ schema: schemas.tags.ModifyTagBodySchema }),
+  createRequestQueryVerifier({ schema: schemas.tags.ModifyTagQuerySchema }),
   wrapExpressErrorHandler(tagsController.modifyTag),
 );
 
