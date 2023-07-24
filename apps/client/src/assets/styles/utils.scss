@@ -30,3 +30,23 @@ $baseIconSize: 24px;
 @function getTextColor($colorName, $weight: 400) {
   @return var(--text-color-#{$colorName}-#{$weight});
 }
+
+@mixin generateColorShades(
+  $baseColor,
+  $baseColorName,
+  $step: 6%,
+  $brighterShadesNo: 3,
+  $darkerShadesNo: 3
+) {
+  @for $i from $brighterShadesNo through 1 {
+    $weight: 400 - $i * 100;
+    $shadeColor: lighten($baseColor, $step * $i);
+    --color-#{$baseColorName}-#{$weight}: #{$shadeColor};
+  }
+  --color-#{$baseColorName}-400: #{$baseColor};
+  @for $i from 1 through $darkerShadesNo {
+    $weight: 400 + $i * 100;
+    $shadeColor: darken($baseColor, $step * $i);
+    --color-#{$baseColorName}-#{$weight}: #{$shadeColor};
+  }
+}
