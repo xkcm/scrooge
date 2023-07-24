@@ -2,6 +2,7 @@ import { schemas } from "@scrooge/shared";
 
 import { AuthLocals } from "#api:auth/middleware/token/token.middleware.types.js";
 import { env } from "#core/config/env.config.js";
+import serverConfig from "#core/config/server.config.js";
 import {
   ApiControllerObject,
   ApiRequest,
@@ -92,13 +93,19 @@ const authController = bindObjectMethods({
     const authToken = tokenService.createAuthToken(tokenPayload);
     const refreshToken = tokenService.createRefreshToken(tokenPayload);
 
+    const expirationDate = new Date(
+      Date.now() + +serverConfig.service_configs.token.expire_time,
+    );
+
     res.cookie("authToken", authToken, {
       httpOnly: true,
       domain: env.BACKEND_DOMAIN,
+      expires: expirationDate,
     });
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       domain: env.BACKEND_DOMAIN,
+      expires: expirationDate,
     });
 
     return res.json({
