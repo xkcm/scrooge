@@ -1,8 +1,0 @@
-{
-  "mailConfigurations": {
-    "confirmRegistration": {
-      "templateFile": "./templates/confirm-registration.mustache",
-      "subject": "Finish Scrooge account registration"
-    }
-  }
-}

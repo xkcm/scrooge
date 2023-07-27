@@ -1,0 +1,19 @@
+{
+  "name": "@scrooge/shared",
+  "version": "0.1.0",
+  "author": "xkcm",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.0.0",
+    "moment": "^2.29.4"
+  }
+}

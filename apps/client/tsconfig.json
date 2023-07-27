@@ -1,0 +1,28 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ESNext", "DOM"],
+    "module": "Node16",
+    "moduleResolution": "Node",
+    "composite": true,
+    "useDefineForClassFields": true,
+    "jsx": "preserve",
+    "isolatedModules": true,
+    "skipLibCheck": false,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@icons/*": ["./src/assets/icons/*"],
+      "@features/*": ["./src/features/*"],
+      "@core/*": ["./src/features/core/*"]
+    }
+  },
+  "include": [
+    "./src/**/*.ts",
+    "./src/**/*.d.ts",
+    "./src/**/*.tsx",
+    "./src/**/*.vue",
+    "./src/assets/**/*.json"
+  ],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}

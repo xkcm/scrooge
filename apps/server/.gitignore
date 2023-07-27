@@ -1,0 +1,14 @@
+# build files
+dist/
+
+# node modules
+node_modules/
+
+# secret files
+.env*
+
+# error logs
+yarn-error.log
+
+# redis dump
+dump.rdb

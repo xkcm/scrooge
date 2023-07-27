@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "dist",
+    "rootDir": "./src/",
+    "baseUrl": "./src/",
+    "paths": {
+      "#core/*": ["./core/*"],
+      "#api:auth/*": ["./api/features/auth/*"],
+      "#api/*": ["./api/*"],
+      "#root/*": ["./*"],
+      "#assets/*": ["./assets/*"]
+    }
+  },
+  "include": ["./src/**/*", "./src/**/*.json"]
+}
