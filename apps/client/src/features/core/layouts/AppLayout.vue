@@ -16,7 +16,7 @@ await resolveAuthState();
 @use "@/assets/styles/utils.scss";
 
 #app-container {
-  @include utils.useColorSet(alpha);
+  @include utils.useBgColor(alpha);
 
   width: 100%;
   min-height: 100vh;

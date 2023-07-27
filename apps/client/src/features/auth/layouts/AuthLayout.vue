@@ -37,20 +37,20 @@
   }
 
   #app-title h1 {
-    @include utils.useTextColor(alpha);
+    @include utils.useTextColor(primary);
   }
 
   #app-subtitle h6 {
-    @include utils.useTextColor(alpha);
+    @include utils.useTextColor(primary);
     margin-top: 6px;
     > span {
-      @include utils.useTextColor(delta);
+      color: utils.getColor(delta);
     }
   }
 }
 
 #right-section {
-  @include utils.useBgColor(alpha, 200);
+  @include utils.useBgColor(alpha, 500);
   display: flex;
 }
 </style>

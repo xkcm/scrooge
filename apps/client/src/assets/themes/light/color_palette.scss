@@ -1,26 +1,24 @@
 @use "../../styles/utils.scss";
 
-$brighterShadesNo: 2;
-$darkerShadesNo: 2;
-
-$colorAlphaBase: hsl(9, 30%, 77%);
-$colorBetaBase: hsl(206, 88%, 55%);
-$colorGammaBase: hsl(67, 34%, 43%);
-$colorDeltaBase: hsl(246, 43%, 45%);
-
 :root[data-theme="light"] {
-  /* #region Theme Colors */
+  --text-color-dark: 15, 7, 5;
+  --text-color-light: 240, 240, 240;
+  --text-color-primary: var(--text-color-dark);
+  --text-color-secondary: var(--text-color-light);
 
-  @include utils.generateColorShades($colorAlphaBase, "alpha");
-  @include utils.generateColorShades($colorBetaBase, "beta");
-  @include utils.generateColorShades($colorGammaBase, "gamma");
-  @include utils.generateColorShades($colorDeltaBase, "delta");
+  --color-alpha-400: 249, 246, 241;
+  --color-alpha-500: 243, 240, 235;
+  --color-alpha-600: 237, 234, 229;
 
-  /* #endregion */
-  /* #region Theme Text Colors */
+  --color-beta-400: 25, 50, 60;
+  --color-beta-500: 23, 45, 54;
+  --color-beta-600: 20, 40, 48;
 
-  --text-color-dark: hsl(11, 51%, 14%);
-  --text-color-light: hsl(38, 40%, 96%);
+  --color-gamma-400: 116, 128, 103;
+  --color-gamma-500: 104, 115, 93;
+  --color-gamma-600: 93, 102, 82;
 
-  /* #endregion */
+  --color-delta-400: 235, 63, 51;
+  --color-delta-500: 212, 57, 46;
+  --color-delta-600: 188, 50, 41;
 }

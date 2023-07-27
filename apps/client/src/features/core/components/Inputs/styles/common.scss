@@ -12,7 +12,6 @@
   }
 
   .input__icon {
-    @include utils.useBgColor(alpha, 200);
     height: 36px;
     width: 36px;
     border-radius: 7px;
@@ -25,7 +24,7 @@
   }
 
   input {
-    @include utils.useTextColor(alpha);
+    @include utils.useTextColor(primary, 0.9);
 
     font-family: Poppins;
     font-weight: 400;
@@ -41,7 +40,7 @@
     }
 
     &::placeholder {
-      @include utils.useTextColor(alpha, 200);
+      @include utils.useTextColor(primary, 0.4);
       font-family: Poppins;
     }
   }

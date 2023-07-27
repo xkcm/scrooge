@@ -8,17 +8,13 @@
 :root {
   font-family: "Poppins";
 
-  /* #region Informative Colors */
+  --color-error-400: 255, 66, 66;
 
-  --color-error-400: hsl(0, 100%, 63%);
+  --color-warning-400: 255, 187, 51;
 
-  --color-warning-400: hsl(40, 100%, 60%);
+  --color-info-400: 52, 181, 229;
 
-  --color-info-400: hsl(196, 77%, 55%);
-
-  --color-success-400: hsl(144, 100%, 39%);
-
-  /* #endregion */
+  --color-success-400: 0, 199, 80;
 }
 
 body {

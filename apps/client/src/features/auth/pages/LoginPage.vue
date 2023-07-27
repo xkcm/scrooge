@@ -22,7 +22,7 @@
         </PasswordInput>
 
         <a id="forgot-password-text" href="#">I forgot my password</a>
-        <span v-if="error.isShown" id="error-info">{{ error.message }}</span>
+        <div v-if="error.isShown" id="error-info">{{ error.message }}</div>
 
         <FilledButton
           id="submit-button"
@@ -90,7 +90,7 @@ const submitForm = async (mailValue: string, passwordValue: string) => {
   width: 400px;
 
   #details-info {
-    @include utils.useTextColor(alpha, 300);
+    @include utils.useTextColor(primary, 0.5);
     margin-left: 5px;
     margin-top: 7px;
     margin-bottom: 11px;
@@ -124,14 +124,15 @@ const submitForm = async (mailValue: string, passwordValue: string) => {
   }
 
   #new-account-text {
-    @include utils.useTextColor(alpha, 300);
+    @include utils.useTextColor(primary, 0.5);
     margin-top: 32px;
     width: 100%;
     text-align: center;
     position: relative;
 
     &::before {
-      @include utils.useColorSet(alpha, 100);
+      @include utils.useBgColor(alpha, 600);
+      @include utils.useTextColor(primary);
       content: "";
       position: absolute;
       display: block;
@@ -155,7 +156,8 @@ const submitForm = async (mailValue: string, passwordValue: string) => {
   }
 
   #error-info {
-    @include utils.useColorSet(error);
+    @include utils.useBgColor(error);
+    @include utils.useTextColor(light);
     margin-bottom: 8px;
     text-align: center;
     border-radius: 5px;

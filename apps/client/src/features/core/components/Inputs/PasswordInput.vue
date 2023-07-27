@@ -38,15 +38,12 @@ const toggleType = () =>
 @use "@/assets/styles/utils.scss";
 
 button.input__icon {
+  @include utils.useBgColor(alpha);
   outline: none;
   border: none;
   cursor: pointer;
   margin-left: 14px;
   padding: 0;
-
-  &:hover {
-    @include utils.useBgColor(alpha, 300);
-  }
 
   &:focus-visible {
     @include utils.defaultOutlineOnFocus;

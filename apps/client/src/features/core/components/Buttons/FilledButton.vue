@@ -21,14 +21,13 @@ const props = defineProps<{
   outline: none;
   border: none;
   cursor: pointer;
-  transition: background-color 0.1s ease-in-out;
 
   &:hover {
-    @include utils.useBgColor(beta, 300);
+    @include utils.useBgColor(beta, 500);
   }
 
   &:active {
-    @include utils.useBgColor(beta, 200);
+    @include utils.useBgColor(beta, 600);
   }
 
   &:focus-visible {
@@ -38,7 +37,7 @@ const props = defineProps<{
 }
 
 .button__caption {
-  @include utils.useTextColor(beta);
+  @include utils.useTextColor(secondary);
   font-family: Poppins;
   font-size: 1.25rem;
   font-weight: 400;
