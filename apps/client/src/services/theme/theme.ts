@@ -1,6 +1,6 @@
 import themesConfig from "@/assets/themes/themes.config.json";
 import { ThemeConfig } from "./theme.types";
-import localStorageUtil from "@/utils/local-storage/local-storage.util";
+import localStorageUtil from "@/services/local-storage/local-storage.util";
 
 const DEFAULT_THEME = themesConfig[0];
 

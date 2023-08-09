@@ -21,13 +21,11 @@ export default defineConfig({
     eslint({
       exclude: path.resolve(__dirname, "../shared/**/*"),
     }),
-    svgLoader(),
     tsconfigPaths(),
   ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      "@icons": path.resolve(__dirname, "./src/assets/icons"),
       "@features": path.resolve(__dirname, "./src/features"),
       "@core": path.resolve(__dirname, "./src/features/core"),
     },

@@ -5,7 +5,7 @@ import type { JwtTokensState } from "../../api-client.types";
 import { ApiError } from "@scrooge/shared";
 import { GetAuthInfoResponse } from "./auth.types";
 
-export async function login(
+export async function logIn(
   mail: string,
   password: string,
 ): Promise<JwtTokensState> {
@@ -20,6 +20,14 @@ export async function login(
     body: requestPayload,
     path,
   });
+
+  return body;
+}
+
+export async function logOut(): Promise<GetAuthInfoResponse> {
+  const path = "auth/logout";
+
+  const { body } = await sendApiRequest<GetAuthInfoResponse>({ path });
 
   return body;
 }

@@ -1,4 +1,5 @@
 <template v-once>
+  <FilledButton caption="Log out" @click="logOut"></FilledButton>
   <div style="overflow: auto; width: 100%; height: 100%">
     <pre>{{ JSON.stringify(data.userInfo, null, 4) }}</pre>
     <pre>{{ JSON.stringify(data.sessions, null, 4) }}</pre>
@@ -6,11 +7,15 @@
 </template>
 
 <script setup lang="ts">
-import apiClient from "@/utils/api-client/api-client";
+import apiClient from "@/services/api-client/api-client";
 import { onMounted, reactive } from "vue";
 
-import type { Session } from "@/utils/api-client/modules/session/session.types";
-import type { UserInfo } from "@/utils/api-client/modules/user/user.types";
+import type { Session } from "@/services/api-client/modules/session/session.types";
+import type { UserInfo } from "@/services/api-client/modules/user/user.types";
+import FilledButton from "@/features/core/components/Buttons/FilledButton.vue";
+
+import { logOut as logOutUtil } from "@features/auth/auth.service";
+import { pushNotification } from "@/features/notifications/notification.utils";
 
 const data = reactive<{
   sessions?: Session[];
@@ -18,9 +23,20 @@ const data = reactive<{
 }>({});
 
 onMounted(async () => {
-  data.sessions = await apiClient.session.getActiveSessions();
-  data.userInfo = await apiClient.user.getInfo();
+  [data.sessions, data.userInfo] = await Promise.all([
+    apiClient.session.getActiveSessions(),
+    apiClient.user.getInfo(),
+  ]);
 });
+
+const logOut = async () => {
+  await logOutUtil();
+
+  pushNotification({
+    title: "You're logged out",
+    type: "info",
+  });
+};
 </script>
 
 <style lang="scss"></style>

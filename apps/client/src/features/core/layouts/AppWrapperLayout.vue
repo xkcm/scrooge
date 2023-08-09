@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import { onErrorCaptured, ref } from "vue";
-import { initTheme } from "@/utils/theme/theme";
+import { initTheme } from "@/services/theme/theme";
 
 import App from "./AppLayout.vue";
 import LoadingLayout from "./LoadingLayout.vue";
@@ -24,4 +24,4 @@ onErrorCaptured((error) => {
   errorMessage.value = error.message;
 });
 </script>
-@/utils/theme
+@/services/theme

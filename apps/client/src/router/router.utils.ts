@@ -1,4 +1,4 @@
-import { isUserAuthenticated } from "@/features/auth/utils/auth.utils";
+import { isUserAuthenticated } from "@/features/auth/auth.service";
 import { RouteLocationNormalized } from "vue-router";
 import { router } from "./router";
 

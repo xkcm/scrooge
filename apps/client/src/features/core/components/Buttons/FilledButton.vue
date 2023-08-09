@@ -1,12 +1,23 @@
 <template>
   <button class="button" type="button">
-    <span class="button__caption">{{ props.caption }}</span>
+    <span class="button__caption">
+      <span>{{ props.caption }}</span>
+      <Icon
+        v-if="props.icon"
+        class="button__icon"
+        :icon="props.icon"
+        height="24"
+      />
+    </span>
   </button>
 </template>
 
 <script setup lang="ts">
+import { Icon } from "@iconify/vue";
+
 const props = defineProps<{
   caption: string;
+  icon?: string;
 }>();
 </script>
 
@@ -42,5 +53,17 @@ const props = defineProps<{
   font-size: 1.25rem;
   font-weight: 400;
   letter-spacing: -0.15px;
+  margin: 0 0.2em;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.button__icon {
+  @include utils.useTextColor(secondary);
+  position: absolute;
+  right: 0;
 }
 </style>

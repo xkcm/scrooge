@@ -42,7 +42,12 @@ authRouter.post(
   tokenMiddleware.safe,
   haltAuthenticatedUsers,
   createRequestBodyVerifier({ schema: schemas.auth.LoginBodySchema }),
-  wrapExpressErrorHandler(authController.login),
+  wrapExpressErrorHandler(authController.logIn),
+);
+authRouter.post(
+  "/logout",
+  tokenMiddleware.safe,
+  wrapExpressErrorHandler(authController.logOut),
 );
 authRouter.post(
   "/refresh",

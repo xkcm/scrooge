@@ -1,80 +1,87 @@
 <template>
   <AuthLayout>
-    <template #default>
-      <form id="form-container" @on-submit.prevent>
-        <h2>Welcome back!</h2>
-        <span id="details-info">Log in to your Scrooge account</span>
+    <form id="form-container" @on-submit.prevent>
+      <h2>Welcome back!</h2>
+      <span id="details-info">Log in to your Scrooge account</span>
 
-        <TextInput
-          id="mail-input"
-          v-model="mail"
-          placeholder="yourmail@mail.com"
-        >
-          <template #icon><MessageIcon /></template>
-        </TextInput>
+      <TextInput id="mail-input" v-model="mail" placeholder="yourmail@mail.com">
+        <template #icon>
+          <Icon icon="mdi:email-outline" height="24" />
+        </template>
+      </TextInput>
 
-        <PasswordInput
-          id="password-input"
-          v-model="password"
-          placeholder="Your Password"
-        >
-          <template #icon><KeyIcon /></template>
-        </PasswordInput>
+      <PasswordInput
+        id="password-input"
+        v-model="password"
+        placeholder="Your password"
+      >
+        <template #icon>
+          <Icon icon="mdi:key-outline" height="24" />
+        </template>
+      </PasswordInput>
 
-        <a id="forgot-password-text" href="#">I forgot my password</a>
-        <div v-if="error.isShown" id="error-info">{{ error.message }}</div>
+      <a id="forgot-password-text" href="#">I forgot my password</a>
 
-        <FilledButton
-          id="submit-button"
-          caption="Log in"
-          @click="submitForm(mail, password)"
-        ></FilledButton>
+      <FilledButton
+        id="submit-button"
+        caption="Log in"
+        icon="mdi:sign-in"
+        @click="submitForm(mail, password)"
+      ></FilledButton>
 
-        <span id="new-account-text">
-          You don't have an account? <a href="#">Sign up</a>
-        </span>
-      </form>
-    </template>
+      <span id="new-account-text">
+        You don't have an account? <a href="#">Sign up</a>
+      </span>
+    </form>
   </AuthLayout>
 </template>
 
 <script setup lang="ts">
 // todo: add form validation
+import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { reactive, ref } from "vue";
+
+import { Icon } from "@iconify/vue";
 
 import AuthLayout from "../layouts/AuthLayout.vue";
-import apiClient from "@/utils/api-client/api-client";
 
-import TextInput from "@core/components/Inputs/TextInput.vue";
-import PasswordInput from "@core/components/Inputs/PasswordInput.vue";
 import FilledButton from "@core/components/Buttons/FilledButton.vue";
+import PasswordInput from "@core/components/Inputs/PasswordInput.vue";
+import TextInput from "@core/components/Inputs/TextInput.vue";
 
-import MessageIcon from "@icons/Message_light.svg";
-import KeyIcon from "@icons/Key_light.svg";
 import { ApiError } from "@scrooge/shared";
 
-import { useAuthStore } from "../stores/auth.store";
+import { NotificationWithActions } from "@/features/notifications/notification.types";
+import { pushNotification } from "@/features/notifications/notification.utils";
+import { logIn } from "../auth.service";
 
 const mail = ref("");
 const password = ref("");
-const error = reactive({
-  message: "",
-  isShown: false,
-});
 
 const router = useRouter();
-const authStore = useAuthStore();
+let lastErrorNotification: NotificationWithActions | null = null;
 
 const submitForm = async (mailValue: string, passwordValue: string) => {
-  error.isShown = false;
+  if (lastErrorNotification) {
+    lastErrorNotification.dispose();
+  }
+
   try {
-    const authState = await apiClient.auth.login(mailValue, passwordValue);
-    authStore.setAuthState(authState.isAuthTokenSet);
+    await logIn(mailValue, passwordValue);
+
     router.push("dashboard");
+    pushNotification({
+      title: "You're logged in",
+      type: "success",
+    });
   } catch (apiError) {
-    error.message = (apiError as ApiError).message;
-    error.isShown = true;
+    lastErrorNotification = pushNotification({
+      title: "Login attempt failed",
+      body: (apiError as ApiError).message,
+      type: "error",
+      duration: -1,
+      onDispose: () => (lastErrorNotification = null),
+    });
   }
 };
 </script>
@@ -92,8 +99,7 @@ const submitForm = async (mailValue: string, passwordValue: string) => {
   #details-info {
     @include utils.useTextColor(primary, 0.5);
     margin-left: 5px;
-    margin-top: 7px;
-    margin-bottom: 11px;
+    margin-bottom: 16px;
   }
 
   #password-input {
@@ -154,16 +160,6 @@ const submitForm = async (mailValue: string, passwordValue: string) => {
       }
     }
   }
-
-  #error-info {
-    @include utils.useBgColor(error);
-    @include utils.useTextColor(light);
-    margin-bottom: 8px;
-    text-align: center;
-    border-radius: 5px;
-    padding: 0.5rem 2rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-  }
 }
 </style>
+../auth.store ../auth.service

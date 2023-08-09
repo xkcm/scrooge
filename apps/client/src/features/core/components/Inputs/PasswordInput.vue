@@ -11,18 +11,22 @@
     />
 
     <button class="input__icon" type="button" @click="toggleType">
-      <OpenEyeIcon v-if="currentType === 'password'" />
-      <ClosedEyeIcon v-else />
+      <Icon
+        v-if="currentType === 'password'"
+        icon="mdi:eye-outline"
+        height="24"
+      />
+      <Icon v-else icon="mdi:eye-off-outline" height="24" />
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, defineModel } from "vue";
-import "./styles/common.scss";
+import { ref } from "vue";
 
-import OpenEyeIcon from "@icons/View_light.svg";
-import ClosedEyeIcon from "@icons/View_hide_light.svg";
+import { Icon } from "@iconify/vue";
+
+import "./styles/common.scss";
 
 const { placeholder } = defineProps<{
   placeholder?: string;

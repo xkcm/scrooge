@@ -59,7 +59,14 @@ const authController = bindObjectMethods({
     return this.login(newReq, res, next);
   },
 
-  async login(
+  async logOut(req, res: ApiResponse<schemas.auth.GetAuthStateResponse>) {
+    res.clearCookie("authToken");
+    res.clearCookie("refreshToken");
+
+    res.json({ isAuthenticated: false });
+  },
+
+  async logIn(
     req: ApiRequest<schemas.auth.LoginBody>,
     res: ApiResponse<schemas.auth.LoginResponse>,
   ) {

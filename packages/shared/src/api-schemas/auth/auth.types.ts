@@ -33,5 +33,5 @@ export type GetAuthStateResponse =
     }
   | {
       isAuthenticated: false;
-      error: ApiErrorResponseBody;
+      error?: ApiErrorResponseBody;
     };

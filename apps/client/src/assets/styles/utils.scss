@@ -1,11 +1,5 @@
 @use "sass:math";
 
-$baseIconSize: 24px;
-
-@function scaleIcon($destinationSize) {
-  @return math.div($destinationSize, $baseIconSize);
-}
-
 @mixin defaultOutlineOnFocus {
   outline: 2px getColor(beta) solid;
 }

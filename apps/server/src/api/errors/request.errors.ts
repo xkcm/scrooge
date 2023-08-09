@@ -21,7 +21,10 @@ export class InvalidRequestCookiesError extends ApiError {}
 @withMetadata({ httpCode: 400 })
 export class InvalidRequestQueryError extends ApiError {}
 
-@withMessage("Endpoint %{metadata.endpoint} doesn't exist")
+@withMessage("Endpoint %{metadata.method} %{metadata.endpoint} doesn't exist")
 @withCode("api.endpoint_not_found")
 @withMetadata({ httpCode: 404 })
-export class EndpointNotFoundError extends ApiError<{ endpoint?: string }> {}
+export class EndpointNotFoundError extends ApiError<{
+  endpoint?: string;
+  method?: string;
+}> {}
