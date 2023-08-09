@@ -56,9 +56,9 @@ export class ApiError<M extends SupportedMetadata = {}> extends BetterError<
     return {
       code: this.code,
       message: this.message,
-      attachments: this.metadata.attachments
-        ?.filter(({ type }) => type === "public")
-        .map(({ data }) => data),
+      attachments: this.metadata.attachments?.filter(
+        ({ type }) => type === "public",
+      ),
     };
   }
 }

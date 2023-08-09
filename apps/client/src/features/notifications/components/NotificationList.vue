@@ -1,6 +1,7 @@
 <template>
   <Teleport to="body">
     <div class="notification-list">
+      <!-- todo: add animations -->
       <NotificationItem
         v-for="notification in notificationStore.items"
         :key="notification.id"

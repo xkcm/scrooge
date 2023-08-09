@@ -1,5 +1,6 @@
 import { ApiError } from "@scrooge/shared";
 import { ZodSchema } from "zod";
+import { fromZodError } from "zod-validation-error";
 
 import { ApiNextFunc, ApiRequest, ApiResponse } from "#root/api/api.types.js";
 import {
@@ -40,10 +41,14 @@ const generateGenericRequestVerifierFactory =
       const ErrorClass = generatorOptions.errorClass;
       return next(
         new ErrorClass({
+          message: fromZodError(parsed.error, {
+            prefix: "",
+            maxIssuesInMessage: 1,
+          }).message.slice(2),
           metadata: {
             attachments: [
               {
-                name: `invalid_${generatorOptions.requestProperty}`,
+                name: `zod_validation_error[invalid_${generatorOptions.requestProperty}]`,
                 type: "public",
                 data: parsed.error,
               },

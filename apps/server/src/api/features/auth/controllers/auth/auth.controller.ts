@@ -2,7 +2,6 @@ import { schemas } from "@scrooge/shared";
 
 import { AuthLocals } from "#api:auth/middleware/token/token.middleware.types.js";
 import { env } from "#core/config/env.config.js";
-import serverConfig from "#core/config/server.config.js";
 import {
   ApiControllerObject,
   ApiRequest,
@@ -23,7 +22,7 @@ const authController = bindObjectMethods({
     res: ApiResponse<schemas.auth.BeginRegistrationResponse>,
   ) {
     const { email } = req.body;
-    const token = tokenService.createGenericToken({ email });
+    const { token } = tokenService.createGenericToken({ email });
 
     const isSent = await mailService.sendConfirmRegistrationMail(email, token);
 
@@ -97,22 +96,20 @@ const authController = bindObjectMethods({
       userId: user.id,
       sessionId: session.id,
     };
-    const authToken = tokenService.createAuthToken(tokenPayload);
-    const refreshToken = tokenService.createRefreshToken(tokenPayload);
-
-    const expirationDate = new Date(
-      Date.now() + +serverConfig.service_configs.token.expire_time,
-    );
+    const { token: authToken, expiresIn: authTokenExpiresIn } =
+      tokenService.createAuthToken(tokenPayload);
+    const { token: refreshToken, expiresIn: refreshTokenExpiresIn } =
+      tokenService.createRefreshToken(tokenPayload);
 
     res.cookie("authToken", authToken, {
       httpOnly: true,
       domain: env.BACKEND_DOMAIN,
-      expires: expirationDate,
+      expires: new Date(Date.now() + authTokenExpiresIn * 1000),
     });
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       domain: env.BACKEND_DOMAIN,
-      expires: expirationDate,
+      expires: new Date(Date.now() + refreshTokenExpiresIn * 1000),
     });
 
     return res.json({

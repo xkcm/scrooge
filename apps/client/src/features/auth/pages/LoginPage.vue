@@ -49,10 +49,10 @@ import FilledButton from "@core/components/Buttons/FilledButton.vue";
 import PasswordInput from "@core/components/Inputs/PasswordInput.vue";
 import TextInput from "@core/components/Inputs/TextInput.vue";
 
-import { ApiError } from "@scrooge/shared";
-
 import { NotificationWithActions } from "@/features/notifications/notification.types";
 import { pushNotification } from "@/features/notifications/notification.utils";
+
+import { ApiError } from "@scrooge/shared";
 import { logIn } from "../auth.service";
 
 const mail = ref("");
@@ -75,11 +75,12 @@ const submitForm = async (mailValue: string, passwordValue: string) => {
       type: "success",
     });
   } catch (apiError) {
+    console.error({ apiError });
     lastErrorNotification = pushNotification({
       title: "Login attempt failed",
       body: (apiError as ApiError).message,
       type: "error",
-      duration: -1,
+      duration: 15000,
       onDispose: () => (lastErrorNotification = null),
     });
   }

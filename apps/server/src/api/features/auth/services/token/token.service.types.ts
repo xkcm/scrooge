@@ -20,27 +20,34 @@ export interface RegistrationTokenPayload {
   email: string;
 }
 
+type CreateTokenResult = {
+  token: string;
+  expiresIn: number;
+};
+
 export interface TokenService {
   createGenericToken<T extends JwtPayload>(
     tokenPayload: T,
     additionalClaims?: SignOptions,
     key?: string,
-  ): string;
+  ): CreateTokenResult;
 
   decodeGenericToken<T extends JwtPayload = {}>(
     token: string,
     key?: string,
   ): T & GenericTokenPayload;
 
-  createAuthToken(tokenPayload: AuthTokenPayload): string;
+  createAuthToken(tokenPayload: AuthTokenPayload): CreateTokenResult;
 
   decodeAuthToken(token: string): AuthTokenPayload & GenericTokenPayload;
 
-  createRefreshToken(tokenPayload: RefreshTokenPayload): string;
+  createRefreshToken(tokenPayload: RefreshTokenPayload): CreateTokenResult;
 
   decodeRefreshToken(token: string): RefreshTokenPayload & GenericTokenPayload;
 
-  createRegistrationToken(tokenPayload: RegistrationTokenPayload): string;
+  createRegistrationToken(
+    tokenPayload: RegistrationTokenPayload,
+  ): CreateTokenResult;
 
   decodeRegistrationToken(
     token: string,

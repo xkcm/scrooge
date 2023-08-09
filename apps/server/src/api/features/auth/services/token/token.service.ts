@@ -11,12 +11,17 @@ const tokenService: TokenService = {
     tokenPayload,
     additionalClaims = {},
     key = env.AUTH_TOKEN_SECRET,
-  ): string {
-    return jwt.sign(tokenPayload, key, {
+  ) {
+    const expiresIn = additionalClaims.expiresIn
+      ? +additionalClaims.expiresIn
+      : serverConfig.service_configs.token.expire_time;
+    const token = jwt.sign(tokenPayload, key, {
       issuer: env.SERVER_APP_NAME,
       audience: env.SERVER_APP_NAME,
       ...additionalClaims,
     });
+
+    return { token, expiresIn };
   },
 
   decodeGenericToken(token, key = env.AUTH_TOKEN_SECRET) {
@@ -42,8 +47,8 @@ const tokenService: TokenService = {
 
   createAuthToken(tokenPayload) {
     return this.createGenericToken(tokenPayload, {
-      expiresIn: serverConfig.service_configs.token.expire_time,
       subject: tokenPayload.userId,
+      expiresIn: serverConfig.service_configs.token.expire_time,
     });
   },
 
@@ -55,6 +60,7 @@ const tokenService: TokenService = {
     return this.createGenericToken(
       tokenPayload,
       {
+        expiresIn: serverConfig.service_configs.token.refresh_expire_time,
         subject: tokenPayload.userId,
       },
       env.REFRESH_TOKEN_SECRET,

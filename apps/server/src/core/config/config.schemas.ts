@@ -50,7 +50,8 @@ export const ServerConfigSchema = z.object({
       refreshable: z.boolean(),
     }),
     token: z.object({
-      expire_time: z.union([z.number(), z.string()]),
+      expire_time: z.number(),
+      refresh_expire_time: z.number(),
       registration_expire_time: z.number(),
     }),
     tags: z.object({
