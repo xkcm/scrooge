@@ -2,17 +2,14 @@
   <div id="app-container">
     <router-view></router-view>
   </div>
-  <NotificationList></NotificationList>
 </template>
 
 <script setup lang="ts">
-import { resolveAuthState } from "@/features/auth/auth.service";
-import { loadFonts } from "@/services/font-loader/font-loader";
+import AuthService from "@/features/auth/auth.service";
+import FontLoaderService from "@/services/font-loader/font-loader";
 
-import NotificationList from "@features/notifications/components/NotificationList.vue";
-
-await loadFonts();
-await resolveAuthState();
+await FontLoaderService.loadFonts();
+await AuthService.resolveAuthState();
 </script>
 
 <style lang="scss">

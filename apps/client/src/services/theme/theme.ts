@@ -4,11 +4,11 @@ import localStorageUtil from "@/services/local-storage/local-storage.util";
 
 const DEFAULT_THEME = themesConfig[0];
 
-export function initTheme(): ThemeConfig {
+function initTheme(): ThemeConfig {
   return setTheme(getInitThemeName());
 }
 
-export function setTheme(themeName: string) {
+function setTheme(themeName: string) {
   const theme = getThemeConfig(themeName);
 
   document.querySelector(":root")?.setAttribute("data-theme", theme.id);
@@ -17,7 +17,7 @@ export function setTheme(themeName: string) {
   return theme;
 }
 
-export function getThemesConfig() {
+function getThemesConfig() {
   return themesConfig;
 }
 
@@ -34,3 +34,11 @@ function getThemeConfig(themeName: string): ThemeConfig {
 
   return foundTheme;
 }
+
+const ThemeService = {
+  initTheme,
+  setTheme,
+  getThemesConfig,
+};
+
+export default ThemeService;

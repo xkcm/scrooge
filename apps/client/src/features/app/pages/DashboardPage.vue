@@ -14,8 +14,8 @@ import type { Session } from "@/services/api-client/modules/session/session.type
 import type { UserInfo } from "@/services/api-client/modules/user/user.types";
 import FilledButton from "@/features/core/components/Buttons/FilledButton.vue";
 
-import { logOut as logOutUtil } from "@features/auth/auth.service";
-import { pushNotification } from "@/features/notifications/notification.utils";
+import NotificationService from "@/features/notifications/notification.service";
+import AuthService from "@/features/auth/auth.service";
 
 const data = reactive<{
   sessions?: Session[];
@@ -30,9 +30,9 @@ onMounted(async () => {
 });
 
 const logOut = async () => {
-  await logOutUtil();
+  await AuthService.logOut();
 
-  pushNotification({
+  NotificationService.pushNotification({
     title: "You're logged out",
     type: "info",
   });
@@ -40,3 +40,4 @@ const logOut = async () => {
 </script>
 
 <style lang="scss"></style>
+@/features/notifications/notification.service

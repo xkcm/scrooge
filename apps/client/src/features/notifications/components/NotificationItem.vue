@@ -1,15 +1,16 @@
 <template>
   <div class="notification" :class="`notification--${type}`">
     <div class="notification__icon">
-      <Icon :icon="resolvedIcon" height="24" />
+      <Icon :icon="icon" height="24" />
     </div>
     <div class="notification__content">
       <span class="notification__title">{{ title }}</span>
       <span v-if="body" class="notification__body">{{ body }}</span>
     </div>
     <button
+      v-if="closeable"
       class="notification__close"
-      @click="disposeNotification(notificationId)"
+      @click="NotificationService.disposeNotification(notificationId)"
     >
       <Icon icon="mdi:close" height="24" />
     </button>
@@ -18,22 +19,28 @@
 
 <script lang="ts" setup>
 import { Icon } from "@iconify/vue";
-import { NotificationType, Notification } from "../notification.types";
-import { disposeNotification } from "../notification.utils";
 
-const TYPE_ICON_MAP: Record<NotificationType, string> = {
-  warning: "mdi:alert",
-  error: "mdi:alert-octagon",
-  success: "mdi:check",
-  info: "mdi:information",
+import NotificationService from "../notification.service";
+import type { Notification, NotificationInput } from "../notification.types";
+
+type NotificationItemProps = Omit<
+  NotificationInput,
+  "duration" | "onDispose"
+> & {
+  notificationId: Notification["id"];
 };
 
-const { title, notificationId, type, icon, body } = defineProps<
-  Pick<Notification, "type" | "title" | "body" | "icon"> & {
-    notificationId: Notification["id"];
-  }
->();
-const resolvedIcon = icon || TYPE_ICON_MAP[type];
+const {
+  title,
+  notificationId,
+  type,
+  icon: inputIcon,
+  body,
+  closeable = true,
+} = withDefaults(defineProps<NotificationItemProps>(), {
+  closeable: true,
+});
+const icon = inputIcon || NotificationService.getDefaultNotificationIcon(type);
 </script>
 
 <style lang="scss">
@@ -46,22 +53,27 @@ const resolvedIcon = icon || TYPE_ICON_MAP[type];
   display: flex;
   justify-content: center;
   align-items: center;
+  box-shadow: 2px 2px 5px 0 var(--notification-shadow-color);
 
   &.notification--info {
     @include utils.useBgColor(info);
     @include utils.useTextColor(light);
+    --notification-shadow-color: #{utils.getColor(info, 400, 0.5)};
   }
   &.notification--success {
     @include utils.useBgColor(success);
     @include utils.useTextColor(light);
+    --notification-shadow-color: #{utils.getColor(success, 400, 0.5)};
   }
   &.notification--error {
     @include utils.useBgColor(error);
     @include utils.useTextColor(light);
+    --notification-shadow-color: #{utils.getColor(error, 400, 0.5)};
   }
   &.notification--warning {
     @include utils.useBgColor(warning);
     @include utils.useTextColor(dark);
+    --notification-shadow-color: #{utils.getColor(warning, 400, 0.5)};
   }
 }
 
@@ -97,3 +109,4 @@ const resolvedIcon = icon || TYPE_ICON_MAP[type];
   }
 }
 </style>
+../notification.service

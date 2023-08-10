@@ -34,7 +34,7 @@
     "vue-eslint-parser": "^9.3.1"
   },
   "dependencies": {
-    "@xkcm/better-errors": "^2.1.2",
+    "@xkcm/better-errors": "^2.2.0",
     "zod": "^3.19.1"
   }
 }

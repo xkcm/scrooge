@@ -10,6 +10,7 @@
         :icon="notification.icon"
         :body="notification.body"
         :type="notification.type"
+        :closeable="notification.closeable"
       ></NotificationItem>
     </div>
   </Teleport>
