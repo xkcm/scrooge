@@ -80,6 +80,9 @@ importers:
       pinia:
         specifier: ^2.1.4
         version: 2.1.4(typescript@4.9.4)(vue@3.3.4)
+      radix-vue:
+        specifier: ^0.1.19
+        version: 0.1.19(vue@3.3.4)
       sha.js:
         specifier: ^2.4.11
         version: 2.4.11

@@ -27,7 +27,10 @@
 </template>
 
 <script lang="ts" setup>
+import NotificationService from "@/features/notifications/notification.service";
+
 import NavItem from "../components/NavItem.vue";
+import { NavItemProps } from "../types/NavItem.types";
 
 import AuthService from "@features/auth/auth.service";
 
@@ -35,16 +38,7 @@ defineProps<{
   headerText: string;
 }>();
 
-type NavItemOptions = {
-  caption: string;
-  icon: string;
-  to?: {
-    name: string;
-  };
-  onClick?: (event: MouseEvent) => any;
-};
-
-const NAV_ITEMS: NavItemOptions[] = [
+const NAV_ITEMS: NavItemProps[] = [
   {
     caption: "Dashboard",
     icon: "mdi:poll",
@@ -68,7 +62,14 @@ const NAV_ITEMS: NavItemOptions[] = [
   {
     caption: "Sign out",
     icon: "mdi:logout",
-    onClick: AuthService.logOut,
+    onClick: async () => {
+      await AuthService.logOut();
+      NotificationService.pushNotification({
+        title: "You're logged out",
+        type: "info",
+        icon: "mdi:account-check",
+      });
+    },
   },
 ];
 </script>
@@ -76,7 +77,7 @@ const NAV_ITEMS: NavItemOptions[] = [
 <style lang="scss">
 @use "@/assets/styles/utils.scss";
 
-$headerHeight: 140px;
+$headerHeight: 100px;
 
 .app-layout {
   @include utils.useBgColor(alpha, 600);

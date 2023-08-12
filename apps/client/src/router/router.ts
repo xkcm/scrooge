@@ -1,10 +1,11 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import { validateRoute } from "./router.utils";
 
-import DashboardPage from "@/features/app/pages/DashboardPage.vue";
-import HistoryPage from "@/features/app/pages/HistoryPage.vue";
-import NewOperationPage from "@/features/app/pages/NewOperationPage.vue";
-import SettingsPage from "@/features/app/pages/SettingsPage.vue";
+import DashboardPage from "@app/features/dashboard/pages/DashboardPage.vue";
+import HistoryPage from "@app/features/history/pages/HistoryPage.vue";
+import NewOperationPage from "@app/features/new-operation/pages/NewOperationPage.vue";
+import SettingsPage from "@app/features/settings/pages/SettingsPage.vue";
+
 import LoginPage from "@/features/auth/pages/LoginPage.vue";
 
 const routes: RouteRecordRaw[] = [

@@ -1,32 +1,34 @@
 <template>
-  <component
-    :is="to ? 'router-link' : 'button'"
-    :to="to"
-    class="nav-item"
-    @click="onClick"
-  >
+  <button class="nav-item" :class="isActive && 'active'" @click="onButtonClick">
     <div class="nav-item__icon">
-      <Icon :icon="icon" width="20" />
+      <Icon :icon="icon" width="24" />
     </div>
 
     <div class="nav-item__caption">
       <span>{{ caption }}</span>
     </div>
-  </component>
+  </button>
 </template>
 
 <script lang="ts" setup>
 import { Icon } from "@iconify/vue";
-import { RouteLocationRaw } from "vue-router";
+import { computed } from "vue";
+import { useRouter } from "vue-router";
 
-type NavItemProps = {
-  caption: string;
-  icon: string;
-  to?: RouteLocationRaw;
-  onClick?: (event: MouseEvent) => void;
+import { NavItemProps } from "../types/NavItem.types";
+
+const { onClick, to } = defineProps<NavItemProps>();
+const router = useRouter();
+
+const isActive = computed(() => router.currentRoute.value.name === to?.name);
+
+const onButtonClick = (event: MouseEvent) => {
+  onClick?.(event);
+
+  if (to) {
+    router.push(to);
+  }
 };
-
-defineProps<NavItemProps>();
 </script>
 
 <style lang="scss">
@@ -48,10 +50,14 @@ $navItemHeight: 60px;
     @include utils.useBgColor(beta, 500);
   }
 
-  &.router-link-active,
+  &.active,
   &:active {
     @include utils.useBgColor(beta, 600);
     @include utils.useTextColor(secondary);
+  }
+
+  &:focus-visible {
+    @include utils.defaultOutlineOnFocus(alpha);
   }
 }
 

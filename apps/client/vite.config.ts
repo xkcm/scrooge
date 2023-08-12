@@ -28,6 +28,7 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
       "@features": path.resolve(__dirname, "./src/features"),
       "@core": path.resolve(__dirname, "./src/features/core"),
+      "@app": path.resolve(__dirname, "./src/features/app"),
     },
   },
 });

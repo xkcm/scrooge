@@ -12,7 +12,7 @@
     </template>
   </Suspense>
 
-  <NotificationList></NotificationList>
+  <NotificationPortal></NotificationPortal>
 </template>
 
 <script setup lang="ts">
@@ -23,7 +23,7 @@ import GlobalApp from "./GlobalAppPage.vue";
 import GlobalAppError from "./GlobalAppErrorPage.vue";
 import GlobalAppLoading from "./GlobalAppLoadingPage.vue";
 
-import NotificationList from "@/features/notifications/components/NotificationList.vue";
+import NotificationPortal from "@/features/notifications/components/NotificationList.vue";
 
 import { prepareNotificationInputFromApiError } from "@/features/notifications/notification.utils";
 import NotificationService from "@/features/notifications/notification.service";

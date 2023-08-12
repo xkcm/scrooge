@@ -22,12 +22,13 @@
 
       <a id="forgot-password-text" href="#">I forgot my password</a>
 
-      <FilledButton
+      <AppButton
         id="submit-button"
-        caption="Log in"
         icon="mdi:sign-in"
         @click="submitForm(mail, password)"
-      ></FilledButton>
+      >
+        Log in
+      </AppButton>
 
       <span id="new-account-text">
         You don't have an account? <a href="#">Sign up</a>
@@ -43,7 +44,7 @@ import { useRouter } from "vue-router";
 import { Icon } from "@iconify/vue";
 
 import { ApiError } from "@scrooge/shared";
-import { FilledButton, PasswordInput, TextInput } from "@scrooge/ui-library";
+import { AppButton, PasswordInput, TextInput } from "@scrooge/ui-library";
 
 import AuthLayout from "../layouts/AuthLayout.vue";
 import AuthService from "../auth.service";

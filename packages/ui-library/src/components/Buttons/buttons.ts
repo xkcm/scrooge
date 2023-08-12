@@ -1,1 +1,1 @@
-export { default as FilledButton } from "./FilledButton.vue";
+export { default as AppButton } from "./AppButton.vue";

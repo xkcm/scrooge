@@ -13,7 +13,8 @@
     "paths": {
       "@/*": ["./src/*"],
       "@features/*": ["./src/features/*"],
-      "@core/*": ["./src/features/core/*"]
+      "@core/*": ["./src/features/core/*"],
+      "@app/*": ["./src/features/app/*"]
     }
   },
   "include": [
