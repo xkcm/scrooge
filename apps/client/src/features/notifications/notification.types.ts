@@ -7,7 +7,7 @@ export type NotificationInput = {
   type: NotificationType;
   duration?: number;
   closeable?: boolean;
-  onDispose?: () => void; // eslint-disable-line @typescript-eslint/no-explicit-any
+  onDispose?: () => void;
 };
 
 export type Notification = NotificationInput & {

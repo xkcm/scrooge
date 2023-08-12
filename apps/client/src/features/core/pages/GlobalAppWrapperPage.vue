@@ -1,15 +1,17 @@
 <template>
-  <ErrorLayout
+  <GlobalAppError
     v-if="appError.message"
     :message="appError.message"
     :title="appError.title"
-  ></ErrorLayout>
+  ></GlobalAppError>
+
   <Suspense v-else>
-    <App></App>
+    <GlobalApp></GlobalApp>
     <template #fallback>
-      <LoadingLayout></LoadingLayout>
+      <GlobalAppLoading></GlobalAppLoading>
     </template>
   </Suspense>
+
   <NotificationList></NotificationList>
 </template>
 
@@ -17,9 +19,9 @@
 import { onErrorCaptured, reactive } from "vue";
 import { ApiError } from "@scrooge/shared";
 
-import App from "./AppLayout.vue";
-import ErrorLayout from "./ErrorLayout.vue";
-import LoadingLayout from "./LoadingLayout.vue";
+import GlobalApp from "./GlobalAppPage.vue";
+import GlobalAppError from "./GlobalAppErrorPage.vue";
+import GlobalAppLoading from "./GlobalAppLoadingPage.vue";
 
 import NotificationList from "@/features/notifications/components/NotificationList.vue";
 
@@ -36,10 +38,12 @@ const appError = reactive<{
 
 onErrorCaptured((error) => {
   appError.message = error.message;
+
   if (error instanceof ApiError) {
-    NotificationService.pushNotification(
-      prepareNotificationInputFromApiError(error),
-    );
+    const notificationInput = prepareNotificationInputFromApiError(error, {
+      closeable: false,
+    });
+    NotificationService.pushNotification(notificationInput);
   }
 });
 </script>

@@ -4,7 +4,6 @@ import url from "node:url";
 import { defineConfig } from "vite";
 
 import vue from "@vitejs/plugin-vue";
-import svgLoader from "vite-svg-loader";
 import eslint from "vite-plugin-eslint";
 import tsconfigPaths from "vite-tsconfig-paths";
 
@@ -16,6 +15,7 @@ export default defineConfig({
     vue({
       script: {
         defineModel: true,
+        propsDestructure: true,
       },
     }),
     eslint({

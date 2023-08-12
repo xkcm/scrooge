@@ -15,7 +15,7 @@ export function prepareNotificationInputFromApiError(
   };
 
   if (error.code === extractErrorDefaults(RequestFailedError).code) {
-    notificationInput.icon = "mdi:cloud-cancel";
+    notificationInput.icon = "mdi:cloud-off";
   }
 
   return {

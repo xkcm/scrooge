@@ -1,12 +1,12 @@
 import { createPinia } from "pinia";
 import { createApp } from "vue";
 
-import AppWrapper from "@core/layouts/AppWrapperLayout.vue";
+import GlobalAppWrapper from "@core/pages/GlobalAppWrapperPage.vue";
 import "./assets/styles/global.scss";
 import { router } from "./router/router";
 
-async function start() {
-  const vueApp = createApp(AppWrapper);
+async function initApp() {
+  const vueApp = createApp(GlobalAppWrapper);
   const pinia = createPinia();
 
   vueApp.use(router);
@@ -14,4 +14,4 @@ async function start() {
   vueApp.mount("#app");
 }
 
-start();
+initApp();

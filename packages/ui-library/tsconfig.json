@@ -1,0 +1,25 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "lib": ["ESNext", "DOM"],
+    "module": "Node16",
+    "moduleResolution": "Node",
+    "useDefineForClassFields": true,
+    "jsx": "preserve",
+    "isolatedModules": true,
+    "skipLibCheck": false,
+    "baseUrl": "./src/",
+    "outDir": "./dist",
+    "sourceMap": true,
+    "declarationMap": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "src/assets/**/*.json"
+  ],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}

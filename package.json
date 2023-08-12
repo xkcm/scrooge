@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "@client": "pnpm --filter @scrooge/client",
+    "@ui-lib": "pnpm --filter @scrooge/ui-library",
     "@server": "pnpm --filter @scrooge/server",
     "@shared": "pnpm --filter @scrooge/shared",
+
     "lint": "pnpm exec eslint .",
     "dev": "pnpm --recursive --parallel --stream run dev",
     "start-dbs": "./development/start-databases.sh",

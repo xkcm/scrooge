@@ -9,12 +9,14 @@
       <span class="error-box__submessage">
         Try refreshing the app or try later
       </span>
+      <MyBrandButton text="Hello maciej"></MyBrandButton>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
+import { MyBrandButton } from "@scrooge/ui-library";
 
 const { message, title = "Critical error" } = withDefaults(
   defineProps<{

@@ -1,0 +1,30 @@
+{
+  "name": "@scrooge/ui-library",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "module": "./dist/main.js",
+  "types": "./dist/main.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/main.d.ts",
+      "import": "./dist/main.js"
+    }
+  },
+  "scripts": {
+    "dev": "vite build --watch"
+  },
+  "dependencies": {
+    "vue": "^3.3.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.2.3",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5",
+    "vite-plugin-dts": "^3.5.2",
+    "vue-tsc": "^1.8.5"
+  }
+}
