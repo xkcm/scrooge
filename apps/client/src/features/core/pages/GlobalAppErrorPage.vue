@@ -16,17 +16,11 @@
 
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
-import { MyBrandButton } from "@scrooge/ui-library";
 
-const { message, title = "Critical error" } = withDefaults(
-  defineProps<{
-    title?: string;
-    message: string;
-  }>(),
-  {
-    title: "Critical error",
-  },
-);
+const { message, title = "Critical error" } = defineProps<{
+  title?: string;
+  message: string;
+}>();
 </script>
 
 <style lang="scss">

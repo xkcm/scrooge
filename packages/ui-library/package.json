@@ -8,16 +8,11 @@
   "files": [
     "dist"
   ],
-  "exports": {
-    ".": {
-      "types": "./dist/main.d.ts",
-      "import": "./dist/main.js"
-    }
-  },
   "scripts": {
     "dev": "vite build --watch"
   },
   "dependencies": {
+    "@iconify/vue": "^4.1.1",
     "vue": "^3.3.4"
   },
   "devDependencies": {

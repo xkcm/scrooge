@@ -45,9 +45,7 @@ import { Icon } from "@iconify/vue";
 
 import AuthLayout from "../layouts/AuthLayout.vue";
 
-import FilledButton from "@core/components/Buttons/FilledButton.vue";
-import PasswordInput from "@core/components/Inputs/PasswordInput.vue";
-import TextInput from "@core/components/Inputs/TextInput.vue";
+import { FilledButton, PasswordInput, TextInput } from "@scrooge/ui-library";
 
 import NotificationService from "@/features/notifications/notification.service";
 import { NotificationWithActions } from "@/features/notifications/notification.types";

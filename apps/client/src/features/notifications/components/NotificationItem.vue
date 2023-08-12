@@ -37,9 +37,7 @@ const {
   icon: inputIcon,
   body,
   closeable = true,
-} = withDefaults(defineProps<NotificationItemProps>(), {
-  closeable: true,
-});
+} = defineProps<NotificationItemProps>();
 const icon = inputIcon || NotificationService.getDefaultNotificationIcon(type);
 </script>
 

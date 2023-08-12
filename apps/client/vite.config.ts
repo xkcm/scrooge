@@ -19,7 +19,7 @@ export default defineConfig({
       },
     }),
     eslint({
-      exclude: path.resolve(__dirname, "../shared/**/*"),
+      exclude: path.join(__dirname, "../../packages/**/*"),
     }),
     tsconfigPaths(),
   ],

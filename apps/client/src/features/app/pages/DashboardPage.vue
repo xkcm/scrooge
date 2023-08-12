@@ -7,15 +7,16 @@
 </template>
 
 <script setup lang="ts">
-import apiClient from "@/services/api-client/api-client";
 import { onMounted, reactive } from "vue";
+import { FilledButton } from "@scrooge/ui-library";
 
 import type { Session } from "@/services/api-client/modules/session/session.types";
 import type { UserInfo } from "@/services/api-client/modules/user/user.types";
-import FilledButton from "@/features/core/components/Buttons/FilledButton.vue";
 
 import NotificationService from "@/features/notifications/notification.service";
 import AuthService from "@/features/auth/auth.service";
+
+import ApiClient from "@/services/api-client/api-client";
 
 const data = reactive<{
   sessions?: Session[];
@@ -24,8 +25,8 @@ const data = reactive<{
 
 onMounted(async () => {
   [data.sessions, data.userInfo] = await Promise.all([
-    apiClient.session.getActiveSessions(),
-    apiClient.user.getInfo(),
+    ApiClient.session.getActiveSessions(),
+    ApiClient.user.getInfo(),
   ]);
 });
 
