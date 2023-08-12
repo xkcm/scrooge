@@ -9,7 +9,6 @@
       <span class="error-box__submessage">
         Try refreshing the app or try later
       </span>
-      <MyBrandButton text="Hello maciej"></MyBrandButton>
     </div>
   </div>
 </template>

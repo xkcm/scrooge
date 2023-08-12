@@ -19,6 +19,7 @@ module.exports = {
   rules: {
     "vue/no-setup-props-destructure": "off",
     "import/named": "off",
+    "@typescript-eslint/no-explicit-any": "off",
   },
   globals: {
     defineModel: "readonly",

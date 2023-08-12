@@ -8,8 +8,6 @@
 import AuthService from "@/features/auth/auth.service";
 import FontLoaderService from "@/services/font-loader/font-loader";
 
-import "@scrooge/ui-library";
-
 await FontLoaderService.loadFonts();
 await AuthService.resolveAuthState();
 </script>
