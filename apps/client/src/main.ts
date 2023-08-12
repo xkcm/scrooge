@@ -5,6 +5,8 @@ import GlobalAppWrapper from "@core/pages/GlobalAppWrapperPage.vue";
 import "./assets/styles/global.scss";
 import { router } from "./router/router";
 
+import "@scrooge/ui-library/css";
+
 async function initApp() {
   const vueApp = createApp(GlobalAppWrapper);
   const pinia = createPinia();

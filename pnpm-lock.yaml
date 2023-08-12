@@ -68,6 +68,9 @@ importers:
       '@scrooge/shared':
         specifier: workspace:^
         version: link:../../packages/shared
+      '@scrooge/ui-library':
+        specifier: workspace:^
+        version: link:../../packages/ui-library
       '@vueuse/core':
         specifier: ^10.2.1
         version: 10.2.1(vue@3.3.4)
@@ -77,9 +80,6 @@ importers:
       pinia:
         specifier: ^2.1.4
         version: 2.1.4(typescript@4.9.4)(vue@3.3.4)
-      radix-vue:
-        specifier: ^0.1.19
-        version: 0.1.19(vue@3.3.4)
       sha.js:
         specifier: ^2.4.11
         version: 2.4.11
@@ -96,9 +96,6 @@ importers:
         specifier: '4'
         version: 4.0.0(vue@3.3.4)
     devDependencies:
-      '@scrooge/ui-library':
-        specifier: workspace:^
-        version: link:../../packages/ui-library
       '@types/node':
         specifier: ^20.2.5
         version: 20.2.5
@@ -268,6 +265,9 @@ importers:
       '@iconify/vue':
         specifier: ^4.1.1
         version: 4.1.1(vue@3.3.4)
+      radix-vue:
+        specifier: ^0.1.19
+        version: 0.1.19(vue@3.3.4)
       vue:
         specifier: ^3.3.4
         version: 3.3.4

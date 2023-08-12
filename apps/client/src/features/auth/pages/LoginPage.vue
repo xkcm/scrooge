@@ -40,19 +40,17 @@
 // todo: add form validation
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-
 import { Icon } from "@iconify/vue";
 
-import AuthLayout from "../layouts/AuthLayout.vue";
-
+import { ApiError } from "@scrooge/shared";
 import { FilledButton, PasswordInput, TextInput } from "@scrooge/ui-library";
+
+import AuthLayout from "../layouts/AuthLayout.vue";
+import AuthService from "../auth.service";
 
 import NotificationService from "@/features/notifications/notification.service";
 import { NotificationWithActions } from "@/features/notifications/notification.types";
-
 import { prepareNotificationInputFromApiError } from "@/features/notifications/notification.utils";
-import { ApiError } from "@scrooge/shared";
-import AuthService from "../auth.service";
 
 const mail = ref("");
 const password = ref("");
