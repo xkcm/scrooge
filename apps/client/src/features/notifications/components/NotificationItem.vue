@@ -10,7 +10,7 @@
     <button
       v-if="closeable"
       class="notification__close"
-      @click="NotificationService.disposeNotification(notificationId)"
+      @click="notificationService.disposeNotification(notificationId)"
     >
       <Icon icon="mdi:close" height="24" />
     </button>
@@ -20,7 +20,7 @@
 <script lang="ts" setup>
 import { Icon } from "@iconify/vue";
 
-import NotificationService from "../notification.service";
+import notificationService from "../notification.service";
 import type { Notification, NotificationInput } from "../notification.types";
 
 type NotificationItemProps = Omit<
@@ -38,7 +38,7 @@ const {
   body,
   closeable = true,
 } = defineProps<NotificationItemProps>();
-const icon = inputIcon || NotificationService.getDefaultNotificationIcon(type);
+const icon = inputIcon || notificationService.getDefaultNotificationIcon(type);
 </script>
 
 <style lang="scss">

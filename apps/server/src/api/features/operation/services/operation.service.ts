@@ -21,6 +21,7 @@ const PUBLIC_OPERATION_SELECT = {
   createdAt: true,
   amount: true,
   tags: true,
+  title: true,
   description: true,
   type: true,
 };
@@ -34,6 +35,7 @@ const operationService: OperationService = {
     const createdOperation = await prismaClient.operation
       .create({
         data: {
+          title: payload.title,
           description: payload.description,
           amount: payload.amount,
           tags: payload.tags,
@@ -55,7 +57,7 @@ const operationService: OperationService = {
     return mapToPublicOperation(createdOperation);
   },
 
-  async getAllOperations(ownerId, filters = {}) {
+  async getOperations(ownerId, filters = {}) {
     const operations = await prismaClient.operation
       .findMany({
         where: {
@@ -78,11 +80,11 @@ const operationService: OperationService = {
   },
 
   async getOperationsByDate(ownerId, from, to) {
-    const filters: Parameters<OperationService["getAllOperations"]>[1] = {
+    const filters: Parameters<OperationService["getOperations"]>[1] = {
       createdAt: createFullDayDatePrismaFilter(from, to),
     };
 
-    return this.getAllOperations(ownerId, filters);
+    return this.getOperations(ownerId, filters);
   },
 
   async getOperationsSum(ownerId, from, to) {

@@ -11,8 +11,8 @@ async function loadFonts(fontNames: string[] = USED_FONTS) {
   await document.fonts.ready;
 }
 
-const FontLoaderService = {
+const fontLoaderService = {
   loadFonts,
 };
 
-export default FontLoaderService;
+export default fontLoaderService;

@@ -7,15 +7,15 @@ export interface OperationService {
     operationType: Operation["type"],
     payload: Pick<
       Prisma.OperationCreateInput,
-      "amount" | "description" | "createdAt"
+      "amount" | "description" | "createdAt" | "title"
     > & {
       tags?: Operation["tags"];
     },
   ): Promise<schemas.operation.PublicOperation>;
 
-  getAllOperations(
+  getOperations(
     ownerId: Operation["ownerId"],
-    filters?: Omit<K<Prisma.OperationFindManyArgs["where"]>, "ownerId">,
+    filters?: Omit<Partial<Prisma.OperationFindManyArgs["where"]>, "ownerId">,
   ): Promise<schemas.operation.PublicOperation[]>;
 
   getOperationsByDate(

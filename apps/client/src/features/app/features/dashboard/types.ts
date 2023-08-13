@@ -1,6 +1,6 @@
 export type Operation = {
   title: string;
-  date: string;
+  createdAt: number;
   amount: number;
   type: "INCOME" | "EXPENSE";
   tags: string[];

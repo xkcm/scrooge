@@ -8,8 +8,9 @@ export const GetOperationsQuerySchema = z
 
 export const AddOperationBodySchema = z
   .object({
+    title: z.string(),
     amount: z.number().positive(),
-    description: z.string(),
+    description: z.string().optional(),
     tags: z.array(z.string()).optional(),
     createdAt: z
       .number()

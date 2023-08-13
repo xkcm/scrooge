@@ -5,11 +5,11 @@
 </template>
 
 <script setup lang="ts">
-import AuthService from "@/features/auth/auth.service";
-import FontLoaderService from "@/services/font-loader/font-loader";
+import authService from "@/features/auth/auth.service";
+import fontLoaderService from "@/services/font-loader/font-loader";
 
-await FontLoaderService.loadFonts();
-await AuthService.resolveAuthState();
+await fontLoaderService.loadFonts();
+await authService.resolveAuthState();
 </script>
 
 <style lang="scss">

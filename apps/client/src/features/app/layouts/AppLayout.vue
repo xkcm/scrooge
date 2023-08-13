@@ -27,12 +27,12 @@
 </template>
 
 <script lang="ts" setup>
-import NotificationService from "@/features/notifications/notification.service";
+import notificationService from "@/features/notifications/notification.service";
 
 import NavItem from "../components/NavItem.vue";
 import { NavItemProps } from "../types/NavItem.types";
 
-import AuthService from "@features/auth/auth.service";
+import authService from "@features/auth/auth.service";
 
 defineProps<{
   headerText: string;
@@ -63,8 +63,8 @@ const NAV_ITEMS: NavItemProps[] = [
     caption: "Sign out",
     icon: "mdi:logout",
     onClick: async () => {
-      await AuthService.logOut();
-      NotificationService.pushNotification({
+      await authService.logOut();
+      notificationService.pushNotification({
         title: "You're logged out",
         type: "info",
         icon: "mdi:account-check",

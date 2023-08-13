@@ -1,4 +1,4 @@
-import { filters, Query, schemas } from "@scrooge/shared";
+import { filters, QueryFilter, schemas } from "@scrooge/shared";
 
 import {
   ApiControllerObject,
@@ -46,20 +46,21 @@ export const operationController = {
   ) {
     const { userId } = res.locals.auth;
 
-    const filterQuery = Query.fromString(req.query?.filter, {
-      schema: filters.GetOperationsSchema,
+    console.info({ query: req.query?.filter });
+    const filterQuery = QueryFilter.fromString(req.query?.filter, {
+      schema: filters.GetOperationsFilterQuerySchema,
+      decodeUri: true,
     });
 
     const { from, to } = filterQuery.getFilter("createdAt", {
-      from: Date.now() - 60 * 60 * 24,
+      from: 0,
       to: Date.now(),
     });
 
-    const foundOperations = await operationService.getOperationsByDate(
-      userId,
+    const foundOperations = await operationService.getOperations(userId, {
       from,
       to,
-    );
+    });
 
     return res.json(foundOperations);
   },
@@ -104,8 +105,8 @@ export const operationController = {
   ) {
     const { userId } = res.locals.auth;
 
-    const filter = Query.fromString(req.query?.filter, {
-      schema: filters.GetOperationsSchema,
+    const filter = QueryFilter.fromString(req.query?.filter, {
+      schema: filters.GetOperationsFilterQuerySchema,
     });
     const { from, to } = filter.getFilter("createdAt", {
       from: Date.now() - 60 * 60 * 24,

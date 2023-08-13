@@ -24,9 +24,12 @@ const authController = bindObjectMethods({
     const { email } = req.body;
     const { token } = tokenService.createGenericToken({ email });
 
-    const isSent = await mailService.sendConfirmRegistrationMail(email, token);
+    const sendMailResult = await mailService.sendConfirmRegistrationMail(
+      email,
+      token,
+    );
 
-    res.json({ mailSent: isSent });
+    res.json(sendMailResult);
   },
 
   async register(
@@ -55,7 +58,7 @@ const authController = bindObjectMethods({
       password: req.body.password,
     };
 
-    return this.login(newReq, res, next);
+    return this.logIn(newReq, res, next);
   },
 
   async logOut(req, res: ApiResponse<schemas.auth.GetAuthStateResponse>) {

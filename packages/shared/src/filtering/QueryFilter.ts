@@ -15,23 +15,51 @@ import {
 } from "./filtering.types.js";
 import {
   decodeFilterItem,
+  determineFilterTypeBasedOnSchema,
   encodeFilterItem,
   validateFilterValue,
 } from "./filtering.utils.js";
 
-export class Query<F extends QueryDictionary = QueryDictionary> {
+export class QueryFilter<F extends QueryDictionary = QueryDictionary> {
   private constructor(filterObject: Record<keyof F, FilterSpec>) {
     Object.entries(filterObject).forEach(([key, value]) =>
       this.add(key, value),
     );
   }
 
-  public static fromString<S extends Zod.ZodRawShape = {}>(
+  public static empty<S extends QueryDictionary>() {
+    const queryFilter = new QueryFilter<S>({} as Record<keyof S, FilterSpec>);
+    return queryFilter;
+  }
+
+  public static fromFilters<F extends QueryDictionary>(
+    filters: F,
+    schema: Zod.AnyZodObject,
+  ) {
+    const filterSpecsObject = Object.fromEntries(
+      Object.entries(filters).map(
+        ([key, filterValue]) =>
+          [
+            key,
+            {
+              type: determineFilterTypeBasedOnSchema(key, schema),
+              value: filterValue,
+            } as FilterSpec,
+          ] as const,
+      ),
+    );
+    const queryFilter = new QueryFilter(filterSpecsObject);
+    console.info({ queryFilter });
+    console.info(QueryFilter);
+    return queryFilter;
+  }
+
+  public static fromString<S extends Zod.AnyZodObject>(
     stringValue?: string,
     options: CreateFilterFromStringOptions<S> = {},
-  ): Query<z.infer<Zod.ZodObject<S>>> {
+  ): QueryFilter<z.infer<S>> {
     let resolvedStringValue = stringValue;
-    if (options.uriEncoded && stringValue) {
+    if (options.decodeUri && stringValue) {
       resolvedStringValue = decodeURIComponent(stringValue);
     }
 
@@ -39,21 +67,16 @@ export class Query<F extends QueryDictionary = QueryDictionary> {
       ? resolvedStringValue.split(";").map((entry) => entry.split(":"))
       : [];
 
-    const filterObject = filterEntries.map(([key, value]) => [
-      key,
-      decodeFilterItem(value),
-    ]);
+    const filterObject = filterEntries.map(
+      ([key, value]) => [key, decodeFilterItem(value)] as const,
+    );
 
     if (options.schema) {
-      const schema = z.object(options.schema);
       const pluckedObject = Object.fromEntries(
-        (filterObject as [string, FilterSpec][]).map(([key, { value }]) => [
-          key,
-          value,
-        ]),
+        filterObject.map(([key, filterSpec]) => [key, filterSpec.value]),
       );
 
-      const { success } = schema.safeParse(pluckedObject);
+      const { success } = options.schema.safeParse(pluckedObject);
       if (!success) {
         throw new InvalidFilterError({
           metadata: { filter: stringValue || "<empty>" },
@@ -61,7 +84,7 @@ export class Query<F extends QueryDictionary = QueryDictionary> {
       }
     }
 
-    return new Query(Object.fromEntries(filterObject));
+    return new QueryFilter(Object.fromEntries(filterObject));
   }
 
   private filterMap = new Map<keyof F, FilterSpec>();
@@ -105,7 +128,7 @@ export class Query<F extends QueryDictionary = QueryDictionary> {
     const filterSpec = this.filterMap.get(key);
 
     if (!filterSpec) {
-      return fallback as F[K];
+      return fallback as NonNullable<F[K]>;
     }
 
     return filterSpec.value as NonNullable<F[K]>;
@@ -120,10 +143,17 @@ export class Query<F extends QueryDictionary = QueryDictionary> {
       .map(([key, value]) => `${key.toString()}:${encodeFilterItem(value)}`)
       .join(";");
 
-    if (options.uriEncoded) {
+    if (options.encodeUri) {
       stringifiedValue = encodeURIComponent(stringifiedValue);
     }
 
     return stringifiedValue;
+  }
+
+  public toURLSearchParams() {
+    const urlSearchParams = new URLSearchParams();
+    urlSearchParams.set("filter", this.stringify());
+
+    return urlSearchParams;
   }
 }

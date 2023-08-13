@@ -20,10 +20,12 @@
 
 <script lang="ts" setup>
 import { computed } from "vue";
-
 import { Operation } from "../../types";
 
-const { amount, date } = defineProps<Operation & { rowNumber: number }>();
+type LatestOperationItemProps = Operation & {
+  rowNumber: number;
+};
+const { amount, createdAt } = defineProps<LatestOperationItemProps>();
 
 // todo: implement this correctly
 // - set locale based on user
@@ -38,7 +40,7 @@ const dateFormatter = new Intl.DateTimeFormat("en-us", {
 });
 
 const formattedAmount = computed(() => currencyFormatter.format(amount));
-const formattedDate = computed(() => dateFormatter.format(new Date(date)));
+const formattedDate = computed(() => dateFormatter.format(new Date(createdAt)));
 </script>
 
 <style lang="scss">

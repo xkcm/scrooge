@@ -22,7 +22,7 @@ const mailService = {
   async sendConfirmRegistrationMail(
     email: string,
     registrationToken: string,
-  ): Promise<boolean> {
+  ): Promise<{ mailSent: boolean }> {
     const { mailConfigurations } = config;
 
     const url = buildUrl(env.FRONTEND_URL, {
@@ -37,13 +37,16 @@ const mailService = {
       data: { url },
     });
     const { subject } = mailConfigurations.confirmRegistration;
-
-    return this.sendMail({
+    const mailPayload = {
       to: email,
       html: body,
       subject,
       from: env.MAIL_FROM,
-    });
+    };
+
+    return process.env.NODE_ENV === "development"
+      ? ({ ...mailPayload, registrationToken } as any)
+      : { mailSent: this.sendMail(mailPayload) };
   },
 };
 

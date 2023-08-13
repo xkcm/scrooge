@@ -1,16 +1,19 @@
 import { z } from "zod";
 
-import { FilterRangeSchema } from "../filters.helpers.js";
+import {
+  FilterEnumSchema,
+  FilterNumberSchema,
+  FilterRangeSchema,
+} from "../filters.helpers.js";
 
-type InferFilterFromSchema<S extends Zod.ZodRawShape> = z.infer<z.ZodObject<S>>;
-
-export const GetOperationsSchema = {
+export const GetOperationsFilterQuerySchema = z.object({
   createdAt: FilterRangeSchema.optional(),
-  operationType: z.enum(["INCOME", "EXPENSE", "ALL"]).optional(),
-  sortBy: z.enum(["createdAt"]).optional(),
-  limit: z.number().optional(),
-  offset: z.number(),
-};
-export type GetOperationsFilter = InferFilterFromSchema<
-  typeof GetOperationsSchema
+  operationType: FilterEnumSchema.create(["INCOME", "EXPENSE", "ALL"]),
+  sortBy: FilterEnumSchema.create(["createdAt"]).optional(),
+  limit: FilterNumberSchema.optional(),
+  offset: FilterNumberSchema.optional(),
+});
+
+export type GetOperationFilterQuery = z.infer<
+  typeof GetOperationsFilterQuerySchema
 >;

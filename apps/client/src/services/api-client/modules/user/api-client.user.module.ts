@@ -1,5 +1,5 @@
 import { sendApiRequest } from "../../api-client.utils";
-import { UserInfo } from "./user.types";
+import { UserInfo } from "./api-client.user.module.types.js";
 
 export async function getInfo(): Promise<UserInfo> {
   const path = "user/info";

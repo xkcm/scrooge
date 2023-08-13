@@ -35,10 +35,10 @@ function getThemeConfig(themeName: string): ThemeConfig {
   return foundTheme;
 }
 
-const ThemeService = {
+const themeService = {
   initTheme,
   setTheme,
   getThemesConfig,
 };
 
-export default ThemeService;
+export default themeService;

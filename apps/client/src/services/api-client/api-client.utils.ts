@@ -8,7 +8,11 @@ import {
 export async function sendApiRequest<T = unknown>(
   options: SendApiRequestOptions,
 ): Promise<SendApiRequestResult<T>> {
-  const fullUrl = joinUrlParts(import.meta.env.VITE_API_URL, options.path);
+  let fullUrl = joinUrlParts(import.meta.env.VITE_API_URL, options.path);
+
+  if (options.query) {
+    fullUrl += "?" + options.query.toString();
+  }
 
   const payload: Parameters<typeof fetch>[1] = {
     method: options.method || "POST",

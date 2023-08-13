@@ -19,7 +19,8 @@ CREATE TABLE "Operation" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "amount" MONEY NOT NULL,
     "tags" TEXT[],
-    "description" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "description" TEXT,
     "type" "OperationType" NOT NULL,
 
     CONSTRAINT "Operation_pkey" PRIMARY KEY ("id")

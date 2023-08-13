@@ -101,7 +101,7 @@ function getDefaultNotificationIcon(type: NotificationType) {
   return TYPE_ICON_MAP[type] || TYPE_ICON_MAP.info;
 }
 
-const NotificationService = {
+const notificationService = {
   createNotification,
   pushNotification,
   unshiftNotification,
@@ -110,4 +110,4 @@ const NotificationService = {
   getDefaultNotificationIcon,
 };
 
-export default NotificationService;
+export default notificationService;

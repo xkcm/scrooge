@@ -25,3 +25,7 @@ export class UnrecognizedFilterValueTypeError extends BetterError<{
 export class InvalidFilterError extends BetterError<{
   filter: string;
 }> {}
+
+@withMessage("Filter schema is invalid")
+@withCode("filtering.invalid_schema")
+export class InvalidFilterSchema extends BetterError {}

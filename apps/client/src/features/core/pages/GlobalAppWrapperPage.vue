@@ -26,10 +26,10 @@ import GlobalAppLoading from "./GlobalAppLoadingPage.vue";
 import NotificationPortal from "@/features/notifications/components/NotificationList.vue";
 
 import { prepareNotificationInputFromApiError } from "@/features/notifications/notification.utils";
-import NotificationService from "@/features/notifications/notification.service";
-import ThemeService from "@/services/theme/theme";
+import notificationService from "@/features/notifications/notification.service";
+import themeService from "@/services/theme/theme";
 
-ThemeService.initTheme();
+themeService.initTheme();
 
 const appError = reactive<{
   message?: string;
@@ -43,7 +43,7 @@ onErrorCaptured((error) => {
     const notificationInput = prepareNotificationInputFromApiError(error, {
       closeable: false,
     });
-    NotificationService.pushNotification(notificationInput);
+    notificationService.pushNotification(notificationInput);
   }
 });
 </script>

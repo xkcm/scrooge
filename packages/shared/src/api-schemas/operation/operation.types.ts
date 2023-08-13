@@ -1,4 +1,3 @@
-import { Operation } from "@prisma/client";
 import { z } from "zod";
 
 import {
@@ -15,9 +14,13 @@ export type DeleteOperationParams = z.infer<typeof DeleteOperationParamsSchema>;
 export type ModifyOperationBody = z.infer<typeof ModifyOperationBodySchema>;
 export type ModifyOperationParams = z.infer<typeof ModifyOperationParamsSchema>;
 
-export type PublicOperation = Pick<Operation, "id" | "tags" | "description"> & {
+export type PublicOperation = {
+  title: string;
+  id: string;
+  tags: string[];
   amount: number;
   createdAt: number;
+  description?: string;
 };
 export type GetOperationsSumResponse = {
   incomeSum: number;

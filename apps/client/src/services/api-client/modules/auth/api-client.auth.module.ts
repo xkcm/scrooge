@@ -1,15 +1,15 @@
 import hashJs from "hash.js";
+import { ApiError } from "@scrooge/shared";
+
+import { GetAuthInfoResponse } from "./api-client.auth.module.types.js";
 
 import { sendApiRequest } from "../../api-client.utils";
 import type { JwtTokensState } from "../../api-client.types";
-import { ApiError } from "@scrooge/shared";
-import { GetAuthInfoResponse } from "./auth.types";
 
 export async function logIn(
   mail: string,
   password: string,
 ): Promise<JwtTokensState> {
-  // TODO: Improve error handling (recognize error codes etc)
   const path = "auth/login";
   const requestPayload = {
     email: mail,

@@ -1,11 +1,11 @@
 import { RouteLocationNormalized } from "vue-router";
 import { router } from "./router";
-import AuthService from "@/features/auth/auth.service";
-import NotificationService from "@/features/notifications/notification.service";
+import authService from "@/features/auth/auth.service";
+import notificationService from "@/features/notifications/notification.service";
 
 export function validateRoute(route: RouteLocationNormalized) {
-  if (route.meta.requireAuthentication && !AuthService.isUserAuthenticated()) {
-    NotificationService.pushNotification({
+  if (route.meta.requireAuthentication && !authService.isUserAuthenticated()) {
+    notificationService.pushNotification({
       title: "Action not allowed",
       type: "warning",
       duration: 20000,
@@ -16,7 +16,7 @@ export function validateRoute(route: RouteLocationNormalized) {
 
   if (
     route.meta.rejectAuthenticatedUsers &&
-    AuthService.isUserAuthenticated()
+    authService.isUserAuthenticated()
   ) {
     return { name: "dashboard" };
   }

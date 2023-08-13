@@ -43,6 +43,7 @@ import { useRouter } from "vue-router";
 
 import AppLayout from "@app/layouts/AppLayout.vue";
 
+import apiClient from "@/services/api-client/api-client";
 import DashboardTile from "../components/DashboardTile.vue";
 import ShowFullHistoryButton from "../components/ShowFullHistoryButton.vue";
 import LatestOperationsList from "../components/latest-operations/LatestOperationsList.vue";
@@ -58,37 +59,27 @@ const incomes = ref<Operation[]>([]);
 
 const OPERATION_ITEM_HEIGHT = 41;
 
-const expense = {
-  title: "Groceries",
-  date: "09/10",
-  amount: 320,
-  type: "EXPENSE",
-  tags: [],
-} as const;
-
-const income = {
-  title: "Paycheck",
-  date: "09/10",
-  amount: 4200,
-  type: "INCOME",
-  tags: [],
-} as const;
-
-onMounted(() => {
+onMounted(async () => {
   if (expensesList.value && incomesList.value) {
     const expensesListHeight =
       expensesList.value.getBoundingClientRect().height;
     const incomesListHeight = incomesList.value.getBoundingClientRect().height;
 
-    const expenseItems = Math.floor(expensesListHeight / OPERATION_ITEM_HEIGHT);
-    const incomeItems = Math.floor(incomesListHeight / OPERATION_ITEM_HEIGHT);
+    const maxExpenseItems = Math.floor(
+      expensesListHeight / OPERATION_ITEM_HEIGHT,
+    );
+    const maxIncomeItems = Math.floor(
+      incomesListHeight / OPERATION_ITEM_HEIGHT,
+    );
 
-    const expensesArray = new Array(expenseItems).fill(expense);
-    const incomesArray = new Array(incomeItems).fill(income);
-    console.info({ expensesArray, incomesArray });
+    console.info({ maxExpenseItems, maxIncomeItems });
 
-    expenses.value = expensesArray;
-    incomes.value = incomesArray;
+    incomes.value = await apiClient.operation.getOperations({
+      operationType: "INCOME",
+    });
+    expenses.value = await apiClient.operation.getOperations({
+      operationType: "EXPENSE",
+    });
   }
 });
 </script>

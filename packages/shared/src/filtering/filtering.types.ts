@@ -1,8 +1,8 @@
 export type FilterString = string;
 export type FilterNumber = number;
 export type FilterRange = {
-  includeFrom: boolean;
-  includeTo: boolean;
+  includeFrom?: boolean;
+  includeTo?: boolean;
   from: number;
   to: number;
 };
@@ -26,10 +26,10 @@ export type QueryDictionary = Record<
   FilterString | FilterNumber | FilterRange
 >;
 
-export type CreateFilterFromStringOptions<Schema extends Zod.ZodRawShape> = {
-  uriEncoded?: boolean;
+export type CreateFilterFromStringOptions<Schema extends Zod.AnyZodObject> = {
+  decodeUri?: boolean;
   schema?: Schema;
 };
 export type StringifyFilterOptions = {
-  uriEncoded?: boolean;
+  encodeUri?: boolean;
 };

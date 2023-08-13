@@ -12,9 +12,8 @@
 </template>
 
 <script lang="ts" setup>
-import LatestOperationItem from "./LatestOperationItem.vue";
-
 import { Operation } from "../../types";
+import LatestOperationItem from "./LatestOperationItem.vue";
 
 defineProps<{
   operations: Operation[];

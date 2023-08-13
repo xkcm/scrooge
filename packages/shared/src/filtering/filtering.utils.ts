@@ -1,5 +1,6 @@
 import {
   BadEncodedFilterValueError,
+  InvalidFilterSchema,
   UnrecognizedFilterValueTypeError,
 } from "./filtering.errors.js";
 import { FilterSpec } from "./filtering.types.js";
@@ -79,4 +80,16 @@ export function decodeFilterItem(rawItem: string): FilterSpec {
   }
 
   return { type, value } as FilterSpec;
+}
+
+export function determineFilterTypeBasedOnSchema(
+  key: string,
+  schema: Zod.AnyZodObject,
+): FilterSpec["type"] {
+  const { description } = schema.shape[key];
+  if (!/^type=(?:string|number|range)/.test(description)) {
+    throw new InvalidFilterSchema();
+  }
+
+  return description.slice(5);
 }

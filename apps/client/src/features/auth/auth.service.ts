@@ -30,11 +30,11 @@ async function logIn(mailValue: string, passwordValue: string) {
   return authState.isAuthTokenSet;
 }
 
-const AuthService = {
+const authService = {
   isUserAuthenticated,
   resolveAuthState,
   logOut,
   logIn,
 };
 
-export default AuthService;
+export default authService;

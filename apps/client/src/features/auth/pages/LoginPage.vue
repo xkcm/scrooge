@@ -39,17 +39,17 @@
 
 <script setup lang="ts">
 // todo: add form validation
+import { Icon } from "@iconify/vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { Icon } from "@iconify/vue";
 
 import { ApiError } from "@scrooge/shared";
 import { AppButton, PasswordInput, TextInput } from "@scrooge/ui-library";
 
+import authService from "../auth.service";
 import AuthLayout from "../layouts/AuthLayout.vue";
-import AuthService from "../auth.service";
 
-import NotificationService from "@/features/notifications/notification.service";
+import notificationService from "@/features/notifications/notification.service";
 import { NotificationWithActions } from "@/features/notifications/notification.types";
 import { prepareNotificationInputFromApiError } from "@/features/notifications/notification.utils";
 
@@ -65,15 +65,15 @@ const submitForm = async (mailValue: string, passwordValue: string) => {
   }
 
   try {
-    await AuthService.logIn(mailValue, passwordValue);
+    await authService.logIn(mailValue, passwordValue);
 
     router.push("dashboard");
-    NotificationService.pushNotification({
+    notificationService.pushNotification({
       title: "You're logged in",
       type: "success",
     });
   } catch (apiError) {
-    lastErrorNotification = NotificationService.pushNotification(
+    lastErrorNotification = notificationService.pushNotification(
       prepareNotificationInputFromApiError(apiError as ApiError, {
         title: "Login attempt failed",
         duration: 1500000,

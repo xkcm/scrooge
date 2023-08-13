@@ -11,6 +11,7 @@ export interface SendApiRequestResult<T> {
 export interface SendApiRequestOptions {
   path: string;
   body?: object;
+  query?: URLSearchParams;
   method?: string;
   ignoreBadStatusCode?: boolean;
 }

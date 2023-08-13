@@ -1,5 +1,5 @@
 import { sendApiRequest } from "../../api-client.utils";
-import { Session } from "./session.types";
+import { Session } from "./api-client.session.module.types.js";
 
 export async function getActiveSessions(): Promise<Session[]> {
   const path = "auth/sessions";
