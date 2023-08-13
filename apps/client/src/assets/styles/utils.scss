@@ -1,6 +1,6 @@
 @use "sass:math";
 
-@mixin defaultOutlineOnFocus($colorName: beta) {
+@mixin defaultOutlineOnFocus($colorName: gamma) {
   outline: 2px getColor($colorName) solid;
 }
 

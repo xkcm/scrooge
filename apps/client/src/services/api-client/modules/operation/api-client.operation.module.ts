@@ -11,8 +11,6 @@ export async function getOperations(
     filters.GetOperationsFilterQuerySchema,
   );
 
-  // todo: add typing
-
   const { body } = await sendApiRequest<schemas.operation.PublicOperation[]>({
     method: "GET",
     path,

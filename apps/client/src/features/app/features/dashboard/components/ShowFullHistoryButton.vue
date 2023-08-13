@@ -6,7 +6,7 @@
     @click="
       redirect({
         name: 'history',
-        query: { filter: `operationType:${variant}` },
+        query: { filter },
         // todo: change this
       })
     "
@@ -16,7 +16,9 @@
 </template>
 
 <script lang="ts" setup>
+import { QueryFilter, filters } from "@scrooge/shared";
 import { AppButton } from "@scrooge/ui-library";
+import { computed } from "vue";
 import { RouteLocationRaw } from "vue-router";
 
 type ShowFullHistoryButtonProps = {
@@ -24,5 +26,12 @@ type ShowFullHistoryButtonProps = {
   variant: "expense" | "income";
 };
 
-defineProps<ShowFullHistoryButtonProps>();
+const { variant } = defineProps<ShowFullHistoryButtonProps>();
+
+const filter = computed(() =>
+  QueryFilter.fromFilters<{ operationType: string }>(
+    { operationType: variant.toUpperCase() },
+    filters.GetOperationsFilterQuerySchema,
+  ).stringify(),
+);
 </script>

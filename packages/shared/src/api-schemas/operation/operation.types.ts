@@ -20,6 +20,7 @@ export type PublicOperation = {
   tags: string[];
   amount: number;
   createdAt: number;
+  type: "INCOME" | "EXPENSE";
   description?: string | null;
 };
 export type GetOperationsSumResponse = {

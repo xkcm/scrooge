@@ -5,19 +5,25 @@
       :key="i"
       :row-number="i + 1"
       v-bind="operation"
-    >
-      {{ JSON.stringify(operation) }}
-    </LatestOperationItem>
+      @click="openItemInHistory(operation.id)"
+      @keyup.enter="openItemInHistory(operation.id)"
+    />
   </ul>
 </template>
 
 <script lang="ts" setup>
+import { useRouter } from "vue-router";
 import { Operation } from "../../types";
 import LatestOperationItem from "./LatestOperationItem.vue";
 
 defineProps<{
   operations: Operation[];
 }>();
+const router = useRouter();
+
+const openItemInHistory = (operationId: Operation["id"]) => {
+  router.push({ name: "history/item-details", query: { id: operationId } });
+};
 </script>
 
 <style lang="scss">

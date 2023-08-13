@@ -4,13 +4,13 @@ import {
   UnrecognizedFilterValueTypeError,
 } from "./filtering.errors.js";
 import { FilterSpec } from "./filtering.types.js";
-import { GetOperationsFilterQuerySchema } from "./filters/filters.js";
 
 export function validateFilterValue(value: string) {
   return (
     !!value &&
     !value.includes(";") &&
     !value.includes(":") &&
+    !value.includes(",") &&
     !value.includes("&")
   );
 }
@@ -31,8 +31,13 @@ export function encodeFilterItem(item: FilterSpec) {
     case "string":
       itemValue = `s!${item.value}`;
       break;
+    case "array":
+      itemValue = `a!${item.value.join(",")}`;
+      break;
     default:
-      itemValue = "";
+      throw new UnrecognizedFilterValueTypeError({
+        metadata: { valueType: (item as FilterSpec).type },
+      });
   }
 
   return itemValue;
@@ -74,6 +79,10 @@ export function decodeFilterItem(rawItem: string): FilterSpec {
       type = "number";
       value = +encodedValue;
       break;
+    case "a":
+      type = "array";
+      value = encodedValue.split(",");
+      break;
     default:
       throw new UnrecognizedFilterValueTypeError({
         metadata: { valueType: encodedType },
@@ -88,9 +97,7 @@ export function determineFilterTypeBasedOnSchema(
   schema: Zod.AnyZodObject,
 ): FilterSpec["type"] {
   const { description } = schema.shape[key];
-  if (!/^type=(?:string|number|range)/.test(description)) {
-    console.info({ description, schema, key });
-    console.info({ GetOperationsFilterQuerySchema });
+  if (!/^type=(?:string|number|range|array)/.test(description)) {
     throw new InvalidFilterSchema({
       metadata: { schema: schema.shape[key], parentSchema: schema },
     });

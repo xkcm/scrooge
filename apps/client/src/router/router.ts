@@ -43,6 +43,14 @@ const routes: RouteRecordRaw[] = [
     path: "/history",
     component: HistoryPage,
     meta: { requireAuthentication: true },
+    children: [
+      {
+        name: "history/item-details",
+        path: "operation",
+        component: HistoryPage,
+        meta: { requireAuthentication: true },
+      },
+    ],
   },
 ];
 

@@ -12,7 +12,6 @@ const tokenMiddlewareRequestHandler: ApiHandler = async (req, res, next) => {
     return next(new NoAuthCookieError());
   }
 
-  console.info({ token });
   let tokenPayload;
   try {
     tokenPayload = tokenService.decodeAuthToken(token);

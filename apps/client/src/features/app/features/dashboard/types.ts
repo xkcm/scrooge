@@ -1,4 +1,5 @@
 export type Operation = {
+  id: string;
   title: string;
   createdAt: number;
   amount: number;

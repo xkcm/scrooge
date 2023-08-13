@@ -65,7 +65,7 @@ const operationService: OperationService = {
     };
 
     const type = queryFilter.getFilter("operationType");
-    if (type !== "ALL") {
+    if (type) {
       where.type = type;
     }
 

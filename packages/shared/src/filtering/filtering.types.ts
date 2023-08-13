@@ -1,5 +1,3 @@
-export type FilterString = string;
-export type FilterNumber = number;
 export type FilterRange = {
   includeFrom?: boolean;
   includeTo?: boolean;
@@ -10,21 +8,22 @@ export type FilterRange = {
 export type FilterSpec =
   | {
       type: "string";
-      value: FilterString;
+      value: string;
     }
   | {
       type: "number";
-      value: FilterNumber;
+      value: number;
     }
   | {
       type: "range";
       value: FilterRange;
+    }
+  | {
+      type: "array";
+      value: string[];
     };
 
-export type QueryDictionary = Record<
-  string,
-  FilterString | FilterNumber | FilterRange
->;
+export type QueryDictionary = Record<string, FilterSpec["value"]>;
 
 export type CreateFilterFromStringOptions<Schema extends Zod.AnyZodObject> = {
   decodeUri?: boolean;

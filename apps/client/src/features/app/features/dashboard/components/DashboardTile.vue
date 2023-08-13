@@ -4,6 +4,7 @@
       <div class="dashboard-tile__title">
         <Icon width="25" :icon="icon" />
         <h4>{{ caption }}</h4>
+        <slot name="header" />
       </div>
 
       <span v-if="subinfo" class="dashboard-tile__subinfo">
@@ -47,6 +48,7 @@ defineProps<{
     align-items: center;
 
     h4 {
+      flex-grow: 1;
       margin-left: 8px;
       font-size: 1.5rem;
       font-weight: 500;

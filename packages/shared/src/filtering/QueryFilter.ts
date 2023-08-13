@@ -6,10 +6,8 @@ import {
 } from "./filtering.errors.js";
 import {
   CreateFilterFromStringOptions,
-  FilterNumber,
   FilterRange,
   FilterSpec,
-  FilterString,
   QueryDictionary,
   StringifyFilterOptions,
 } from "./filtering.types.js";
@@ -36,6 +34,14 @@ export class QueryFilter<F extends QueryDictionary = QueryDictionary> {
     filters: F,
     schema: Zod.AnyZodObject,
   ) {
+    const parseResult = schema.safeParse(filters);
+    if (!parseResult.success) {
+      throw new InvalidFilterError({
+        metadata: { filter: "<internal>" },
+        cause: parseResult.error,
+      });
+    }
+
     const filterSpecsObject = Object.fromEntries(
       Object.entries(filters).map(
         ([key, filterValue]) =>
@@ -74,10 +80,11 @@ export class QueryFilter<F extends QueryDictionary = QueryDictionary> {
         filterObject.map(([key, filterSpec]) => [key, filterSpec.value]),
       );
 
-      const { success } = options.schema.safeParse(pluckedObject);
-      if (!success) {
+      const parseResult = options.schema.safeParse(pluckedObject);
+      if (!parseResult.success) {
         throw new InvalidFilterError({
           metadata: { filter: stringValue || "<empty>" },
+          cause: parseResult.error,
         });
       }
     }
@@ -87,7 +94,7 @@ export class QueryFilter<F extends QueryDictionary = QueryDictionary> {
 
   private filterMap = new Map<keyof F, FilterSpec>();
 
-  public addString(key: keyof F, value: FilterString) {
+  public addString(key: keyof F, value: string) {
     if (!validateFilterValue(value)) {
       throw new ForbiddenFilterValueError({
         metadata: {
@@ -110,10 +117,27 @@ export class QueryFilter<F extends QueryDictionary = QueryDictionary> {
     return this.add(key, item);
   }
 
-  public addNumber(key: keyof F, value: FilterNumber) {
+  public addNumber(key: keyof F, value: number) {
     return this.add(key, {
       type: "number",
       value,
+    });
+  }
+
+  public addArray(key: keyof F, values: string[]) {
+    values.forEach((value) => {
+      if (!validateFilterValue(value)) {
+        throw new ForbiddenFilterValueError({
+          metadata: {
+            filterValue: value,
+          },
+        });
+      }
+    });
+
+    return this.add(key, {
+      type: "array",
+      value: values,
     });
   }
 

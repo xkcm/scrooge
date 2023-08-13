@@ -7,6 +7,7 @@ import {
 } from "#root/api/api.types.js";
 import { AuthLocals } from "#root/api/features/auth/middleware/token/token.middleware.types.js";
 
+import { InvalidFilterError } from "./operation.errors.js";
 import operationService from "./services/operation.service.js";
 
 export const operationController = {
@@ -46,9 +47,14 @@ export const operationController = {
   ) {
     const { userId } = res.locals.auth;
 
-    const queryFilter = QueryFilter.fromString(req.query?.filter, {
-      schema: filters.GetOperationsFilterQuerySchema,
-    });
+    let queryFilter;
+    try {
+      queryFilter = QueryFilter.fromString(req.query?.filter, {
+        schema: filters.GetOperationsFilterQuerySchema,
+      });
+    } catch (queryFilterError) {
+      throw new InvalidFilterError({ cause: queryFilterError });
+    }
 
     const foundOperations = await operationService.getOperations(
       userId,

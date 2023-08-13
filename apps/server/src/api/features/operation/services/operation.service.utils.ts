@@ -16,7 +16,7 @@ export const mapRangeFilterToPrismaFilter = (dateTimeFilter: FilterRange) => {
   const from = new Date(dateTimeFilter.from);
   const result: Prisma.DateTimeFilter = {};
 
-  if (dateTimeFilter.includeFrom) {
+  if (dateTimeFilter.number) {
     result.gte = from;
   } else {
     result.gt = from;
@@ -44,7 +44,7 @@ export const createFullDayRangeFilter = (
   return {
     from: fromDate.getTime(),
     to: toDate.getTime(),
-    includeFrom: true,
+    number: true,
     includeTo: true,
   };
 };

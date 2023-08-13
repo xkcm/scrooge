@@ -1,11 +1,24 @@
 <template>
-  <li class="operation-item" :class="`operation-item--${type.toLowerCase()}`">
+  <li
+    class="operation-item"
+    :class="`operation-item--${type.toLowerCase()}`"
+    tabindex="0"
+  >
     <div class="operation-item__row-number">
       {{ rowNumber }}
     </div>
 
     <div class="operation-item__title">
-      {{ title }}
+      <span>{{ title }}</span>
+      <div
+        v-for="(tag, i) of tags"
+        :key="i"
+        class="operation-item__tag"
+        tabindex="0"
+        @click.stop="openTagsInHistory(tag)"
+      >
+        {{ tag }}
+      </div>
     </div>
 
     <div class="operation-item__amount">
@@ -21,26 +34,46 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 import { Operation } from "../../types";
+import { router } from "@/router/router";
+import { QueryFilter, filters } from "@scrooge/shared";
 
 type LatestOperationItemProps = Operation & {
   rowNumber: number;
 };
-const { amount, createdAt } = defineProps<LatestOperationItemProps>();
+const { amount, createdAt, type } = defineProps<LatestOperationItemProps>();
 
 // todo: implement this correctly
-// - set locale based on user
-// - set currency based on preference
-const currencyFormatter = new Intl.NumberFormat("en-us", {
-  style: "currency",
-  currency: "PLN",
+const getUserPreferencies = () => ({
+  currency: "USD",
+  locale: navigator.language,
 });
-const dateFormatter = new Intl.DateTimeFormat("en-us", {
+
+const { locale, currency } = getUserPreferencies();
+const currencyFormatter = new Intl.NumberFormat(locale, {
+  style: "currency",
+  currency,
+});
+const dateFormatter = new Intl.DateTimeFormat(locale, {
   month: "2-digit",
   day: "2-digit",
 });
 
 const formattedAmount = computed(() => currencyFormatter.format(amount));
 const formattedDate = computed(() => dateFormatter.format(new Date(createdAt)));
+
+const openTagsInHistory = (tag: string) => {
+  const queryFilter = QueryFilter.fromFilters(
+    { tags: [tag] },
+    filters.GetOperationsFilterQuerySchema,
+  );
+
+  router.push({
+    name: "history",
+    query: {
+      filter: queryFilter.stringify(),
+    },
+  });
+};
 </script>
 
 <style lang="scss">
@@ -51,12 +84,23 @@ const formattedDate = computed(() => dateFormatter.format(new Date(createdAt)));
   display: flex;
   align-items: center;
   height: 40px;
+  cursor: pointer;
 
   &--income .operation-item__amount {
     color: utils.getColor(green);
   }
   &--expense .operation-item__amount {
     color: utils.getColor(red);
+  }
+
+  &:hover {
+    @include utils.useBgColor(alpha, 500);
+  }
+
+  &:active,
+  &:focus-visible {
+    @include utils.useBgColor(alpha, 600);
+    outline: none;
   }
 }
 
@@ -70,8 +114,29 @@ const formattedDate = computed(() => dateFormatter.format(new Date(createdAt)));
 }
 
 .operation-item__title {
+  display: flex;
   flex-grow: 1;
-  font-weight: 300;
+  gap: 6px;
+  align-items: center;
+
+  > span {
+    font-weight: 300;
+  }
+}
+
+.operation-item__tag {
+  @include utils.useBgColor(gamma);
+  @include utils.useTextColor(secondary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 15px;
+  padding: 0 6px;
+  border-radius: 12px;
+  text-transform: lowercase;
 }
 
 .operation-item__amount {
