@@ -19,7 +19,20 @@
           @click.stop="openTagInHistory(tag)"
           @keyup.enter.stop="openTagInHistory(tag)"
         >
-          {{ tag }}
+          <AppTooltip
+            side="right"
+            :side-offset="6"
+            tooltip-class="show-tag-history-tooltip"
+          >
+            <template #trigger>
+              <span>{{ tag }}</span>
+            </template>
+            <span>
+              See all operations with
+              <span class="show-tag-history-tooltip__tag-name">{{ tag }}</span>
+              tag
+            </span>
+          </AppTooltip>
         </div>
       </div>
     </div>
@@ -39,6 +52,7 @@ import { computed } from "vue";
 import { Operation } from "../../types";
 import { router } from "@/router/router";
 import { QueryFilter, filters } from "@scrooge/shared";
+import { AppTooltip } from "@scrooge/ui-library";
 
 type LatestOperationItemProps = Operation & {
   rowNumber: number;
@@ -161,6 +175,15 @@ const openTagInHistory = (tag: string) => {
   &:focus-visible {
     @include utils.useBgColor(gamma, 600);
     outline: none;
+  }
+}
+
+.show-tag-history-tooltip {
+  --p-tooltip-color: #{utils.getColor(beta)};
+  font-weight: 300;
+
+  .show-tag-history-tooltip__tag-name {
+    font-weight: 500;
   }
 }
 

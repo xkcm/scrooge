@@ -21,6 +21,7 @@
 }
 
 @mixin clearButtonStyles {
+  all: unset;
   outline: none;
   border: none;
   cursor: pointer;
