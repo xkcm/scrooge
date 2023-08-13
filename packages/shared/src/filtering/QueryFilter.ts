@@ -49,8 +49,6 @@ export class QueryFilter<F extends QueryDictionary = QueryDictionary> {
       ),
     );
     const queryFilter = new QueryFilter(filterSpecsObject);
-    console.info({ queryFilter });
-    console.info(QueryFilter);
     return queryFilter;
   }
 
@@ -121,7 +119,7 @@ export class QueryFilter<F extends QueryDictionary = QueryDictionary> {
 
   public getFilter<K extends keyof F>(
     ...args: undefined extends F[K]
-      ? [key: K, fallback: NonNullable<F[K]>]
+      ? [key: K, fallback?: NonNullable<F[K]>]
       : [key: K]
   ): NonNullable<F[K]> {
     const [key, fallback] = args;

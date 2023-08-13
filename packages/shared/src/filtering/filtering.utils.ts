@@ -4,6 +4,7 @@ import {
   UnrecognizedFilterValueTypeError,
 } from "./filtering.errors.js";
 import { FilterSpec } from "./filtering.types.js";
+import { GetOperationsFilterQuerySchema } from "./filters/filters.js";
 
 export function validateFilterValue(value: string) {
   return (
@@ -88,7 +89,11 @@ export function determineFilterTypeBasedOnSchema(
 ): FilterSpec["type"] {
   const { description } = schema.shape[key];
   if (!/^type=(?:string|number|range)/.test(description)) {
-    throw new InvalidFilterSchema();
+    console.info({ description, schema, key });
+    console.info({ GetOperationsFilterQuerySchema });
+    throw new InvalidFilterSchema({
+      metadata: { schema: schema.shape[key], parentSchema: schema },
+    });
   }
 
   return description.slice(5);

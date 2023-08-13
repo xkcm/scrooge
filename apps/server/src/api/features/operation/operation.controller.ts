@@ -46,21 +46,14 @@ export const operationController = {
   ) {
     const { userId } = res.locals.auth;
 
-    console.info({ query: req.query?.filter });
-    const filterQuery = QueryFilter.fromString(req.query?.filter, {
+    const queryFilter = QueryFilter.fromString(req.query?.filter, {
       schema: filters.GetOperationsFilterQuerySchema,
-      decodeUri: true,
     });
 
-    const { from, to } = filterQuery.getFilter("createdAt", {
-      from: 0,
-      to: Date.now(),
-    });
-
-    const foundOperations = await operationService.getOperations(userId, {
-      from,
-      to,
-    });
+    const foundOperations = await operationService.getOperations(
+      userId,
+      queryFilter,
+    );
 
     return res.json(foundOperations);
   },

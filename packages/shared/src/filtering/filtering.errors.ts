@@ -26,6 +26,11 @@ export class InvalidFilterError extends BetterError<{
   filter: string;
 }> {}
 
-@withMessage("Filter schema is invalid")
+@withMessage(
+  "Filter schema is invalid (Parent schema description: %{metadata.parentSchema.description}; Schema description: %{metadata.schema.description})",
+)
 @withCode("filtering.invalid_schema")
-export class InvalidFilterSchema extends BetterError {}
+export class InvalidFilterSchema extends BetterError<{
+  schema: Zod.Schema;
+  parentSchema: Zod.Schema;
+}> {}

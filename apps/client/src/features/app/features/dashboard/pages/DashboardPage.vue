@@ -72,13 +72,13 @@ onMounted(async () => {
       incomesListHeight / OPERATION_ITEM_HEIGHT,
     );
 
-    console.info({ maxExpenseItems, maxIncomeItems });
-
     incomes.value = await apiClient.operation.getOperations({
       operationType: "INCOME",
+      limit: maxIncomeItems,
     });
     expenses.value = await apiClient.operation.getOperations({
       operationType: "EXPENSE",
+      limit: maxExpenseItems,
     });
   }
 });

@@ -1,5 +1,5 @@
 import { Operation, Prisma } from "@prisma/client";
-import { schemas } from "@scrooge/shared";
+import type { filters, QueryFilter, schemas } from "@scrooge/shared";
 
 export interface OperationService {
   addOperation(
@@ -15,7 +15,7 @@ export interface OperationService {
 
   getOperations(
     ownerId: Operation["ownerId"],
-    filters?: Omit<Partial<Prisma.OperationFindManyArgs["where"]>, "ownerId">,
+    queryFilter: QueryFilter<filters.GetOperationFilterQuery>,
   ): Promise<schemas.operation.PublicOperation[]>;
 
   getOperationsByDate(

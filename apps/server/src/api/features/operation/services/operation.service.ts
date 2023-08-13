@@ -1,4 +1,5 @@
 import { Prisma } from "@prisma/client";
+import { filters, QueryFilter } from "@scrooge/shared";
 
 import prismaClient from "#core/prisma/prisma.js";
 import { createPrismaErrorParser } from "#core/prisma/prisma.utils.js";
@@ -12,7 +13,8 @@ import {
 } from "../operation.errors.js";
 import { OperationService } from "./operation.service.types.js";
 import {
-  createFullDayDatePrismaFilter,
+  createFullDayRangeFilter,
+  mapRangeFilterToPrismaFilter,
   mapToPublicOperation,
 } from "./operation.service.utils.js";
 
@@ -57,20 +59,42 @@ const operationService: OperationService = {
     return mapToPublicOperation(createdOperation);
   },
 
-  async getOperations(ownerId, filters = {}) {
-    const operations = await prismaClient.operation
-      .findMany({
-        where: {
-          ...filters,
-          ownerId,
-        },
-        select: PUBLIC_OPERATION_SELECT,
-      })
-      .catch(
-        createPrismaErrorParser({
-          P2025: UserWithGivenIdNotFoundError.withMetadata({ userId: ownerId }),
-        }),
-      );
+  async getOperations(ownerId, queryFilter) {
+    const where: Prisma.OperationWhereInput = {
+      ownerId,
+    };
+
+    const type = queryFilter.getFilter("operationType");
+    if (type !== "ALL") {
+      where.type = type;
+    }
+
+    const createdAt = queryFilter.getFilter("createdAt");
+    if (createdAt) {
+      where.createdAt = mapRangeFilterToPrismaFilter(createdAt);
+    }
+
+    const limit = queryFilter.getFilter("limit", 20);
+    const offset = queryFilter.getFilter("offset", 0);
+
+    const orderKey = queryFilter.getFilter("orderKey", "createdAt");
+    const orderDirection = queryFilter.getFilter("orderDirection", "desc");
+
+    const prismaArgs: Prisma.OperationFindManyArgs = {
+      where,
+      select: PUBLIC_OPERATION_SELECT,
+      orderBy: {
+        [orderKey]: orderDirection,
+      },
+      skip: offset,
+      take: limit,
+    };
+
+    const operations = await prismaClient.operation.findMany(prismaArgs).catch(
+      createPrismaErrorParser({
+        P2025: UserWithGivenIdNotFoundError.withMetadata({ userId: ownerId }),
+      }),
+    );
 
     const parsedOperations = operations.map((operation) =>
       mapToPublicOperation(operation),
@@ -80,15 +104,18 @@ const operationService: OperationService = {
   },
 
   async getOperationsByDate(ownerId, from, to) {
-    const filters: Parameters<OperationService["getOperations"]>[1] = {
-      createdAt: createFullDayDatePrismaFilter(from, to),
-    };
+    const queryFilter = QueryFilter.empty<filters.GetOperationFilterQuery>();
+    queryFilter.addString("operationType", "ALL");
+    queryFilter.addRange("createdAt", createFullDayRangeFilter(from, to));
 
-    return this.getOperations(ownerId, filters);
+    return this.getOperations(ownerId, queryFilter);
   },
 
   async getOperationsSum(ownerId, from, to) {
-    const dateFilter = createFullDayDatePrismaFilter(from, to);
+    const dateFilter = mapRangeFilterToPrismaFilter(
+      createFullDayRangeFilter(from, to),
+    );
+
     const expenseSumQuery = prismaClient.operation.aggregate({
       _sum: { amount: true },
       where: {
@@ -97,6 +124,7 @@ const operationService: OperationService = {
         createdAt: dateFilter,
       },
     });
+
     const incomeSumQuery = prismaClient.operation.aggregate({
       _sum: { amount: true },
       where: {
