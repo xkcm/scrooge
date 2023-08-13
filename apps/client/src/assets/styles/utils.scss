@@ -34,3 +34,10 @@
 @mixin clearHrefStyles {
   text-decoration: none;
 }
+
+@mixin clearListStyles {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  font-family: inherit;
+}

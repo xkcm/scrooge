@@ -19,7 +19,7 @@ await AuthService.resolveAuthState();
   @include utils.useBgColor(alpha);
 
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
 }

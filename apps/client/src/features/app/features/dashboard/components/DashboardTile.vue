@@ -1,13 +1,15 @@
 <template>
   <div class="dashboard-tile">
-    <div class="dashboard-tile__title">
-      <Icon width="25" :icon="icon" />
-      <h4>{{ caption }}</h4>
+    <div class="dashboard-tile__header">
+      <div class="dashboard-tile__title">
+        <Icon width="25" :icon="icon" />
+        <h4>{{ caption }}</h4>
+      </div>
+
+      <span v-if="subinfo" class="dashboard-tile__subinfo">
+        {{ subinfo }}
+      </span>
     </div>
-    <span v-if="subinfo" class="dashboard-tile__subinfo">
-      Summary of operations from the last 30 days
-      {{ subinfo }}
-    </span>
 
     <slot />
   </div>
@@ -29,13 +31,18 @@ defineProps<{
 .dashboard-tile {
   @include utils.useBgColor(alpha);
   border-radius: 10px;
-  padding: 15px 25px;
+  padding: 25px;
+  padding-top: 15px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
 
+  &__header {
+    padding-bottom: 15px;
+  }
+
   &__title {
-    @include utils.useTextColor(beta);
+    color: utils.getColor(beta);
     display: flex;
     align-items: center;
 
@@ -48,7 +55,8 @@ defineProps<{
 
   &__subinfo {
     @include utils.useTextColor(primary, 0.6);
-    margin-left: 33px;
+    font-size: 0.875rem;
+    padding-left: 33px;
     margin-top: 5px;
   }
 }

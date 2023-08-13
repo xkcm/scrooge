@@ -16,11 +16,13 @@
 </template>
 
 <script lang="ts" setup>
-import { Router } from "vue-router";
 import { AppButton } from "@scrooge/ui-library";
+import { RouteLocationRaw } from "vue-router";
 
-defineProps<{
-  redirect: Router["push"];
+type ShowFullHistoryButtonProps = {
+  redirect: (location: RouteLocationRaw) => any;
   variant: "expense" | "income";
-}>();
+};
+
+defineProps<ShowFullHistoryButtonProps>();
 </script>

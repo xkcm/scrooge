@@ -1,4 +1,4 @@
-import { schemas } from "@scrooge/shared";
+import { filters, Query, schemas } from "@scrooge/shared";
 
 import {
   ApiControllerObject,
@@ -45,7 +45,15 @@ export const operationController = {
     res: ApiResponse<schemas.operation.PublicOperation[], AuthLocals>,
   ) {
     const { userId } = res.locals.auth;
-    const { from, to } = req.query;
+
+    const filterQuery = Query.fromString(req.query?.filter, {
+      schema: filters.GetOperationsSchema,
+    });
+
+    const { from, to } = filterQuery.getFilter("createdAt", {
+      from: Date.now() - 60 * 60 * 24,
+      to: Date.now(),
+    });
 
     const foundOperations = await operationService.getOperationsByDate(
       userId,
@@ -95,7 +103,14 @@ export const operationController = {
     res: ApiResponse<schemas.operation.GetOperationsSumResponse, AuthLocals>,
   ) {
     const { userId } = res.locals.auth;
-    const { from, to } = req.query;
+
+    const filter = Query.fromString(req.query?.filter, {
+      schema: filters.GetOperationsSchema,
+    });
+    const { from, to } = filter.getFilter("createdAt", {
+      from: Date.now() - 60 * 60 * 24,
+      to: Date.now(),
+    });
 
     const operationsSum = await operationService.getOperationsSum(
       userId,

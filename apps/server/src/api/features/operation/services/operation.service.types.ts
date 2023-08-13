@@ -15,10 +15,7 @@ export interface OperationService {
 
   getAllOperations(
     ownerId: Operation["ownerId"],
-    filters?: Omit<
-      NonNullable<Prisma.OperationFindManyArgs["where"]>,
-      "ownerId"
-    >,
+    filters?: Omit<K<Prisma.OperationFindManyArgs["where"]>, "ownerId">,
   ): Promise<schemas.operation.PublicOperation[]>;
 
   getOperationsByDate(

@@ -13,19 +13,19 @@ const DEFAULT_NOTIFICATION_DURATION = 5000; // 5s
 function createNotification(
   notificationInput: NotificationInput,
 ): Notification {
-  const id = uuidv4();
+  const notificationId = uuidv4();
   const duration = notificationInput.duration ?? DEFAULT_NOTIFICATION_DURATION;
 
   const notification: Notification = {
     ...notificationInput,
-    id,
+    notificationId,
     timestamp: Date.now(),
     duration: duration,
   };
 
   if (duration !== -1) {
     notification.timeoutInstance = setTimeout(
-      () => disposeNotification(id),
+      () => disposeNotification(notificationId),
       duration,
     );
   }
@@ -44,7 +44,7 @@ function pushNotification(
 
   return {
     ...notification,
-    dispose: () => disposeNotification(notification.id),
+    dispose: () => disposeNotification(notification.notificationId),
   };
 }
 
@@ -59,18 +59,18 @@ function unshiftNotification(
 
   return {
     ...notification,
-    dispose: () => disposeNotification(notification.id),
+    dispose: () => disposeNotification(notification.notificationId),
   };
 }
 
-function disposeNotification(notificationId: Notification["id"]) {
+function disposeNotification(notificationId: Notification["notificationId"]) {
   const store = useNotificationStore();
 
   const [newItems, disposedNotification] = store.items.reduce<
     [Notification[], Notification | null]
   >(
     (acc, cur) => {
-      if (cur.id !== notificationId) {
+      if (cur.notificationId !== notificationId) {
         return [[...acc[0], cur], acc[1]];
       }
       return [acc[0], cur];

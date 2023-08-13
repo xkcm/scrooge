@@ -4,13 +4,8 @@
       <!-- todo: add animations -->
       <NotificationItem
         v-for="notification in notificationStore.items"
-        :key="notification.id"
-        :notification-id="notification.id"
-        :title="notification.title"
-        :icon="notification.icon"
-        :body="notification.body"
-        :type="notification.type"
-        :closeable="notification.closeable"
+        :key="notification.notificationId"
+        v-bind="notification"
       ></NotificationItem>
     </div>
   </Teleport>

@@ -1,18 +1,10 @@
-import moment from "moment";
 import { z } from "zod";
-
-import { NumericStringSchema } from "../api-schemas.utils.js";
 
 export const GetOperationsQuerySchema = z
   .object({
-    from: NumericStringSchema,
-    to: NumericStringSchema,
+    filter: z.string(),
   })
-  .optional()
-  .default(() => ({
-    from: moment().subtract(1, "week").valueOf().toString(),
-    to: moment().valueOf().toString(),
-  }));
+  .optional();
 
 export const AddOperationBodySchema = z
   .object({

@@ -11,7 +11,7 @@ export type NotificationInput = {
 };
 
 export type Notification = NotificationInput & {
-  id: string;
+  notificationId: string;
   timestamp: number;
   duration: number;
   timeoutInstance?: ReturnType<typeof setTimeout>;

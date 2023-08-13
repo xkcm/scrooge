@@ -122,7 +122,7 @@ $headerHeight: 100px;
   align-items: center;
 
   h2 {
-    @include utils.useTextColor(beta);
+    color: utils.getColor(beta);
     font-size: 2.25rem;
     font-weight: 500;
   }
