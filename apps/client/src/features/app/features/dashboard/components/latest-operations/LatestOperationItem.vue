@@ -10,14 +10,17 @@
 
     <div class="operation-item__title">
       <span>{{ title }}</span>
-      <div
-        v-for="(tag, i) of tags"
-        :key="i"
-        class="operation-item__tag"
-        tabindex="0"
-        @click.stop="openTagsInHistory(tag)"
-      >
-        {{ tag }}
+      <div class="operation-item__tags-wrapper">
+        <div
+          v-for="(tag, i) of tags"
+          :key="i"
+          class="operation-item__tag"
+          tabindex="0"
+          @click.stop="openTagInHistory(tag)"
+          @keyup.enter.stop="openTagInHistory(tag)"
+        >
+          {{ tag }}
+        </div>
       </div>
     </div>
 
@@ -61,7 +64,7 @@ const dateFormatter = new Intl.DateTimeFormat(locale, {
 const formattedAmount = computed(() => currencyFormatter.format(amount));
 const formattedDate = computed(() => dateFormatter.format(new Date(createdAt)));
 
-const openTagsInHistory = (tag: string) => {
+const openTagInHistory = (tag: string) => {
   const queryFilter = QueryFilter.fromFilters(
     { tags: [tag] },
     filters.GetOperationsFilterQuerySchema,
@@ -81,9 +84,9 @@ const openTagsInHistory = (tag: string) => {
 
 .operation-item {
   @include utils.useBgColor(alpha);
-  display: flex;
-  align-items: center;
-  height: 40px;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) 140px 70px;
+  grid-template-rows: 40px;
   cursor: pointer;
 
   &--income .operation-item__amount {
@@ -106,8 +109,6 @@ const openTagsInHistory = (tag: string) => {
 
 .operation-item__row-number {
   @include utils.useTextColor(primary, 0.5);
-  height: 40px;
-  width: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -116,11 +117,25 @@ const openTagsInHistory = (tag: string) => {
 .operation-item__title {
   display: flex;
   flex-grow: 1;
-  gap: 6px;
   align-items: center;
+  padding-right: 10px;
 
   > span {
     font-weight: 300;
+  }
+}
+
+.operation-item__tags-wrapper {
+  height: 100%;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 10px;
+  overflow-x: scroll;
+
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
 
@@ -137,16 +152,25 @@ const openTagsInHistory = (tag: string) => {
   padding: 0 6px;
   border-radius: 12px;
   text-transform: lowercase;
+
+  &:hover {
+    @include utils.useBgColor(gamma, 500);
+  }
+
+  &:active,
+  &:focus-visible {
+    @include utils.useBgColor(gamma, 600);
+    outline: none;
+  }
 }
 
 .operation-item__amount {
-  min-width: 140px;
   font-weight: 600;
 }
 
 .operation-item__date {
   text-align: right;
-  min-width: 70px;
   font-weight: 300;
+  padding-right: 10px;
 }
 </style>

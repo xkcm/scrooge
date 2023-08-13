@@ -2,7 +2,7 @@ import { QueryFilter, filters, schemas } from "@scrooge/shared";
 import { sendApiRequest } from "../../api-client.utils";
 
 export async function getOperations(
-  operationsFilters: filters.GetOperationFilterQuery,
+  operationsFilters: filters.GetOperationFilterQuery = {},
 ) {
   const path = "operation/";
 

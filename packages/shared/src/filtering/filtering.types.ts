@@ -32,3 +32,7 @@ export type CreateFilterFromStringOptions<Schema extends Zod.AnyZodObject> = {
 export type StringifyFilterOptions = {
   encodeUri?: boolean;
 };
+
+export type ExtractKeysBasedOnValueType<O extends Record<string, any>, T> = {
+  [K in keyof O as NonNullable<O[K]> extends T ? K : never]: O[K];
+};

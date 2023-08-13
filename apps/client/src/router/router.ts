@@ -37,6 +37,18 @@ const routes: RouteRecordRaw[] = [
     path: "/new-operation",
     component: NewOperationPage,
     meta: { requireAuthentication: true },
+    children: [
+      {
+        name: "new-income",
+        path: "income",
+        component: NewOperationPage,
+      },
+      {
+        name: "new-expense",
+        path: "expense",
+        component: NewOperationPage,
+      },
+    ],
   },
   {
     name: "history",

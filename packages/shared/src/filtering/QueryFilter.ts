@@ -6,6 +6,7 @@ import {
 } from "./filtering.errors.js";
 import {
   CreateFilterFromStringOptions,
+  ExtractKeysBasedOnValueType,
   FilterRange,
   FilterSpec,
   QueryDictionary,
@@ -43,18 +44,16 @@ export class QueryFilter<F extends QueryDictionary = QueryDictionary> {
     }
 
     const filterSpecsObject = Object.fromEntries(
-      Object.entries(filters).map(
-        ([key, filterValue]) =>
-          [
-            key,
-            {
-              type: determineFilterTypeBasedOnSchema(key, schema),
-              value: filterValue,
-            } as FilterSpec,
-          ] as const,
-      ),
-    );
-    const queryFilter = new QueryFilter(filterSpecsObject);
+      Object.entries(filters).map(([key, filterValue]) => [
+        key,
+        {
+          type: determineFilterTypeBasedOnSchema(key, schema),
+          value: filterValue,
+        },
+      ]),
+    ) as Record<keyof F, FilterSpec>;
+
+    const queryFilter = new QueryFilter<F>(filterSpecsObject);
     return queryFilter;
   }
 
@@ -94,22 +93,29 @@ export class QueryFilter<F extends QueryDictionary = QueryDictionary> {
 
   private filterMap = new Map<keyof F, FilterSpec>();
 
-  public addString(key: keyof F, value: string) {
-    if (!validateFilterValue(value)) {
+  public addString<SK extends keyof ExtractKeysBasedOnValueType<F, string>>(
+    key: SK,
+    value: F[SK],
+  ) {
+    const typedValue = value as string;
+    if (!validateFilterValue(typedValue as string)) {
       throw new ForbiddenFilterValueError({
         metadata: {
-          filterValue: value,
+          filterValue: typedValue as string,
         },
       });
     }
 
     this.filterMap.set(key, {
       type: "string",
-      value,
+      value: typedValue as string,
     });
   }
 
-  public addRange(key: keyof F, value: FilterRange) {
+  public addRange<SK extends keyof ExtractKeysBasedOnValueType<F, FilterRange>>(
+    key: SK,
+    value: FilterRange,
+  ) {
     const item: FilterSpec = {
       type: "range",
       value,
@@ -117,14 +123,20 @@ export class QueryFilter<F extends QueryDictionary = QueryDictionary> {
     return this.add(key, item);
   }
 
-  public addNumber(key: keyof F, value: number) {
+  public addNumber<SK extends keyof ExtractKeysBasedOnValueType<F, number>>(
+    key: SK,
+    value: number,
+  ) {
     return this.add(key, {
       type: "number",
       value,
     });
   }
 
-  public addArray(key: keyof F, values: string[]) {
+  public addArray<SK extends keyof ExtractKeysBasedOnValueType<F, string[]>>(
+    key: SK,
+    values: string[],
+  ) {
     values.forEach((value) => {
       if (!validateFilterValue(value)) {
         throw new ForbiddenFilterValueError({

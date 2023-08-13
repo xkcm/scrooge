@@ -6,7 +6,20 @@
         caption="Past month"
         icon="mdi:chart-timeline-variant"
         subinfo="Summary of operations from the last 30 days"
-      ></DashboardTile>
+      >
+        <template #header>
+          <AppButton
+            class="add-new-button"
+            variant="outlined"
+            compact
+            icon="mdi:plus"
+            :icon-size="20"
+            @click="router.push({ name: 'new-expense' })"
+          >
+            test
+          </AppButton>
+        </template>
+      </DashboardTile>
 
       <DashboardTile
         id="latest-expenses"
@@ -20,7 +33,7 @@
             compact
             icon="mdi:plus"
             :icon-size="20"
-            @click="router.push({ name: 'new-operation' })"
+            @click="router.push({ name: 'new-expense' })"
           >
             Add new
           </AppButton>
@@ -44,7 +57,7 @@
             compact
             icon="mdi:plus"
             :icon-size="20"
-            @click="router.push({ name: 'new-operation' })"
+            @click="router.push({ name: 'new-income' })"
           >
             Add new
           </AppButton>
@@ -68,13 +81,13 @@ import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 
 import AppLayout from "@app/layouts/AppLayout.vue";
+import { AppButton } from "@scrooge/ui-library";
 
-import apiClient from "@/services/api-client/api-client";
+import operationService from "@app/services/operation.service";
 import DashboardTile from "../components/DashboardTile.vue";
 import ShowFullHistoryButton from "../components/ShowFullHistoryButton.vue";
 import LatestOperationsList from "../components/latest-operations/LatestOperationsList.vue";
 import { Operation } from "../types";
-import { AppButton } from "@scrooge/ui-library";
 
 const router = useRouter();
 
@@ -99,14 +112,8 @@ onMounted(async () => {
     const maxIncomeItems = Math.floor(incomeListHeight / OPERATION_ITEM_HEIGHT);
 
     [incomes.value, expenses.value] = await Promise.all([
-      apiClient.operation.getOperations({
-        operationType: "INCOME",
-        limit: maxIncomeItems,
-      }),
-      apiClient.operation.getOperations({
-        operationType: "EXPENSE",
-        limit: maxExpenseItems,
-      }),
+      operationService.getIncomeOperations({ limit: maxIncomeItems }),
+      operationService.getExpenseOperations({ limit: maxExpenseItems }),
     ]);
   }
 });
@@ -120,7 +127,7 @@ $dashboardGap: 25px;
 #dashboard {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: calc(50% - #{$dashboardGap}) 50%;
   gap: $dashboardGap;
   padding: $dashboardGap;
   height: 100%;
@@ -133,11 +140,15 @@ $dashboardGap: 25px;
 }
 
 .operations-list__wrapper {
+  @include utils.useCustomScrollbar(gamma, 6px);
+
   flex-grow: 1;
+  overflow: auto;
 }
 
 button.show-full-history-button {
   --p-text-color: #{utils.getColor(delta)};
+  margin-top: 10px;
   min-width: 180px;
   border-width: 1px;
   place-self: center;

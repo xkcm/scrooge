@@ -41,3 +41,18 @@
   list-style: none;
   font-family: inherit;
 }
+
+@mixin useCustomScrollbar($scrollbarColor: beta, $scrollbarWidth: 10px) {
+  &::-webkit-scrollbar {
+    width: $scrollbarWidth;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: math.div($scrollbarWidth, 2);
+    background: getColor($scrollbarColor);
+  }
+}
