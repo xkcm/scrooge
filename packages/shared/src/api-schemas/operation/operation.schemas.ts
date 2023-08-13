@@ -40,3 +40,5 @@ export const ModifyOperationParamsSchema = z
     operationId: z.string().uuid(),
   })
   .strict();
+
+export const GetOperationsPeriodSummaryQuerySchema = GetOperationsQuerySchema;

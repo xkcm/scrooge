@@ -48,4 +48,9 @@ export interface OperationService {
     from: number,
     to: number,
   ): Promise<schemas.operation.GetOperationsSumResponse>;
+
+  getOperationsPeriodSummary(
+    ownerId: Operation["ownerId"],
+    queryFilter: QueryFilter<filters.GetOperationsSummaryFilterQuery>,
+  ): Promise<schemas.operation.GetOperationsSumResponse>;
 }

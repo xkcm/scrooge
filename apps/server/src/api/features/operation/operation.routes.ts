@@ -51,6 +51,14 @@ operationRouter.get(
   }),
   wrapExpressErrorHandler(operationController.getOperationsSum),
 );
+operationRouter.get(
+  "/sum/period",
+  tokenMiddleware.strict,
+  createRequestQueryVerifier({
+    schema: schemas.operation.GetOperationsPeriodSummaryQuerySchema,
+  }),
+  wrapExpressErrorHandler(operationController.getOperationsPeriodSummary),
+);
 
 operationRouter.post(
   "/expense/add",

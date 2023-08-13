@@ -15,6 +15,14 @@ export const GetOperationsFilterQuerySchema = z.object({
   tags: z.array(z.string()).optional().describe("type=array"),
 });
 
+export const GetOperationsPeriodSummaryFilterQuerySchema = z.object({
+  periodGroup: z.enum(["day", "week", "month", "year"]).describe("type=string"),
+  limit: z.number().optional().describe("type=number"),
+});
+
 export type GetOperationFilterQuery = z.infer<
   typeof GetOperationsFilterQuerySchema
+>;
+export type GetOperationsSummaryFilterQuery = z.infer<
+  typeof GetOperationsPeriodSummaryFilterQuerySchema
 >;

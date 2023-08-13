@@ -105,7 +105,6 @@ const operationService: OperationService = {
 
   async getOperationsByDate(ownerId, from, to) {
     const queryFilter = QueryFilter.empty<filters.GetOperationFilterQuery>();
-    queryFilter.addString("operationType", "ALL");
     queryFilter.addRange("createdAt", createFullDayRangeFilter(from, to));
 
     return this.getOperations(ownerId, queryFilter);
@@ -197,6 +196,30 @@ const operationService: OperationService = {
     });
 
     return mapToPublicOperation(modifiedOperation);
+  },
+
+  async getOperationsPeriodSummary(ownerId, queryFilter) {
+    const periodGroup = queryFilter.getFilter("periodGroup");
+
+    const query = Prisma.sql`
+        SELECT
+          o.type,
+          SUM(o.amount) "amountSum",
+          DATE_TRUNC(${periodGroup}, o."createdAt") date
+        FROM
+          "Operation" o
+        WHERE
+          o."ownerId"::text=${ownerId}
+        GROUP BY
+          DATE_TRUNC($1, o."createdAt"),
+          o.type
+        ORDER BY
+          DATE_TRUNC($1, o."createdAt") DESC;
+      `;
+
+    const result = await prismaClient.$queryRaw(query);
+
+    return result as any;
   },
 };
 

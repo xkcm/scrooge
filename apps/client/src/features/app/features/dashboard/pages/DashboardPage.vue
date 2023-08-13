@@ -8,17 +8,22 @@
         subinfo="Summary of operations from the last 30 days"
       >
         <template #header>
-          <AppButton
-            class="add-new-button"
-            variant="outlined"
-            compact
-            icon="mdi:plus"
-            :icon-size="20"
-            @click="router.push({ name: 'new-expense' })"
-          >
-            test
-          </AppButton>
+          <!-- todo: add switch components -->
+          Incomes
+          <input v-model="datasets.income.isShown" type="checkbox" />
+          Expenses
+          <input v-model="datasets.expense.isShown" type="checkbox" />
         </template>
+
+        <div id="operations-summary-chart__wrapper" ref="operationsChart">
+          <OperationsChart
+            v-if="chartSize.isInitialized"
+            :height="chartSize.height"
+            :width="chartSize.width"
+            :chart-data="chartData"
+            :chart-options="chartOptions"
+          />
+        </div>
       </DashboardTile>
 
       <DashboardTile
@@ -77,27 +82,74 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { AppButton } from "@scrooge/ui-library";
+import { computed, onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 
 import AppLayout from "@app/layouts/AppLayout.vue";
-import { AppButton } from "@scrooge/ui-library";
 
-import operationService from "@app/services/operation.service";
 import DashboardTile from "../components/DashboardTile.vue";
 import ShowFullHistoryButton from "../components/ShowFullHistoryButton.vue";
 import LatestOperationsList from "../components/latest-operations/LatestOperationsList.vue";
+import OperationsChart from "../components/OperationsChart.vue";
+
+import operationService from "@app/services/operation.service";
 import { Operation } from "../types";
 
+const OPERATION_ITEM_HEIGHT = 41;
 const router = useRouter();
 
 const expensesListElement = ref<HTMLDivElement>();
 const incomesListElement = ref<HTMLDivElement>();
+const operationsChart = ref<HTMLDivElement>();
 
 const expenses = ref<Operation[]>([]);
 const incomes = ref<Operation[]>([]);
+const chartSize = reactive({
+  height: 0,
+  width: 0,
+  isInitialized: false,
+});
 
-const OPERATION_ITEM_HEIGHT = 41;
+const datasets = reactive({
+  income: {
+    isShown: true,
+    dataset: { data: [40, 20, 12, 30, 94, 129, 30, 12], label: "Incomes" },
+  },
+  expense: {
+    isShown: true,
+    dataset: { data: [20, 40, 22, 89, 20, 19, 31, 21], label: "Expenses" },
+  },
+});
+
+const chartData = computed(() => {
+  const chartDatasets = [];
+
+  if (datasets.income.isShown) {
+    chartDatasets.push(datasets.income.dataset);
+  }
+  if (datasets.expense.isShown) {
+    chartDatasets.push(datasets.expense.dataset);
+  }
+
+  return {
+    labels: [
+      "01/01",
+      "02/01",
+      "03/01",
+      "04/01",
+      "05/01",
+      "06/01",
+      "07/01",
+      "08/01",
+    ],
+    datasets: chartDatasets,
+  };
+});
+
+const chartOptions = {
+  responsive: true,
+};
 
 onMounted(async () => {
   if (expensesListElement.value && incomesListElement.value) {
@@ -116,6 +168,14 @@ onMounted(async () => {
       operationService.getExpenseOperations({ limit: maxExpenseItems }),
     ]);
   }
+
+  if (operationsChart.value) {
+    const { height, width } = operationsChart.value.getBoundingClientRect();
+    chartSize.height = height;
+    chartSize.width = width;
+    chartSize.isInitialized = true;
+    console.info({ height, width });
+  }
 });
 </script>
 
@@ -127,7 +187,7 @@ $dashboardGap: 25px;
 #dashboard {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: calc(50% - #{$dashboardGap}) 50%;
+  grid-template-rows: minmax(0, 1fr) 50%;
   gap: $dashboardGap;
   padding: $dashboardGap;
   height: 100%;
@@ -137,6 +197,10 @@ $dashboardGap: 25px;
 
 #chart {
   grid-column: 1 / 3;
+}
+
+#operations-summary-chart__wrapper {
+  flex-grow: 1;
 }
 
 .operations-list__wrapper {

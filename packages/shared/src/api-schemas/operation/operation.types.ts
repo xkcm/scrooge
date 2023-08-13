@@ -3,6 +3,7 @@ import { z } from "zod";
 import {
   AddOperationBodySchema,
   DeleteOperationParamsSchema,
+  GetOperationsPeriodSummaryQuerySchema,
   GetOperationsQuerySchema,
   ModifyOperationBodySchema,
   ModifyOperationParamsSchema,
@@ -13,6 +14,9 @@ export type AddOperationBody = z.infer<typeof AddOperationBodySchema>;
 export type DeleteOperationParams = z.infer<typeof DeleteOperationParamsSchema>;
 export type ModifyOperationBody = z.infer<typeof ModifyOperationBodySchema>;
 export type ModifyOperationParams = z.infer<typeof ModifyOperationParamsSchema>;
+export type GetOperationsPeriodSummaryQuery = z.infer<
+  typeof GetOperationsPeriodSummaryQuerySchema
+>;
 
 export type PublicOperation = {
   title: string;
@@ -30,3 +34,4 @@ export type GetOperationsSumResponse = {
 export type DeleteOperationResponse = {
   id: PublicOperation["id"];
 };
+export type GetOperationsPeriodSummaryResponse = {};

@@ -127,4 +127,8 @@ $headerHeight: 100px;
     font-weight: 500;
   }
 }
+
+.app-layout__main {
+  overflow: auto;
+}
 </style>

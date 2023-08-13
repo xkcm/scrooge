@@ -103,7 +103,6 @@ export const operationController = {
     res: ApiResponse<schemas.operation.GetOperationsSumResponse, AuthLocals>,
   ) {
     const { userId } = res.locals.auth;
-
     const filter = QueryFilter.fromString(req.query?.filter, {
       schema: filters.GetOperationsFilterQuerySchema,
     });
@@ -119,6 +118,32 @@ export const operationController = {
     );
 
     res.json(operationsSum);
+  },
+
+  async getOperationsPeriodSummary(
+    req: ApiRequest<{}, {}, schemas.operation.GetOperationsPeriodSummaryQuery>,
+    res: ApiResponse<
+      schemas.operation.GetOperationsPeriodSummaryResponse,
+      AuthLocals
+    >,
+  ) {
+    const { userId } = res.locals.auth;
+
+    let filter;
+    try {
+      filter = QueryFilter.fromString(req.query?.filter, {
+        schema: filters.GetOperationsPeriodSummaryFilterQuerySchema,
+      });
+    } catch (queryFilterError) {
+      throw new InvalidFilterError({ cause: queryFilterError });
+    }
+
+    const operationsSummary = await operationService.getOperationsPeriodSummary(
+      userId,
+      filter,
+    );
+
+    res.json(operationsSummary);
   },
 } satisfies ApiControllerObject;
 
