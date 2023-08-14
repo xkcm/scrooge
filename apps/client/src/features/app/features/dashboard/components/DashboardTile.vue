@@ -31,6 +31,7 @@ defineProps<{
 
 .dashboard-tile {
   @include utils.useBgColor(alpha);
+  position: relative;
   border-radius: 10px;
   padding: 15px 10px 25px;
   box-sizing: border-box;

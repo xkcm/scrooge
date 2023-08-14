@@ -15,7 +15,7 @@ export const AddOperationBodySchema = z
     description: z.string().optional(),
     tags: z.array(z.string()).optional(),
     createdAt: z
-      .number()
+      .union([z.number(), z.string()])
       .transform((time) => new Date(time))
       .optional(),
   })

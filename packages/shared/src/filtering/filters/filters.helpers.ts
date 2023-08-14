@@ -8,3 +8,8 @@ export const RangeFilterSchema = z
     includeTo: z.boolean().optional(),
   })
   .describe("type=range");
+
+export const PaginationSchema = z.object({
+  limit: z.number().optional().describe("type=number"),
+  offset: z.number().optional().describe("type=number"),
+});

@@ -1,2 +1,27 @@
+@use "../../styles/utils.scss";
+
 :root[data-theme="dark"] {
+  --text-color-dark: 15, 7, 5;
+  --text-color-light: 240, 240, 240;
+  --text-color-primary: var(--text-color-light);
+  --text-color-secondary: var(--text-color-dark);
+
+  --color-alpha-400: 30, 30, 30;
+  --color-alpha-500: 40, 40, 40;
+  --color-alpha-600: 50, 50, 50;
+
+  --color-beta-400: 25, 50, 60;
+  --color-beta-500: 23, 45, 54;
+  --color-beta-600: 20, 40, 48;
+
+  --color-gamma-400: 116, 128, 103;
+  --color-gamma-500: 104, 115, 93;
+  --color-gamma-600: 93, 102, 82;
+
+  --color-delta-400: 235, 63, 51;
+  --color-delta-500: 212, 57, 46;
+  --color-delta-600: 188, 50, 41;
+
+  --color-green-400: 256, 5, 10;
+  --color-red-400: 220, 57, 42;
 }

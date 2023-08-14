@@ -61,8 +61,8 @@ export interface OperationService {
 
   getOperationsPeriodSummary(
     ownerId: Operation["ownerId"],
-    filterContainer: FilterContainer<filters.GetOperationsSummary>,
-  ): Promise<schemas.operation.GetOperationsSumResponse>;
+    filterContainer: FilterContainer<filters.GetOperationsPeriodSummary>,
+  ): Promise<schemas.operation.GetOperationsPeriodSummaryResponse>;
 }
 
 export type OperationShape = Partial<Record<keyof Operation, boolean>>;
@@ -70,4 +70,10 @@ export type PluckPublicOperation<O extends OperationShape> = {
   [K in keyof schemas.operation.PublicOperation as O[K] extends true
     ? K
     : never]: schemas.operation.PublicOperation[K];
+};
+
+export type RawSummaryRecord = {
+  range_type: "INCOME" | "EXPENSE";
+  operations_sum: string;
+  range_date: string;
 };

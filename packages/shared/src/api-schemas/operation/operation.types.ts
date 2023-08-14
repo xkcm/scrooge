@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { filters } from "../../filtering/filtering.js";
 import {
   AddOperationBodySchema,
   DeleteOperationParamsSchema,
@@ -33,7 +34,13 @@ export type DeleteOperationResponse = {
 export type GetLatestOperationsResponse = {
   [key in "incomes" | "expenses"]: LatestOperation[];
 };
-export type GetOperationsPeriodSummaryResponse = {};
+export type GetOperationsPeriodSummaryResponse = {
+  income: SummaryItem;
+  expense: SummaryItem;
+  from: number;
+  to: number;
+  periodGroup: filters.GetOperationsPeriodSummary["periodGroup"];
+};
 
 export type PublicOperation = {
   title: string;
@@ -48,3 +55,10 @@ export type LatestOperation = Pick<
   PublicOperation,
   "id" | "title" | "amount" | "createdAt" | "type" | "tags"
 >;
+type SummaryItem = {
+  sum: number;
+  entries: {
+    date: number;
+    sum: number;
+  }[];
+};

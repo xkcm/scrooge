@@ -1,5 +1,5 @@
 import themesConfig from "@/assets/themes/themes.config.json";
-import { ThemeConfig } from "./theme.types";
+import { SupportedTheme, ThemeConfig } from "./theme.types";
 import localStorageUtil from "@/services/local-storage/local-storage.util";
 
 const DEFAULT_THEME = themesConfig[0];
@@ -8,7 +8,7 @@ function initTheme(): ThemeConfig {
   return setTheme(getInitThemeName());
 }
 
-function setTheme(themeName: string) {
+function setTheme(themeName: SupportedTheme) {
   const theme = getThemeConfig(themeName);
 
   document.querySelector(":root")?.setAttribute("data-theme", theme.id);
@@ -21,8 +21,11 @@ function getThemesConfig() {
   return themesConfig;
 }
 
-function getInitThemeName(): string {
-  return localStorageUtil.getItem("scrooge__theme-id") || DEFAULT_THEME.id;
+function getInitThemeName(): SupportedTheme {
+  return (
+    (localStorageUtil.getItem("scrooge__theme-id") as SupportedTheme) ||
+    DEFAULT_THEME.id
+  );
 }
 
 function getThemeConfig(themeName: string): ThemeConfig {

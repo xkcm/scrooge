@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import { validateRoute } from "./router.utils";
 
-import DashboardPage from "@app/features/dashboard/pages/DashboardPage.vue";
+import DashboardPage from "@app/features/dashboard/pages/DashboardPage/DashboardPage.vue";
 import HistoryPage from "@app/features/history/pages/HistoryPage.vue";
 import NewOperationPage from "@app/features/new-operation/pages/NewOperationPage.vue";
 import SettingsPage from "@app/features/settings/pages/SettingsPage.vue";
@@ -58,9 +58,8 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         name: "history/item-details",
-        path: "operation",
+        path: "operation/:id",
         component: HistoryPage,
-        meta: { requireAuthentication: true },
       },
     ],
   },

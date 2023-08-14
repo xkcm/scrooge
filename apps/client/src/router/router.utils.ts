@@ -3,14 +3,17 @@ import { RouteLocationNormalized } from "vue-router";
 import { router } from "./router";
 
 export function validateRoute(route: RouteLocationNormalized) {
-  if (route.meta.requireAuthentication && !authService.isUserAuthenticated()) {
+  const requireAuthentication = route.matched.some(
+    (matched) => matched.meta.requireAuthentication,
+  );
+  if (requireAuthentication && !authService.isUserAuthenticated()) {
     return { name: "home" };
   }
 
-  if (
-    route.meta.rejectAuthenticatedUsers &&
-    authService.isUserAuthenticated()
-  ) {
+  const rejectAuthenticatedUsers = route.matched.some(
+    (matched) => matched.meta.rejectAuthenticatedUsers,
+  );
+  if (rejectAuthenticatedUsers && authService.isUserAuthenticated()) {
     return { name: "dashboard" };
   }
 }

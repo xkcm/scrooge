@@ -36,3 +36,21 @@ export async function getLatestOperations(incomes: number, expenses: number) {
 
   return body;
 }
+
+export async function getOperationsPeriodSummary(
+  operationFilters: filters.GetOperationsPeriodSummary,
+) {
+  const path = "operation/sum/period";
+  const filterContainer = FilterContainer.fromFilters(operationFilters, {
+    schema: filters.GetOperationsPeriodSummarySchema,
+  });
+
+  const { body } =
+    await sendApiRequest<schemas.operation.GetOperationsPeriodSummaryResponse>({
+      method: "GET",
+      path,
+      query: filterContainer.toURLSearchParams(),
+    });
+
+  return body;
+}

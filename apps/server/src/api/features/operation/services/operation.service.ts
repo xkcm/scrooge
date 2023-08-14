@@ -1,5 +1,5 @@
 import { Operation, Prisma } from "@prisma/client";
-import { FilterContainer, filters } from "@scrooge/shared";
+import { FilterContainer, filters, schemas } from "@scrooge/shared";
 
 import prismaClient from "#core/prisma/prisma.js";
 import { createPrismaErrorParser } from "#core/prisma/prisma.utils.js";
@@ -12,7 +12,10 @@ import {
   CantDeleteOperationError,
   InvalidOperationIdError,
 } from "../operation.errors.js";
-import { OperationService } from "./operation.service.types.js";
+import {
+  OperationService,
+  RawSummaryRecord,
+} from "./operation.service.types.js";
 import {
   createFullDayRangeFilter,
   mapOperation,
@@ -32,6 +35,7 @@ const operationService: OperationService = {
           description: payload.description,
           amount: payload.amount,
           tags: payload.tags,
+          createdAt: payload.createdAt,
           type,
           owner: {
             connect: {
@@ -198,27 +202,78 @@ const operationService: OperationService = {
   },
 
   async getOperationsPeriodSummary(ownerId, filterContainer) {
-    const periodGroup = filterContainer.getFilter("periodGroup");
+    const period = filterContainer.getFilter("periodGroup");
+    const from = new Date(filterContainer.getFilter("from"));
+    const to = new Date(filterContainer.getFilter("to", Date.now()));
+    const timezoneInMinutes = filterContainer.getFilter("timezone");
+    const timezone = `${timezoneInMinutes < 0 ? "+" : "-"}${Math.abs(
+      timezoneInMinutes / 60,
+    )}`;
 
     const query = Prisma.sql`
+        WITH
+          date_range AS (
+            SELECT
+              date_trunc(${period}, generate_series(${from}, ${to}, ${`1 ${period}`}::interval)) AS "date",
+              'EXPENSE'::"OperationType" AS "type"
+            UNION ALL
+            SELECT
+              date_trunc(${period}, generate_series(${from}, ${to}, ${`1 ${period}`}::interval)) AS "date",
+              'INCOME'::"OperationType" AS "type"
+            ORDER BY "date", "type" DESC
+          ),
+          operations AS (
+            SELECT
+              o."type",
+              o."amount",
+              date_trunc(${period}, o."createdAt" AT TIME ZONE ${timezone}) AS "date"
+            FROM "Operation" o
+            WHERE o."ownerId"::text = ${ownerId}
+          )
         SELECT
-          o.type,
-          SUM(o.amount) "amountSum",
-          DATE_TRUNC(${periodGroup}, o."createdAt") date
-        FROM
-          "Operation" o
-        WHERE
-          o."ownerId"::text=${ownerId}
-        GROUP BY
-          DATE_TRUNC($1, o."createdAt"),
-          o.type
-        ORDER BY
-          DATE_TRUNC($1, o."createdAt") DESC;
+          date_range."date" as range_date,
+          sum(coalesce(operations."amount", 0::money)) AS operations_sum,
+          date_range."type" AS range_type
+        FROM date_range
+        LEFT OUTER JOIN operations
+        ON operations."date" = date_range."date" AND operations."type" = date_range."type"
+        GROUP BY "range_date", "range_type"
+        ORDER BY "range_date" DESC
       `;
 
-    const result = await prismaClient.$queryRaw(query);
+    const records = await prismaClient.$queryRaw<RawSummaryRecord[]>(query);
+    const mappedRecords = records.map((summaryEntry) => ({
+      date: new Date(summaryEntry.range_date).getTime(),
+      sum: +summaryEntry.operations_sum,
+      type: summaryEntry.range_type,
+    }));
 
-    return result as any;
+    const result =
+      mappedRecords.reduce<schemas.operation.GetOperationsPeriodSummaryResponse>(
+        (acc, cur) => {
+          const entry = {
+            date: cur.date,
+            sum: cur.sum,
+          };
+          const key = cur.type.toLowerCase() as "income" | "expense";
+          return {
+            ...acc,
+            [key]: {
+              sum: acc[key].sum + cur.sum,
+              entries: acc[key].entries.concat(entry),
+            },
+          };
+        },
+        {
+          income: { sum: 0, entries: [] },
+          expense: { sum: 0, entries: [] },
+          from: from.getTime(),
+          to: from.getTime(),
+          periodGroup: period,
+        },
+      );
+
+    return result;
   },
 };
 

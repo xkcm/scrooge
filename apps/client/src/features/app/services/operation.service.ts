@@ -23,15 +23,12 @@ function getExpenseOperations(
   });
 }
 
-function getLatestOperations(incomes: number, expenses: number) {
-  return apiClient.operation.getLatestOperations(incomes, expenses);
-}
-
 const operationService = {
   getOperations,
   getIncomeOperations,
   getExpenseOperations,
-  getLatestOperations,
+  getLatestOperations: apiClient.operation.getLatestOperations,
+  getOperationsPeriodSummary: apiClient.operation.getOperationsPeriodSummary,
 };
 
 export default operationService;
