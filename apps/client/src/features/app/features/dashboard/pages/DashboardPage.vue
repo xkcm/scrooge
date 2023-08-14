@@ -1,6 +1,6 @@
 <template v-once>
   <AppLayout header-text="Dashboard">
-    <div id="dashboard">
+    <div id="dashboard" :class="loading && 'dashboard--loading'">
       <DashboardTile
         id="chart"
         caption="Past month"
@@ -17,12 +17,13 @@
 
         <div id="operations-summary-chart__wrapper" ref="operationsChart">
           <OperationsChart
-            v-if="chartSize.isInitialized"
+            v-if="!loading"
             :height="chartSize.height"
             :width="chartSize.width"
             :chart-data="chartData"
             :chart-options="chartOptions"
           />
+          <AppSkeletonBox v-else id="chart-skeleton" />
         </div>
       </DashboardTile>
 
@@ -45,7 +46,8 @@
         </template>
 
         <div ref="expensesListElement" class="operations-list__wrapper">
-          <LatestOperationsList :operations="expenses" />
+          <LatestOperationsList v-if="!loading" :operations="expenses" />
+          <OperationListSkeleton v-else :items-number="maxExpenseItemsNumber" />
         </div>
 
         <ShowFullHistoryButton
@@ -69,7 +71,8 @@
         </template>
 
         <div ref="incomesListElement" class="operations-list__wrapper">
-          <LatestOperationsList :operations="incomes" />
+          <LatestOperationsList v-if="!loading" :operations="incomes" />
+          <OperationListSkeleton v-else :items-number="maxIncomeItemsNumber" />
         </div>
 
         <ShowFullHistoryButton
@@ -82,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import { AppButton } from "@scrooge/ui-library";
+import { AppButton, AppSkeletonBox } from "@scrooge/ui-library";
 import { computed, onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 
@@ -92,12 +95,16 @@ import DashboardTile from "../components/DashboardTile.vue";
 import ShowFullHistoryButton from "../components/ShowFullHistoryButton.vue";
 import LatestOperationsList from "../components/latest-operations/LatestOperationsList.vue";
 import OperationsChart from "../components/OperationsChart.vue";
+import OperationListSkeleton from "../components/skeletons/OperationListSkeleton.vue";
 
 import operationService from "@app/services/operation.service";
 import { Operation } from "../types";
 
-const OPERATION_ITEM_HEIGHT = 41;
 const router = useRouter();
+
+const OPERATION_ITEM_HEIGHT = 41;
+const maxExpenseItemsNumber = ref(0);
+const maxIncomeItemsNumber = ref(0);
 
 const expensesListElement = ref<HTMLDivElement>();
 const incomesListElement = ref<HTMLDivElement>();
@@ -108,8 +115,9 @@ const incomes = ref<Operation[]>([]);
 const chartSize = reactive({
   height: 0,
   width: 0,
-  isInitialized: false,
 });
+
+const loading = ref(true);
 
 const datasets = reactive({
   income: {
@@ -158,24 +166,29 @@ onMounted(async () => {
     const incomeListHeight =
       incomesListElement.value.getBoundingClientRect().height;
 
-    const maxExpenseItems = Math.floor(
+    maxExpenseItemsNumber.value = Math.floor(
       expenseListHeight / OPERATION_ITEM_HEIGHT,
     );
-    const maxIncomeItems = Math.floor(incomeListHeight / OPERATION_ITEM_HEIGHT);
+    maxIncomeItemsNumber.value = Math.floor(
+      incomeListHeight / OPERATION_ITEM_HEIGHT,
+    );
 
-    [incomes.value, expenses.value] = await Promise.all([
-      operationService.getIncomeOperations({ limit: maxIncomeItems }),
-      operationService.getExpenseOperations({ limit: maxExpenseItems }),
-    ]);
+    const { expenses: apiExpenses, incomes: apiIncomes } =
+      await operationService.getLatestOperations(
+        maxIncomeItemsNumber.value,
+        maxExpenseItemsNumber.value,
+      );
+    incomes.value = apiIncomes;
+    expenses.value = apiExpenses;
   }
 
   if (operationsChart.value) {
     const { height, width } = operationsChart.value.getBoundingClientRect();
     chartSize.height = height;
     chartSize.width = width;
-    chartSize.isInitialized = true;
-    console.info({ height, width });
   }
+
+  loading.value = false;
 });
 </script>
 
@@ -197,6 +210,14 @@ $dashboardGap: 25px;
 
 #chart {
   grid-column: 1 / 3;
+}
+
+#operations-summary-chart__wrapper:has(#chart-skeleton) {
+  padding: 15px 20px;
+  box-sizing: border-box;
+  #chart-skeleton {
+    height: 100%;
+  }
 }
 
 #operations-summary-chart__wrapper {

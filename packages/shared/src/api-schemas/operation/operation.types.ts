@@ -3,6 +3,7 @@ import { z } from "zod";
 import {
   AddOperationBodySchema,
   DeleteOperationParamsSchema,
+  GetLatestOperationsQuerySchema,
   GetOperationsPeriodSummaryQuerySchema,
   GetOperationsQuerySchema,
   ModifyOperationBodySchema,
@@ -17,6 +18,22 @@ export type ModifyOperationParams = z.infer<typeof ModifyOperationParamsSchema>;
 export type GetOperationsPeriodSummaryQuery = z.infer<
   typeof GetOperationsPeriodSummaryQuerySchema
 >;
+export type GetLatestOperationsQuery = z.infer<
+  typeof GetLatestOperationsQuerySchema
+>;
+
+export type GetOperationsResponse = { operations: PublicOperation[] };
+export type GetOperationsSumResponse = {
+  incomeSum: number;
+  expenseSum: number;
+};
+export type DeleteOperationResponse = {
+  id: PublicOperation["id"];
+};
+export type GetLatestOperationsResponse = {
+  [key in "incomes" | "expenses"]: LatestOperation[];
+};
+export type GetOperationsPeriodSummaryResponse = {};
 
 export type PublicOperation = {
   title: string;
@@ -25,13 +42,9 @@ export type PublicOperation = {
   amount: number;
   createdAt: number;
   type: "INCOME" | "EXPENSE";
-  description?: string | null;
+  description: string | null;
 };
-export type GetOperationsSumResponse = {
-  incomeSum: number;
-  expenseSum: number;
-};
-export type DeleteOperationResponse = {
-  id: PublicOperation["id"];
-};
-export type GetOperationsPeriodSummaryResponse = {};
+export type LatestOperation = Pick<
+  PublicOperation,
+  "id" | "title" | "amount" | "createdAt" | "type" | "tags"
+>;

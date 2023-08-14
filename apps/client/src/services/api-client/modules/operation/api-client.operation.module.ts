@@ -1,21 +1,38 @@
-import { QueryFilter, filters, schemas } from "@scrooge/shared";
+import { FilterContainer, filters, schemas } from "@scrooge/shared";
 import { sendApiRequest } from "../../api-client.utils";
 
 export async function getOperations(
-  operationsFilters: filters.GetOperationFilterQuery = {},
+  operationsFilters: filters.GetOperation = {},
 ) {
-  const path = "operation/";
+  const path = "operation";
 
-  const queryFilter = QueryFilter.fromFilters(
-    operationsFilters,
-    filters.GetOperationsFilterQuerySchema,
-  );
-
-  const { body } = await sendApiRequest<schemas.operation.PublicOperation[]>({
-    method: "GET",
-    path,
-    query: queryFilter.toURLSearchParams(),
+  const filterContainer = FilterContainer.fromFilters(operationsFilters, {
+    schema: filters.GetOperationsSchema,
   });
+
+  const { body } =
+    await sendApiRequest<schemas.operation.GetOperationsResponse>({
+      method: "GET",
+      path,
+      query: filterContainer.toURLSearchParams(),
+    });
+
+  return body;
+}
+
+export async function getLatestOperations(incomes: number, expenses: number) {
+  const path = "operation/latest";
+  const query = new URLSearchParams([
+    ["incomes", String(incomes)],
+    ["expenses", String(expenses)],
+  ]);
+
+  const { body } =
+    await sendApiRequest<schemas.operation.GetLatestOperationsResponse>({
+      method: "GET",
+      path,
+      query,
+    });
 
   return body;
 }

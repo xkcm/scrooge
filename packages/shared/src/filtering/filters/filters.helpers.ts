@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const FilterRangeSchema = z
+export const RangeFilterSchema = z
   .object({
     from: z.number(),
     to: z.number(),

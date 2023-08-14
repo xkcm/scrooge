@@ -1,4 +1,4 @@
-import { filters, QueryFilter, schemas } from "@scrooge/shared";
+import { filters, schemas } from "@scrooge/shared";
 
 import {
   ApiControllerObject,
@@ -7,7 +7,11 @@ import {
 } from "#root/api/api.types.js";
 import { AuthLocals } from "#root/api/features/auth/middleware/token/token.middleware.types.js";
 
-import { InvalidFilterError } from "./operation.errors.js";
+import { LATEST_OPERATION_SHAPE } from "./operation.consts.js";
+import {
+  createFilterContainerFromFiltersAndMapError,
+  createFilterContainerFromStringAndMapError,
+} from "./operation.controller.utils.js";
 import operationService from "./services/operation.service.js";
 
 export const operationController = {
@@ -43,25 +47,23 @@ export const operationController = {
 
   async getOperations(
     req: ApiRequest<{}, {}, schemas.operation.GetOperationsQuery>,
-    res: ApiResponse<schemas.operation.PublicOperation[], AuthLocals>,
+    res: ApiResponse<schemas.operation.GetOperationsResponse, AuthLocals>,
   ) {
     const { userId } = res.locals.auth;
 
-    let queryFilter;
-    try {
-      queryFilter = QueryFilter.fromString(req.query?.filter, {
-        schema: filters.GetOperationsFilterQuerySchema,
-      });
-    } catch (queryFilterError) {
-      throw new InvalidFilterError({ cause: queryFilterError });
-    }
-
-    const foundOperations = await operationService.getOperations(
-      userId,
-      queryFilter,
+    const filterContainer = createFilterContainerFromStringAndMapError(
+      req.query?.filter,
+      {
+        schema: filters.GetOperationsSchema,
+      },
     );
 
-    return res.json(foundOperations);
+    const operations = await operationService.getOperations(
+      userId,
+      filterContainer,
+    );
+
+    return res.json({ operations });
   },
 
   async deleteOperation(
@@ -103,9 +105,13 @@ export const operationController = {
     res: ApiResponse<schemas.operation.GetOperationsSumResponse, AuthLocals>,
   ) {
     const { userId } = res.locals.auth;
-    const filter = QueryFilter.fromString(req.query?.filter, {
-      schema: filters.GetOperationsFilterQuerySchema,
-    });
+    const filter = createFilterContainerFromStringAndMapError(
+      req.query?.filter,
+      {
+        schema: filters.GetOperationsSchema,
+      },
+    );
+
     const { from, to } = filter.getFilter("createdAt", {
       from: Date.now() - 60 * 60 * 24,
       to: Date.now(),
@@ -120,6 +126,38 @@ export const operationController = {
     res.json(operationsSum);
   },
 
+  async getLatestOperations(
+    req: ApiRequest<{}, {}, schemas.operation.GetLatestOperationsQuery>,
+    res: ApiResponse<schemas.operation.GetLatestOperationsResponse, AuthLocals>,
+  ) {
+    const { userId } = res.locals.auth;
+
+    const filterContainer = createFilterContainerFromFiltersAndMapError(
+      {},
+      {
+        schema: filters.GetOperationsSchema,
+      },
+    );
+
+    filterContainer.setNumberFilter("limit", req.query.incomes);
+    filterContainer.setStringFilter("operationType", "INCOME");
+    const incomes = await operationService.getOperations(
+      userId,
+      filterContainer,
+      LATEST_OPERATION_SHAPE,
+    );
+
+    filterContainer.setNumberFilter("limit", req.query.expenses);
+    filterContainer.setStringFilter("operationType", "EXPENSE");
+    const expenses = await operationService.getOperations(
+      userId,
+      filterContainer,
+      LATEST_OPERATION_SHAPE,
+    );
+
+    res.json({ incomes, expenses });
+  },
+
   async getOperationsPeriodSummary(
     req: ApiRequest<{}, {}, schemas.operation.GetOperationsPeriodSummaryQuery>,
     res: ApiResponse<
@@ -129,14 +167,12 @@ export const operationController = {
   ) {
     const { userId } = res.locals.auth;
 
-    let filter;
-    try {
-      filter = QueryFilter.fromString(req.query?.filter, {
-        schema: filters.GetOperationsPeriodSummaryFilterQuerySchema,
-      });
-    } catch (queryFilterError) {
-      throw new InvalidFilterError({ cause: queryFilterError });
-    }
+    const filter = createFilterContainerFromStringAndMapError(
+      req.query?.filter,
+      {
+        schema: filters.GetOperationsPeriodSummarySchema,
+      },
+    );
 
     const operationsSummary = await operationService.getOperationsPeriodSummary(
       userId,

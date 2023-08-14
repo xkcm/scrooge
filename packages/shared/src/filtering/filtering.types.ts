@@ -1,4 +1,4 @@
-export type FilterRange = {
+export type RangeFilter = {
   includeFrom?: boolean;
   includeTo?: boolean;
   from: number;
@@ -16,20 +16,25 @@ export type FilterSpec =
     }
   | {
       type: "range";
-      value: FilterRange;
+      value: RangeFilter;
     }
   | {
       type: "array";
       value: string[];
     };
 
-export type QueryDictionary = Record<string, FilterSpec["value"]>;
+export type FilterDictionary = Record<string, FilterSpec["value"]>;
 
-export type CreateFilterFromStringOptions<Schema extends Zod.AnyZodObject> = {
+export type CreateFilterContainerFromStringOptions<
+  Schema extends Zod.AnyZodObject,
+> = {
   decodeUri?: boolean;
   schema?: Schema;
 };
-export type StringifyFilterOptions = {
+export type CreateFilterContainerFromFiltersOptions<S extends Zod.Schema> = {
+  schema: S;
+};
+export type StringifyFilterContainerOptions = {
   encodeUri?: boolean;
 };
 

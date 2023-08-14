@@ -1,5 +1,5 @@
-import { Prisma } from "@prisma/client";
-import { filters, QueryFilter } from "@scrooge/shared";
+import { Operation, Prisma } from "@prisma/client";
+import { FilterContainer, filters } from "@scrooge/shared";
 
 import prismaClient from "#core/prisma/prisma.js";
 import { createPrismaErrorParser } from "#core/prisma/prisma.utils.js";
@@ -7,6 +7,7 @@ import { UserWithGivenIdNotFoundError } from "#root/api/features/auth/services/u
 import tagsService from "#root/api/features/tags/services/tags/tags.service.js";
 import { removeDuplicates } from "#root/core/utils/utils.js";
 
+import { PUBLIC_OPERATION_SHAPE } from "../operation.consts.js";
 import {
   CantDeleteOperationError,
   InvalidOperationIdError,
@@ -14,19 +15,9 @@ import {
 import { OperationService } from "./operation.service.types.js";
 import {
   createFullDayRangeFilter,
+  mapOperation,
   mapRangeFilterToPrismaFilter,
-  mapToPublicOperation,
 } from "./operation.service.utils.js";
-
-const PUBLIC_OPERATION_SELECT = {
-  id: true,
-  createdAt: true,
-  amount: true,
-  tags: true,
-  title: true,
-  description: true,
-  type: true,
-};
 
 const operationService: OperationService = {
   async addOperation(ownerId, type, payload) {
@@ -48,7 +39,7 @@ const operationService: OperationService = {
             },
           },
         },
-        select: PUBLIC_OPERATION_SELECT,
+        select: PUBLIC_OPERATION_SHAPE,
       })
       .catch(
         createPrismaErrorParser({
@@ -56,33 +47,37 @@ const operationService: OperationService = {
         }),
       );
 
-    return mapToPublicOperation(createdOperation);
+    return mapOperation(createdOperation, PUBLIC_OPERATION_SHAPE);
   },
 
-  async getOperations(ownerId, queryFilter) {
+  async getOperations(
+    ownerId: Operation["id"],
+    filterContainer: FilterContainer<filters.GetOperation>,
+    operationShape = PUBLIC_OPERATION_SHAPE,
+  ) {
     const where: Prisma.OperationWhereInput = {
       ownerId,
     };
 
-    const type = queryFilter.getFilter("operationType");
+    const type = filterContainer.getFilter("operationType");
     if (type) {
       where.type = type;
     }
 
-    const createdAt = queryFilter.getFilter("createdAt");
+    const createdAt = filterContainer.getFilter("createdAt");
     if (createdAt) {
       where.createdAt = mapRangeFilterToPrismaFilter(createdAt);
     }
 
-    const limit = queryFilter.getFilter("limit", 20);
-    const offset = queryFilter.getFilter("offset", 0);
+    const limit = filterContainer.getFilter("limit", 20);
+    const offset = filterContainer.getFilter("offset", 0);
 
-    const orderKey = queryFilter.getFilter("orderKey", "createdAt");
-    const orderDirection = queryFilter.getFilter("orderDirection", "desc");
+    const orderKey = filterContainer.getFilter("orderKey", "createdAt");
+    const orderDirection = filterContainer.getFilter("orderDirection", "desc");
 
     const prismaArgs: Prisma.OperationFindManyArgs = {
       where,
-      select: PUBLIC_OPERATION_SELECT,
+      select: operationShape,
       orderBy: {
         [orderKey]: orderDirection,
       },
@@ -97,17 +92,21 @@ const operationService: OperationService = {
     );
 
     const parsedOperations = operations.map((operation) =>
-      mapToPublicOperation(operation),
+      mapOperation(operation, operationShape),
     );
 
     return parsedOperations;
   },
 
   async getOperationsByDate(ownerId, from, to) {
-    const queryFilter = QueryFilter.empty<filters.GetOperationFilterQuery>();
-    queryFilter.addRange("createdAt", createFullDayRangeFilter(from, to));
+    const filterContainer = FilterContainer.empty<filters.GetOperation>();
 
-    return this.getOperations(ownerId, queryFilter);
+    filterContainer.setRangeFilter(
+      "createdAt",
+      createFullDayRangeFilter(from, to),
+    );
+
+    return this.getOperations(ownerId, filterContainer);
   },
 
   async getOperationsSum(ownerId, from, to) {
@@ -160,7 +159,7 @@ const operationService: OperationService = {
         }),
       );
 
-    return mapToPublicOperation(operation);
+    return mapOperation(operation, PUBLIC_OPERATION_SHAPE);
   },
 
   async deleteOperation(operationId, requesterId) {
@@ -195,11 +194,11 @@ const operationService: OperationService = {
       data: newPayload,
     });
 
-    return mapToPublicOperation(modifiedOperation);
+    return mapOperation(modifiedOperation, PUBLIC_OPERATION_SHAPE);
   },
 
-  async getOperationsPeriodSummary(ownerId, queryFilter) {
-    const periodGroup = queryFilter.getFilter("periodGroup");
+  async getOperationsPeriodSummary(ownerId, filterContainer) {
+    const periodGroup = filterContainer.getFilter("periodGroup");
 
     const query = Prisma.sql`
         SELECT

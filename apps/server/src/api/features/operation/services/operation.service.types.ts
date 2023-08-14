@@ -1,5 +1,5 @@
 import { Operation, Prisma } from "@prisma/client";
-import type { filters, QueryFilter, schemas } from "@scrooge/shared";
+import type { FilterContainer, filters, schemas } from "@scrooge/shared";
 
 export interface OperationService {
   addOperation(
@@ -15,8 +15,18 @@ export interface OperationService {
 
   getOperations(
     ownerId: Operation["ownerId"],
-    queryFilter: QueryFilter<filters.GetOperationFilterQuery>,
+    filterContainer: FilterContainer<filters.GetOperation>,
   ): Promise<schemas.operation.PublicOperation[]>;
+  getOperations<O extends OperationShape>(
+    ownerId: Operation["ownerId"],
+    filterContainer: FilterContainer<filters.GetOperation>,
+    operationShape: O,
+  ): Promise<PluckPublicOperation<O>[]>;
+  getOperations<O extends OperationShape>(
+    ownerId: Operation["ownerId"],
+    filterContainer: FilterContainer<filters.GetOperation>,
+    operationShape?: O,
+  ): Promise<schemas.operation.PublicOperation[] | PluckPublicOperation<O>[]>;
 
   getOperationsByDate(
     ownerId: Operation["ownerId"],
@@ -51,6 +61,13 @@ export interface OperationService {
 
   getOperationsPeriodSummary(
     ownerId: Operation["ownerId"],
-    queryFilter: QueryFilter<filters.GetOperationsSummaryFilterQuery>,
+    filterContainer: FilterContainer<filters.GetOperationsSummary>,
   ): Promise<schemas.operation.GetOperationsSumResponse>;
 }
+
+export type OperationShape = Partial<Record<keyof Operation, boolean>>;
+export type PluckPublicOperation<O extends OperationShape> = {
+  [K in keyof schemas.operation.PublicOperation as O[K] extends true
+    ? K
+    : never]: schemas.operation.PublicOperation[K];
+};

@@ -1,9 +1,9 @@
 import { z } from "zod";
 
-import { FilterRangeSchema } from "../filters.helpers.js";
+import { RangeFilterSchema } from "../filters.helpers.js";
 
-export const GetOperationsFilterQuerySchema = z.object({
-  createdAt: FilterRangeSchema.optional().describe("type=range"),
+export const GetOperationsSchema = z.object({
+  createdAt: RangeFilterSchema.optional().describe("type=range"),
   operationType: z
     .enum(["INCOME", "EXPENSE"])
     .optional()
@@ -15,14 +15,12 @@ export const GetOperationsFilterQuerySchema = z.object({
   tags: z.array(z.string()).optional().describe("type=array"),
 });
 
-export const GetOperationsPeriodSummaryFilterQuerySchema = z.object({
+export const GetOperationsPeriodSummarySchema = z.object({
   periodGroup: z.enum(["day", "week", "month", "year"]).describe("type=string"),
   limit: z.number().optional().describe("type=number"),
 });
 
-export type GetOperationFilterQuery = z.infer<
-  typeof GetOperationsFilterQuerySchema
->;
-export type GetOperationsSummaryFilterQuery = z.infer<
-  typeof GetOperationsPeriodSummaryFilterQuerySchema
+export type GetOperation = z.infer<typeof GetOperationsSchema>;
+export type GetOperationsSummary = z.infer<
+  typeof GetOperationsPeriodSummarySchema
 >;

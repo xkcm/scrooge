@@ -23,6 +23,14 @@ operationRouter.get(
   }),
   wrapExpressErrorHandler(operationController.getOperations),
 );
+operationRouter.get(
+  "/latest",
+  tokenMiddleware.strict,
+  createRequestQueryVerifier({
+    schema: schemas.operation.GetLatestOperationsQuerySchema,
+  }),
+  wrapExpressErrorHandler(operationController.getLatestOperations),
+);
 operationRouter.delete(
   "/:operationId",
   tokenMiddleware.strict,

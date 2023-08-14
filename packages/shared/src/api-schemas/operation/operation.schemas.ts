@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { NumericStringSchema } from "../api-schemas.utils.js";
+
 export const GetOperationsQuerySchema = z
   .object({
     filter: z.string(),
@@ -38,6 +40,13 @@ export const ModifyOperationBodySchema = z
 export const ModifyOperationParamsSchema = z
   .object({
     operationId: z.string().uuid(),
+  })
+  .strict();
+
+export const GetLatestOperationsQuerySchema = z
+  .object({
+    incomes: NumericStringSchema,
+    expenses: NumericStringSchema,
   })
   .strict();
 

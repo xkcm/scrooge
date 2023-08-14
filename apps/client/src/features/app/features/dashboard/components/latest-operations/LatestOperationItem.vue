@@ -51,7 +51,7 @@
 import { computed } from "vue";
 import { Operation } from "../../types";
 import { router } from "@/router/router";
-import { QueryFilter, filters } from "@scrooge/shared";
+import { FilterContainer, filters } from "@scrooge/shared";
 import { AppTooltip } from "@scrooge/ui-library";
 
 type LatestOperationItemProps = Operation & {
@@ -79,15 +79,15 @@ const formattedAmount = computed(() => currencyFormatter.format(amount));
 const formattedDate = computed(() => dateFormatter.format(new Date(createdAt)));
 
 const openTagInHistory = (tag: string) => {
-  const queryFilter = QueryFilter.fromFilters(
+  const filterContainer = FilterContainer.fromFilters(
     { tags: [tag] },
-    filters.GetOperationsFilterQuerySchema,
+    { schema: filters.GetOperationsSchema },
   );
 
   router.push({
     name: "history",
     query: {
-      filter: queryFilter.stringify(),
+      filter: filterContainer.stringify(),
     },
   });
 };

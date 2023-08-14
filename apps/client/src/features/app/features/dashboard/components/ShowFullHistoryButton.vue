@@ -7,7 +7,6 @@
       redirect({
         name: 'history',
         query: { filter },
-        // todo: change this
       })
     "
   >
@@ -16,7 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-import { QueryFilter, filters } from "@scrooge/shared";
+import { FilterContainer, filters } from "@scrooge/shared";
 import { AppButton } from "@scrooge/ui-library";
 import { computed } from "vue";
 import { RouteLocationRaw } from "vue-router";
@@ -29,9 +28,9 @@ type ShowFullHistoryButtonProps = {
 const { variant } = defineProps<ShowFullHistoryButtonProps>();
 
 const filter = computed(() =>
-  QueryFilter.fromFilters<{ operationType: string }>(
-    { operationType: variant.toUpperCase() },
-    filters.GetOperationsFilterQuerySchema,
+  FilterContainer.fromFilters(
+    { operationType: variant.toUpperCase() as Uppercase<typeof variant> },
+    { schema: filters.GetOperationsSchema },
   ).stringify(),
 );
 </script>

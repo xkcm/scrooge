@@ -5,12 +5,13 @@ import {
   InvalidFilterError,
 } from "./filtering.errors.js";
 import {
-  CreateFilterFromStringOptions,
+  CreateFilterContainerFromFiltersOptions,
+  CreateFilterContainerFromStringOptions,
   ExtractKeysBasedOnValueType,
-  FilterRange,
+  FilterDictionary,
   FilterSpec,
-  QueryDictionary,
-  StringifyFilterOptions,
+  RangeFilter,
+  StringifyFilterContainerOptions,
 } from "./filtering.types.js";
 import {
   decodeFilterItem,
@@ -19,21 +20,23 @@ import {
   validateFilterValue,
 } from "./filtering.utils.js";
 
-export class QueryFilter<F extends QueryDictionary = QueryDictionary> {
+export class FilterContainer<F extends FilterDictionary = FilterDictionary> {
   private constructor(filterObject: Record<keyof F, FilterSpec>) {
     Object.entries(filterObject).forEach(([key, value]) =>
-      this.add(key, value),
+      this.set(key, value),
     );
   }
 
-  public static empty<S extends QueryDictionary>() {
-    const queryFilter = new QueryFilter<S>({} as Record<keyof S, FilterSpec>);
-    return queryFilter;
+  public static empty<S extends FilterDictionary>() {
+    const filterContainer = new FilterContainer<S>(
+      {} as Record<keyof S, FilterSpec>,
+    );
+    return filterContainer;
   }
 
-  public static fromFilters<F extends QueryDictionary>(
-    filters: F,
-    schema: Zod.AnyZodObject,
+  public static fromFilters<S extends Zod.AnyZodObject>(
+    filters: z.infer<S>,
+    { schema }: CreateFilterContainerFromFiltersOptions<S>,
   ) {
     const parseResult = schema.safeParse(filters);
     if (!parseResult.success) {
@@ -51,16 +54,16 @@ export class QueryFilter<F extends QueryDictionary = QueryDictionary> {
           value: filterValue,
         },
       ]),
-    ) as Record<keyof F, FilterSpec>;
+    ) as Record<keyof S, FilterSpec>;
 
-    const queryFilter = new QueryFilter<F>(filterSpecsObject);
-    return queryFilter;
+    const filterContainer = new FilterContainer<z.infer<S>>(filterSpecsObject);
+    return filterContainer;
   }
 
   public static fromString<S extends Zod.AnyZodObject>(
     stringValue?: string,
-    options: CreateFilterFromStringOptions<S> = {},
-  ): QueryFilter<z.infer<S>> {
+    options: CreateFilterContainerFromStringOptions<S> = {},
+  ): FilterContainer<z.infer<S>> {
     let resolvedStringValue = stringValue;
     if (options.decodeUri && stringValue) {
       resolvedStringValue = decodeURIComponent(stringValue);
@@ -88,15 +91,14 @@ export class QueryFilter<F extends QueryDictionary = QueryDictionary> {
       }
     }
 
-    return new QueryFilter(Object.fromEntries(filterObject));
+    return new FilterContainer(Object.fromEntries(filterObject));
   }
 
   private filterMap = new Map<keyof F, FilterSpec>();
 
-  public addString<SK extends keyof ExtractKeysBasedOnValueType<F, string>>(
-    key: SK,
-    value: F[SK],
-  ) {
+  public setStringFilter<
+    SK extends keyof ExtractKeysBasedOnValueType<F, string>,
+  >(key: SK, value: F[SK]) {
     const typedValue = value as string;
     if (!validateFilterValue(typedValue as string)) {
       throw new ForbiddenFilterValueError({
@@ -112,31 +114,28 @@ export class QueryFilter<F extends QueryDictionary = QueryDictionary> {
     });
   }
 
-  public addRange<SK extends keyof ExtractKeysBasedOnValueType<F, FilterRange>>(
-    key: SK,
-    value: FilterRange,
-  ) {
+  public setRangeFilter<
+    SK extends keyof ExtractKeysBasedOnValueType<F, RangeFilter>,
+  >(key: SK, value: RangeFilter) {
     const item: FilterSpec = {
       type: "range",
       value,
     };
-    return this.add(key, item);
+    return this.set(key, item);
   }
 
-  public addNumber<SK extends keyof ExtractKeysBasedOnValueType<F, number>>(
-    key: SK,
-    value: number,
-  ) {
-    return this.add(key, {
+  public setNumberFilter<
+    SK extends keyof ExtractKeysBasedOnValueType<F, number>,
+  >(key: SK, value: number) {
+    return this.set(key, {
       type: "number",
       value,
     });
   }
 
-  public addArray<SK extends keyof ExtractKeysBasedOnValueType<F, string[]>>(
-    key: SK,
-    values: string[],
-  ) {
+  public setArrayFilter<
+    SK extends keyof ExtractKeysBasedOnValueType<F, string[]>,
+  >(key: SK, values: string[]) {
     values.forEach((value) => {
       if (!validateFilterValue(value)) {
         throw new ForbiddenFilterValueError({
@@ -147,7 +146,7 @@ export class QueryFilter<F extends QueryDictionary = QueryDictionary> {
       }
     });
 
-    return this.add(key, {
+    return this.set(key, {
       type: "array",
       value: values,
     });
@@ -168,11 +167,11 @@ export class QueryFilter<F extends QueryDictionary = QueryDictionary> {
     return filterSpec.value as NonNullable<F[K]>;
   }
 
-  protected add(key: keyof F, item: FilterSpec) {
+  protected set(key: keyof F, item: FilterSpec) {
     this.filterMap.set(key, item);
   }
 
-  public stringify(options: StringifyFilterOptions = {}) {
+  public stringify(options: StringifyFilterContainerOptions = {}) {
     let stringifiedValue = [...this.filterMap.entries()]
       .map(([key, value]) => `${key.toString()}:${encodeFilterItem(value)}`)
       .join(";");
