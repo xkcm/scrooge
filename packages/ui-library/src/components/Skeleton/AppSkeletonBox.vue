@@ -4,8 +4,8 @@
 
 <script lang="ts" setup>
 const { animationDelay = "0s", animationDuration = "2s" } = defineProps<{
-  animationDuration: `${number}${"s" | "ms"}`;
-  animationDelay: `${number}${"s" | "ms"}`;
+  animationDuration?: `${number}${"s" | "ms"}`;
+  animationDelay?: `${number}${"s" | "ms"}`;
 }>();
 </script>
 

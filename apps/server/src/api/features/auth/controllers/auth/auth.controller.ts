@@ -1,6 +1,7 @@
 import { schemas } from "@scrooge/shared";
 
 import { AuthLocals } from "#api:auth/middleware/token/token.middleware.types.js";
+import passwordService from "#api:auth/services/password/password.service.js";
 import { env } from "#core/config/env.config.js";
 import {
   ApiControllerObject,
@@ -45,7 +46,7 @@ const authController = bindObjectMethods({
       req.query.registrationToken,
     );
 
-    const password = await userService.hashUserPassword(req.body.password);
+    const password = await passwordService.createHash(req.body.password);
     await userService.createUser({
       password,
       email: decodedToken.email,
@@ -81,7 +82,7 @@ const authController = bindObjectMethods({
         throw error;
       });
 
-    const passwordMatches = await userService.compareUserPassword(
+    const passwordMatches = await passwordService.compare(
       req.body.password,
       user.password,
     );

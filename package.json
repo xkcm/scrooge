@@ -8,7 +8,6 @@
     "@ui-lib": "pnpm --filter @scrooge/ui-library",
     "@server": "pnpm --filter @scrooge/server",
     "@shared": "pnpm --filter @scrooge/shared",
-
     "lint": "pnpm exec eslint .",
     "dev": "pnpm --recursive --parallel --stream run dev",
     "start-dbs": "./development/start-databases.sh",
@@ -37,6 +36,7 @@
   },
   "dependencies": {
     "@xkcm/better-errors": "^2.2.0",
+    "@xkcm/memento": "file:/home/xkcm/Desktop/projects/memento/xkcm-memento-1.1.1.tgz",
     "zod": "^3.19.1"
   }
 }

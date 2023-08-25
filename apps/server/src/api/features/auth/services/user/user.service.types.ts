@@ -14,8 +14,4 @@ export interface UserService {
     userId: User["id"],
     select?: Prisma.UserSelect,
   ): Promise<Partial<User>>;
-
-  hashUserPassword(value: string): Promise<string>;
-
-  compareUserPassword(value: string, encrypted: string): Promise<boolean>;
 }

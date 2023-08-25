@@ -1,47 +1,48 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url = env("POSTGRES_URL")
+  provider     = "postgresql"
+  url          = env("POSTGRES_URL")
+  relationMode = "prisma"
 }
 
 model User {
-  id String @id @default(uuid()) @db.Uuid
-  email String @unique
-  username String
-  password String @db.Char(60)
+  id          String      @id @default(cuid())
+  email       String      @unique
+  username    String
+  password    String      @db.Char(60)
   definedTags String[]
-  operations Operation[]
-  sessions Session[]
+  operations  Operation[]
+  sessions    Session[]
 }
 
 model Operation {
-  id String @id @default(uuid()) @db.Uuid
-  ownerId String @db.Uuid
-  createdAt DateTime @default(now())
-  amount Decimal @db.Money
-  tags String[]
-  title String
-  description String? @db.Text
-  type OperationType
-  owner User @relation(fields: [ownerId], references: [id])
+  id          String        @id @default(cuid())
+  ownerId     String
+  createdAt   DateTime      @default(now())
+  amount      Decimal       @db.Money
+  tags        String[]
+  title       String
+  description String?       @db.Text
+  type        OperationType
+  owner       User          @relation(fields: [ownerId], references: [id])
 
   @@index([ownerId])
 }
 
 model Session {
-  id String @id @default(uuid()) @db.Uuid
-  userId String @db.Uuid
-  createdAt DateTime @default(now())
-  expiresAt DateTime
-  sourceIp String? @db.Inet
-  agent String? @db.VarChar
-  geolocation Float[] @db.DoublePrecision
+  id          String   @id @default(cuid())
+  userId      String
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime
+  sourceIp    String?  @db.Inet
+  agent       String?  @db.VarChar
+  geolocation Float[]  @db.DoublePrecision
   refreshable Boolean
-  user User @relation(fields: [userId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
 
   @@index([userId])
 }

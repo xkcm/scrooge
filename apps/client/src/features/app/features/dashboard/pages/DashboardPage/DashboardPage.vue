@@ -1,4 +1,4 @@
-<template v-once>
+<template>
   <AppLayout header-text="Dashboard">
     <div id="dashboard" :class="loading && 'dashboard--loading'">
       <DashboardTile

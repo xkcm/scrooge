@@ -1,8 +1,10 @@
 import { Operation, Prisma } from "@prisma/client";
 import { FilterContainer, filters, schemas } from "@scrooge/shared";
+import { Memento, MementoController, RedisStorage } from "@xkcm/memento";
 
 import prismaClient from "#core/prisma/prisma.js";
 import { createPrismaErrorParser } from "#core/prisma/prisma.utils.js";
+import redisClient from "#core/redis/redis.js";
 import { UserWithGivenIdNotFoundError } from "#root/api/features/auth/services/user/user.service.errors.js";
 import tagsService from "#root/api/features/tags/services/tags/tags.service.js";
 import { removeDuplicates } from "#root/core/utils/utils.js";
@@ -21,6 +23,13 @@ import {
   mapOperation,
   mapRangeFilterToPrismaFilter,
 } from "./operation.service.utils.js";
+
+const operationMementoController = new MementoController();
+const operationMemento = new Memento({
+  ttl: -1,
+  storage: new RedisStorage(redisClient),
+  controller: operationMementoController,
+});
 
 const operationService: OperationService = {
   async addOperation(ownerId, type, payload) {
@@ -51,58 +60,68 @@ const operationService: OperationService = {
         }),
       );
 
+    await operationMementoController.invalidateAll();
     return mapOperation(createdOperation, PUBLIC_OPERATION_SHAPE);
   },
 
-  async getOperations(
-    ownerId: Operation["id"],
-    filterContainer: FilterContainer<filters.GetOperation>,
-    operationShape = PUBLIC_OPERATION_SHAPE,
-  ) {
-    const where: Prisma.OperationWhereInput = {
-      ownerId,
-    };
+  getOperations: operationMemento.memoize(
+    async (
+      ownerId: Operation["id"],
+      filterContainer: FilterContainer<filters.GetOperation>,
+      operationShape = PUBLIC_OPERATION_SHAPE,
+    ) => {
+      const where: Prisma.OperationWhereInput = {
+        ownerId,
+      };
 
-    const type = filterContainer.getFilter("operationType");
-    if (type) {
-      where.type = type;
-    }
+      const type = filterContainer.getFilter("operationType");
+      if (type) {
+        where.type = type;
+      }
 
-    const createdAt = filterContainer.getFilter("createdAt");
-    if (createdAt) {
-      where.createdAt = mapRangeFilterToPrismaFilter(createdAt);
-    }
+      const createdAt = filterContainer.getFilter("createdAt");
+      if (createdAt) {
+        where.createdAt = mapRangeFilterToPrismaFilter(createdAt);
+      }
 
-    const limit = filterContainer.getFilter("limit", 20);
-    const offset = filterContainer.getFilter("offset", 0);
+      const limit = filterContainer.getFilter("limit", 20);
+      const offset = filterContainer.getFilter("offset", 0);
 
-    const orderKey = filterContainer.getFilter("orderKey", "createdAt");
-    const orderDirection = filterContainer.getFilter("orderDirection", "desc");
+      const orderKey = filterContainer.getFilter("orderKey", "createdAt");
+      const orderDirection = filterContainer.getFilter(
+        "orderDirection",
+        "desc",
+      );
 
-    const prismaArgs: Prisma.OperationFindManyArgs = {
-      where,
-      select: operationShape,
-      orderBy: {
-        [orderKey]: orderDirection,
-      },
-      skip: offset,
-      take: limit,
-    };
+      const prismaArgs: Prisma.OperationFindManyArgs = {
+        where,
+        select: operationShape,
+        orderBy: {
+          [orderKey]: orderDirection,
+        },
+        skip: offset,
+        take: limit,
+      };
 
-    const operations = await prismaClient.operation.findMany(prismaArgs).catch(
-      createPrismaErrorParser({
-        P2025: UserWithGivenIdNotFoundError.withMetadata({ userId: ownerId }),
-      }),
-    );
+      const operations = await prismaClient.operation
+        .findMany(prismaArgs)
+        .catch(
+          createPrismaErrorParser({
+            P2025: UserWithGivenIdNotFoundError.withMetadata({
+              userId: ownerId,
+            }),
+          }),
+        );
 
-    const parsedOperations = operations.map((operation) =>
-      mapOperation(operation, operationShape),
-    );
+      const parsedOperations = operations.map((operation) =>
+        mapOperation(operation, operationShape),
+      );
 
-    return parsedOperations;
-  },
+      return parsedOperations;
+    },
+  ),
 
-  async getOperationsByDate(ownerId, from, to) {
+  getOperationsByDate: operationMemento.memoize(async (ownerId, from, to) => {
     const filterContainer = FilterContainer.empty<filters.GetOperation>();
 
     filterContainer.setRangeFilter(
@@ -110,10 +129,10 @@ const operationService: OperationService = {
       createFullDayRangeFilter(from, to),
     );
 
-    return this.getOperations(ownerId, filterContainer);
-  },
+    return operationService.getOperations(ownerId, filterContainer);
+  }),
 
-  async getOperationsSum(ownerId, from, to) {
+  getOperationsSum: operationMemento.memoize(async (ownerId, from, to) => {
     const dateFilter = mapRangeFilterToPrismaFilter(
       createFullDayRangeFilter(from, to),
     );
@@ -150,7 +169,7 @@ const operationService: OperationService = {
       incomeSum,
       balance,
     };
-  },
+  }),
 
   async getOperationById(operationId) {
     const operation = await prismaClient.operation
@@ -180,6 +199,7 @@ const operationService: OperationService = {
       });
     }
 
+    await operationMementoController.invalidateAll();
     return operationId;
   },
 
@@ -198,19 +218,22 @@ const operationService: OperationService = {
       data: newPayload,
     });
 
+    await operationMementoController.invalidateAll();
     return mapOperation(modifiedOperation, PUBLIC_OPERATION_SHAPE);
   },
 
-  async getOperationsPeriodSummary(ownerId, filterContainer) {
-    const period = filterContainer.getFilter("periodGroup");
-    const from = new Date(filterContainer.getFilter("from"));
-    const to = new Date(filterContainer.getFilter("to", Date.now()));
-    const timezoneInMinutes = filterContainer.getFilter("timezone");
-    const timezone = `${timezoneInMinutes < 0 ? "+" : "-"}${Math.abs(
-      timezoneInMinutes / 60,
-    )}`;
+  getOperationsPeriodSummary: operationMemento.memoize(
+    async (ownerId, filterContainer) => {
+      console.info({ hello: "World" });
+      const period = filterContainer.getFilter("periodGroup");
+      const from = new Date(filterContainer.getFilter("from"));
+      const to = new Date(filterContainer.getFilter("to", Date.now()));
+      const timezoneInMinutes = filterContainer.getFilter("timezone");
+      const timezone = `${timezoneInMinutes < 0 ? "+" : "-"}${Math.abs(
+        timezoneInMinutes / 60,
+      )}`;
 
-    const query = Prisma.sql`
+      const query = Prisma.sql`
         WITH
           date_range AS (
             SELECT
@@ -241,40 +264,41 @@ const operationService: OperationService = {
         ORDER BY "range_date" DESC
       `;
 
-    const records = await prismaClient.$queryRaw<RawSummaryRecord[]>(query);
-    const mappedRecords = records.map((summaryEntry) => ({
-      date: new Date(summaryEntry.range_date).getTime(),
-      sum: +summaryEntry.operations_sum,
-      type: summaryEntry.range_type,
-    }));
+      const records = await prismaClient.$queryRaw<RawSummaryRecord[]>(query);
+      const mappedRecords = records.map((summaryEntry) => ({
+        date: new Date(summaryEntry.range_date).getTime(),
+        sum: +summaryEntry.operations_sum,
+        type: summaryEntry.range_type,
+      }));
 
-    const result =
-      mappedRecords.reduce<schemas.operation.GetOperationsPeriodSummaryResponse>(
-        (acc, cur) => {
-          const entry = {
-            date: cur.date,
-            sum: cur.sum,
-          };
-          const key = cur.type.toLowerCase() as "income" | "expense";
-          return {
-            ...acc,
-            [key]: {
-              sum: acc[key].sum + cur.sum,
-              entries: acc[key].entries.concat(entry),
-            },
-          };
-        },
-        {
-          income: { sum: 0, entries: [] },
-          expense: { sum: 0, entries: [] },
-          from: from.getTime(),
-          to: from.getTime(),
-          periodGroup: period,
-        },
-      );
+      const result =
+        mappedRecords.reduce<schemas.operation.GetOperationsPeriodSummaryResponse>(
+          (acc, cur) => {
+            const entry = {
+              date: cur.date,
+              sum: cur.sum,
+            };
+            const key = cur.type.toLowerCase() as "income" | "expense";
+            return {
+              ...acc,
+              [key]: {
+                sum: acc[key].sum + cur.sum,
+                entries: acc[key].entries.concat(entry),
+              },
+            };
+          },
+          {
+            income: { sum: 0, entries: [] },
+            expense: { sum: 0, entries: [] },
+            from: from.getTime(),
+            to: from.getTime(),
+            periodGroup: period,
+          },
+        );
 
-    return result;
-  },
+      return result;
+    },
+  ),
 };
 
 export default operationService;

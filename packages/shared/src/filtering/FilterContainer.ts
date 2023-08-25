@@ -189,4 +189,8 @@ export class FilterContainer<F extends FilterDictionary = FilterDictionary> {
 
     return urlSearchParams;
   }
+
+  public toJSON() {
+    return this.stringify();
+  }
 }
