@@ -49,11 +49,6 @@ authRouter.post(
   tokenMiddleware.safe,
   wrapExpressErrorHandler(authController.logOut),
 );
-authRouter.post(
-  "/refresh",
-  createRequestBodyVerifier({ schema: schemas.auth.RefreshBodySchema }),
-  wrapExpressErrorHandler(authController.refresh),
-);
 
 authRouter.get(
   "/sessions",

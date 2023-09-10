@@ -44,8 +44,8 @@ defineProps<{
   }
 
   &__title {
+    @include utils.useTextColor(primary);
     padding-left: 15px;
-    color: utils.getColor(beta);
     display: flex;
     align-items: center;
 

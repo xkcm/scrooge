@@ -2,6 +2,6 @@ import { z } from "zod";
 
 export const InvalidateSessionParamsSchema = z
   .object({
-    sessionId: z.string().uuid(),
+    sessionId: z.string().cuid(),
   })
   .strict();

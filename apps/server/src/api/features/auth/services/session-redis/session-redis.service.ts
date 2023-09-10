@@ -21,11 +21,7 @@ const sessionRedisService: SessionRedisService = {
   async removeAllSessionInfo(sessionId) {
     const key = `session-info:${sessionId}`;
 
-    const keys = await redisClient.hKeys(key);
-    if (keys.length === 0) {
-      return 0;
-    }
-    return redisClient.hDel(key, keys);
+    return redisClient.del(key);
   },
 };
 

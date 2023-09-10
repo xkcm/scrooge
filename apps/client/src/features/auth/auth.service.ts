@@ -1,6 +1,7 @@
 import apiClient from "@/services/api-client/api-client";
 import { useAuthStore } from "./auth.store";
 import { revalidateCurrentRoute } from "@/router/router.utils";
+import notificationService from "../notifications/notification.service";
 
 function isUserAuthenticated() {
   return useAuthStore().isUserAuthenticated;
@@ -10,6 +11,17 @@ async function resolveAuthState() {
   const userInfo = await apiClient.auth.getAuthState();
   useAuthStore().setAuthState(userInfo.isAuthenticated);
   await revalidateCurrentRoute();
+
+  if (
+    !userInfo.isAuthenticated &&
+    userInfo.error.code === "api.auth.token.relog_required"
+  ) {
+    notificationService.pushNotification({
+      title: "Session expired",
+      type: "info",
+      body: "Current session expired, please re-log into the app",
+    });
+  }
 
   return userInfo;
 }

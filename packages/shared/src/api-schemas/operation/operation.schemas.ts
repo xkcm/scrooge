@@ -23,7 +23,7 @@ export const AddOperationBodySchema = z
 
 export const DeleteOperationParamsSchema = z
   .object({
-    operationId: z.string().uuid(),
+    operationId: z.string().cuid(),
   })
   .strict();
 
@@ -39,7 +39,7 @@ export const ModifyOperationBodySchema = z
 
 export const ModifyOperationParamsSchema = z
   .object({
-    operationId: z.string().uuid(),
+    operationId: z.string().cuid(),
   })
   .strict();
 

@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { env } from "#core/config/env.config.js";
 import serverConfig from "#core/config/server.config.js";
 
-import { InvalidTokenError } from "./token.service.errors.js";
+import { parseTokenVerificationError } from "./token.service.helpers.js";
 import { TokenService } from "./token.service.types.js";
 
 const tokenService: TokenService = {
@@ -24,6 +24,10 @@ const tokenService: TokenService = {
     return { token, expiresIn };
   },
 
+  extractTokenPayload<T>(token: string) {
+    return jwt.decode(token) as T;
+  },
+
   decodeGenericToken(token, key = env.AUTH_TOKEN_SECRET) {
     try {
       return jwt.verify(token, key, {
@@ -31,24 +35,14 @@ const tokenService: TokenService = {
         issuer: env.SERVER_APP_NAME,
       }) as any;
     } catch (error) {
-      throw new InvalidTokenError({
-        cause: error as Error,
-        metadata: {
-          attachments: [
-            {
-              type: "public",
-              data: (error as Error).message,
-            },
-          ],
-        },
-      });
+      throw parseTokenVerificationError(error as Error);
     }
   },
 
   createAuthToken(tokenPayload) {
     return this.createGenericToken(tokenPayload, {
-      subject: tokenPayload.userId,
       expiresIn: serverConfig.service_configs.token.expire_time,
+      subject: tokenPayload.userId,
     });
   },
 
@@ -83,6 +77,20 @@ const tokenService: TokenService = {
 
   decodeRegistrationToken(token) {
     return this.decodeGenericToken(token, env.REGISTRATION_TOKEN_SECRET);
+  },
+
+  createRelogToken(tokenPayload) {
+    return this.createGenericToken(
+      tokenPayload,
+      {
+        expiresIn: serverConfig.service_configs.token.relog_expire_time,
+      },
+      env.RELOG_TOKEN_SECRET,
+    );
+  },
+
+  decodeRelogToken(token) {
+    return this.decodeGenericToken(token, env.RELOG_TOKEN_SECRET);
   },
 };
 

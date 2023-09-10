@@ -23,9 +23,3 @@ export const LoginBodySchema = z
     password: z.string(),
   })
   .strict();
-
-export const RefreshBodySchema = z
-  .object({
-    refreshToken: z.string(),
-  })
-  .strict();

@@ -5,17 +5,12 @@ export interface GenericTokenPayload {
   aud: string;
   sub: string;
 }
-
 export interface AuthTokenPayload {
   userId: string;
   sessionId: string;
 }
-
-export interface RefreshTokenPayload {
-  userId: string;
-  sessionId: string;
-}
-
+export interface RefreshTokenPayload extends AuthTokenPayload {}
+export interface RelogTokenPayload extends AuthTokenPayload {}
 export interface RegistrationTokenPayload {
   email: string;
 }
@@ -26,6 +21,10 @@ type CreateTokenResult = {
 };
 
 export interface TokenService {
+  extractTokenPayload<T extends Record<PropertyKey, any>>(
+    token: string,
+  ): T & GenericTokenPayload;
+
   createGenericToken<T extends JwtPayload>(
     tokenPayload: T,
     additionalClaims?: SignOptions,
@@ -52,4 +51,8 @@ export interface TokenService {
   decodeRegistrationToken(
     token: string,
   ): RegistrationTokenPayload & GenericTokenPayload;
+
+  createRelogToken(tokenPayload: RelogTokenPayload): CreateTokenResult;
+
+  decodeRelogToken(token: string): RelogTokenPayload & GenericTokenPayload;
 }

@@ -1,8 +1,9 @@
 import { schemas } from "@scrooge/shared";
 
+import { clearCookie, setCookie } from "#api/utils/cookies.util.js";
 import { AuthLocals } from "#api:auth/middleware/token/token.middleware.types.js";
 import passwordService from "#api:auth/services/password/password.service.js";
-import { env } from "#core/config/env.config.js";
+import { createPrismaErrorParser } from "#core/prisma/prisma.utils.js";
 import {
   ApiControllerObject,
   ApiRequest,
@@ -15,7 +16,7 @@ import userService from "#root/api/features/auth/services/user/user.service.js";
 import mailService from "#root/api/services/mail/mail.service.js";
 import { bindObjectMethods } from "#root/core/utils/utils.js";
 
-import { prepareCreateSessionPayload } from "./auth.controller.utils.js";
+import { prepareCreateSessionPayload } from "./auth.controller.helpers.js";
 
 const authController = bindObjectMethods({
   async beginRegistration(
@@ -73,14 +74,11 @@ const authController = bindObjectMethods({
     req: ApiRequest<schemas.auth.LoginBody>,
     res: ApiResponse<schemas.auth.LoginResponse>,
   ) {
-    const user = await userService
-      .findUserByEmail(req.body.email)
-      .catch((error) => {
-        if (error?.cause?.code === "P2025") {
-          throw new LoginAttemptFailedError();
-        }
-        throw error;
-      });
+    const user = await userService.findUserByEmail(req.body.email).catch(
+      createPrismaErrorParser({
+        P2025: LoginAttemptFailedError,
+      }),
+    );
 
     const passwordMatches = await passwordService.compare(
       req.body.password,
@@ -90,61 +88,42 @@ const authController = bindObjectMethods({
       throw new LoginAttemptFailedError();
     }
 
-    const createSessionPayload = await prepareCreateSessionPayload(req);
-    const session = await sessionService.createSession(
-      user.id,
-      createSessionPayload,
-    );
+    const { relogToken } = req.cookies ?? {};
+    let sessionId: string = "";
+
+    if (relogToken) {
+      try {
+        const relogPayload = tokenService.decodeRelogToken(relogToken);
+        sessionId = relogPayload.sessionId;
+        clearCookie(res, "relogToken");
+      } catch {
+        // too bad, new session is created
+      }
+    }
+
+    if (!sessionId) {
+      const createSessionPayload = await prepareCreateSessionPayload(req);
+      const session = await sessionService.createSession(
+        user.id,
+        createSessionPayload,
+      );
+      sessionId = session.id;
+    }
 
     const tokenPayload = {
       userId: user.id,
-      sessionId: session.id,
-    };
-    const { token: authToken, expiresIn: authTokenExpiresIn } =
-      tokenService.createAuthToken(tokenPayload);
-    const { token: refreshToken, expiresIn: refreshTokenExpiresIn } =
-      tokenService.createRefreshToken(tokenPayload);
-
-    res.cookie("authToken", authToken, {
-      httpOnly: true,
-      domain: env.BACKEND_DOMAIN,
-      expires: new Date(Date.now() + authTokenExpiresIn * 1000),
-    });
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      domain: env.BACKEND_DOMAIN,
-      expires: new Date(Date.now() + refreshTokenExpiresIn * 1000),
-    });
-
-    return res.json({
-      isAuthTokenSet: true,
-      isRefreshTokenSet: true,
-    });
-  },
-
-  async refresh(
-    req: ApiRequest<schemas.auth.RefreshBody>,
-    res: ApiResponse<schemas.auth.RefreshResponse>,
-  ) {
-    // todo: refactor refresh flow
-    const refreshToken = req.cookies?.refreshToken;
-
-    const { userId, sessionId } = tokenService.decodeRefreshToken(refreshToken);
-    await sessionService.verifySessionById(userId, sessionId);
-
-    const authToken = tokenService.createAuthToken({
-      userId,
       sessionId,
-    });
+    };
+    const authResult = tokenService.createAuthToken(tokenPayload);
+    const refreshResult = tokenService.createRefreshToken(tokenPayload);
 
-    res.cookie("authToken", authToken, {
-      httpOnly: true,
-      domain: env.BACKEND_DOMAIN,
-    });
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      domain: env.BACKEND_DOMAIN,
-    });
+    setCookie(res, "authToken", authResult.token, authResult.expiresIn);
+    setCookie(
+      res,
+      "refreshToken",
+      refreshResult.token,
+      refreshResult.expiresIn,
+    );
 
     return res.json({
       isAuthTokenSet: true,
@@ -156,14 +135,14 @@ const authController = bindObjectMethods({
     req,
     res: ApiResponse<schemas.auth.GetAuthStateResponse, AuthLocals<"safe">>,
   ) {
-    if (!res.locals.auth.isAuthenticated) {
-      return res.status(401).json({
-        isAuthenticated: false,
-        error: res.locals.auth.error.toApiResponse(),
-      });
+    if (res.locals.auth.isAuthenticated) {
+      return res.json({ isAuthenticated: true });
     }
 
-    return res.json({ isAuthenticated: true });
+    return res.status(401).json({
+      isAuthenticated: false,
+      error: res.locals.auth.error.toApiResponse(),
+    });
   },
 } satisfies ApiControllerObject);
 

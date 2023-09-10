@@ -224,7 +224,6 @@ const operationService: OperationService = {
 
   getOperationsPeriodSummary: operationMemento.memoize(
     async (ownerId, filterContainer) => {
-      console.info({ hello: "World" });
       const period = filterContainer.getFilter("periodGroup");
       const from = new Date(filterContainer.getFilter("from"));
       const to = new Date(filterContainer.getFilter("to", Date.now()));

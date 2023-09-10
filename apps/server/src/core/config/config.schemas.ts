@@ -19,6 +19,7 @@ export const EnvConfigSchema = z
     AUTH_TOKEN_SECRET: z.string(),
     REFRESH_TOKEN_SECRET: z.string(),
     REGISTRATION_TOKEN_SECRET: z.string(),
+    RELOG_TOKEN_SECRET: z.string(),
 
     POSTGRES_URL: z.string(),
     REDIS_URL: z.string(),
@@ -52,6 +53,7 @@ export const ServerConfigSchema = z.object({
     token: z.object({
       expire_time: z.number(),
       refresh_expire_time: z.number(),
+      relog_expire_time: z.number(),
       registration_expire_time: z.number(),
     }),
     tags: z.object({

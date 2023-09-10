@@ -12,8 +12,8 @@ importers:
         specifier: ^2.2.0
         version: 2.2.0
       '@xkcm/memento':
-        specifier: file:/home/xkcm/Desktop/projects/memento/xkcm-memento-1.1.1.tgz
-        version: file:../memento/xkcm-memento-1.1.1.tgz
+        specifier: ^1.1.2
+        version: 1.1.2
       zod:
         specifier: ^3.19.1
         version: 3.19.1
@@ -1861,6 +1861,14 @@ packages:
     resolution: {integrity: sha512-O8kI01f3BC4TLo1XBCxrfq3apJrTsuV5v1UaNtTK4Fj7JjMSxYUH+IA/lX6ED3rQ/s38JWcj9LltMVxTKQiBcw==}
     dependencies:
       reflect-metadata: 0.1.13
+    dev: false
+
+  /@xkcm/memento@1.1.2:
+    resolution: {integrity: sha512-WC2S7E+mkFbs7RQ341mLS/BgAm7EGUq6K81hLlDfB3k/CUWicdATasuI3FsftzrWcO5GCfDUPovzgvscGXna/g==}
+    dependencies:
+      '@xkcm/better-errors': 2.2.0
+      sha256: 0.2.0
+      uuid: 8.3.2
     dev: false
 
   /abbrev@1.1.1:
@@ -5364,14 +5372,4 @@ packages:
 
   /zod@3.19.1:
     resolution: {integrity: sha512-LYjZsEDhCdYET9ikFu6dVPGp2YH9DegXjdJToSzD9rO6fy4qiRYFoyEYwps88OseJlPyl2NOe2iJuhEhL7IpEA==}
-    dev: false
-
-  file:../memento/xkcm-memento-1.1.1.tgz:
-    resolution: {integrity: sha512-yNiBufRu1yFWlkep35sG/vWiD+A+u3Y1EtQY8EWlb+Gx4W0XDdJsTGgfIFXC+3jJYHyIHLlvdYLmuCVEv6Q19Q==, tarball: file:../memento/xkcm-memento-1.1.1.tgz}
-    name: '@xkcm/memento'
-    version: 1.1.1
-    dependencies:
-      '@xkcm/better-errors': 2.2.0
-      sha256: 0.2.0
-      uuid: 8.3.2
     dev: false

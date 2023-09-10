@@ -7,6 +7,7 @@ service_configs:
     expire_time: 86400 # 1 day
     refresh_expire_time: 2592000 # 30 days
     registration_expire_time: 1800 # 30 minutes
+    relog_expire_time: 86400 # 1 day
   tags:
     create_undefined: true
     default_tag_icon: ""
