@@ -1,5 +1,5 @@
 import { Operation, Prisma } from "@prisma/client";
-import { schemas } from "@scrooge/shared";
+import type { FilterContainer, filters, schemas } from "@scrooge/shared";
 
 export interface OperationService {
   addOperation(
@@ -7,19 +7,26 @@ export interface OperationService {
     operationType: Operation["type"],
     payload: Pick<
       Prisma.OperationCreateInput,
-      "amount" | "description" | "createdAt"
+      "amount" | "description" | "createdAt" | "title"
     > & {
       tags?: Operation["tags"];
     },
   ): Promise<schemas.operation.PublicOperation>;
 
-  getAllOperations(
+  getOperations(
     ownerId: Operation["ownerId"],
-    filters?: Omit<
-      NonNullable<Prisma.OperationFindManyArgs["where"]>,
-      "ownerId"
-    >,
+    filterContainer: FilterContainer<filters.GetOperation>,
   ): Promise<schemas.operation.PublicOperation[]>;
+  getOperations<O extends OperationShape>(
+    ownerId: Operation["ownerId"],
+    filterContainer: FilterContainer<filters.GetOperation>,
+    operationShape: O,
+  ): Promise<PluckPublicOperation<O>[]>;
+  getOperations<O extends OperationShape>(
+    ownerId: Operation["ownerId"],
+    filterContainer: FilterContainer<filters.GetOperation>,
+    operationShape?: O,
+  ): Promise<schemas.operation.PublicOperation[] | PluckPublicOperation<O>[]>;
 
   getOperationsByDate(
     ownerId: Operation["ownerId"],
@@ -51,4 +58,22 @@ export interface OperationService {
     from: number,
     to: number,
   ): Promise<schemas.operation.GetOperationsSumResponse>;
+
+  getOperationsPeriodSummary(
+    ownerId: Operation["ownerId"],
+    filterContainer: FilterContainer<filters.GetOperationsPeriodSummary>,
+  ): Promise<schemas.operation.GetOperationsPeriodSummaryResponse>;
 }
+
+export type OperationShape = Partial<Record<keyof Operation, boolean>>;
+export type PluckPublicOperation<O extends OperationShape> = {
+  [K in keyof schemas.operation.PublicOperation as O[K] extends true
+    ? K
+    : never]: schemas.operation.PublicOperation[K];
+};
+
+export type RawSummaryRecord = {
+  range_type: "INCOME" | "EXPENSE";
+  operations_sum: string;
+  range_date: string;
+};

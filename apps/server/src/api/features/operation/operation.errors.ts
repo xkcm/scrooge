@@ -14,3 +14,8 @@ export class InvalidOperationIdError extends ApiError<{
 export class CantDeleteOperationError extends ApiError<{
   operationId?: string;
 }> {}
+
+@withMessage("Filter is invalid")
+@withCode("api.operation.invalid_filter")
+@withMetadata({ httpCode: 400 })
+export class InvalidFilterError extends ApiError {}

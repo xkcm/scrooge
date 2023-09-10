@@ -1,26 +1,21 @@
-import moment from "moment";
 import { z } from "zod";
 
 import { NumericStringSchema } from "../api-schemas.utils.js";
 
 export const GetOperationsQuerySchema = z
   .object({
-    from: NumericStringSchema,
-    to: NumericStringSchema,
+    filter: z.string(),
   })
-  .optional()
-  .default(() => ({
-    from: moment().subtract(1, "week").valueOf().toString(),
-    to: moment().valueOf().toString(),
-  }));
+  .optional();
 
 export const AddOperationBodySchema = z
   .object({
+    title: z.string(),
     amount: z.number().positive(),
-    description: z.string(),
+    description: z.string().optional(),
     tags: z.array(z.string()).optional(),
     createdAt: z
-      .number()
+      .union([z.number(), z.string()])
       .transform((time) => new Date(time))
       .optional(),
   })
@@ -47,3 +42,12 @@ export const ModifyOperationParamsSchema = z
     operationId: z.string().uuid(),
   })
   .strict();
+
+export const GetLatestOperationsQuerySchema = z
+  .object({
+    incomes: NumericStringSchema,
+    expenses: NumericStringSchema,
+  })
+  .strict();
+
+export const GetOperationsPeriodSummaryQuerySchema = GetOperationsQuerySchema;

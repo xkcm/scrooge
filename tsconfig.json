@@ -16,6 +16,7 @@
   "references": [
     { "path": "apps/client" },
     { "path": "apps/server" },
-    { "path": "packages/shared" }
+    { "path": "packages/shared" },
+    { "path": "packages/ui-library" }
   ]
 }

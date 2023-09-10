@@ -24,7 +24,8 @@ model Operation {
   createdAt DateTime @default(now())
   amount Decimal @db.Money
   tags String[]
-  description String @db.Text
+  title String
+  description String? @db.Text
   type OperationType
   owner User @relation(fields: [ownerId], references: [id])
 

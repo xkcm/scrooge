@@ -4,7 +4,6 @@ import url from "node:url";
 import { defineConfig } from "vite";
 
 import vue from "@vitejs/plugin-vue";
-import svgLoader from "vite-svg-loader";
 import eslint from "vite-plugin-eslint";
 import tsconfigPaths from "vite-tsconfig-paths";
 
@@ -16,10 +15,11 @@ export default defineConfig({
     vue({
       script: {
         defineModel: true,
+        propsDestructure: true,
       },
     }),
     eslint({
-      exclude: path.resolve(__dirname, "../shared/**/*"),
+      exclude: path.join(__dirname, "../../packages/**/*"),
     }),
     tsconfigPaths(),
   ],
@@ -28,6 +28,7 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
       "@features": path.resolve(__dirname, "./src/features"),
       "@core": path.resolve(__dirname, "./src/features/core"),
+      "@app": path.resolve(__dirname, "./src/features/app"),
     },
   },
 });

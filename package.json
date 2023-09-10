@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "@client": "pnpm --filter @scrooge/client",
+    "@ui-lib": "pnpm --filter @scrooge/ui-library",
     "@server": "pnpm --filter @scrooge/server",
     "@shared": "pnpm --filter @scrooge/shared",
+
     "lint": "pnpm exec eslint .",
     "dev": "pnpm --recursive --parallel --stream run dev",
     "start-dbs": "./development/start-databases.sh",
@@ -34,7 +36,7 @@
     "vue-eslint-parser": "^9.3.1"
   },
   "dependencies": {
-    "@xkcm/better-errors": "^2.1.2",
+    "@xkcm/better-errors": "^2.2.0",
     "zod": "^3.19.1"
   }
 }

@@ -1,7 +1,7 @@
 @use "sass:math";
 
-@mixin defaultOutlineOnFocus {
-  outline: 2px getColor(beta) solid;
+@mixin defaultOutlineOnFocus($colorName: gamma) {
+  outline: 2px getColor($colorName) solid;
 }
 
 @mixin useBgColor($colorName, $weight: 400, $opacity: 1) {
@@ -18,4 +18,42 @@
 
 @function getTextColor($colorName, $opacity: 1) {
   @return rgba(var(--text-color-#{$colorName}), $opacity);
+}
+
+@mixin clearButtonStyles {
+  all: unset;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  background: none;
+  font-family: inherit;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+@mixin clearHrefStyles {
+  text-decoration: none;
+}
+
+@mixin clearListStyles {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  font-family: inherit;
+}
+
+@mixin useCustomScrollbar($scrollbarColor: beta, $scrollbarWidth: 10px) {
+  &::-webkit-scrollbar {
+    width: $scrollbarWidth;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: math.div($scrollbarWidth, 2);
+    background: getColor($scrollbarColor);
+  }
 }

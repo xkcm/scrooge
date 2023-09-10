@@ -1,4 +1,5 @@
 import queryString from "node:querystring";
+import { fileURLToPath } from "node:url";
 
 import { readFile } from "fs/promises";
 import mustache from "mustache";
@@ -20,6 +21,7 @@ type BuildUrlOptions = {
 };
 
 const mailConfig = ConfigSchema.parse(config);
+const dirname = fileURLToPath(import.meta.url);
 
 export async function renderTemplate(
   options: BuildTemplateOptions,
@@ -29,7 +31,11 @@ export async function renderTemplate(
   let rawTemplate = "";
 
   if (templateFile) {
-    const templateResolvedPath = path.resolve(__dirname, templateFile);
+    const templateResolvedPath = path.resolve(
+      dirname,
+      "../../../../assets/mail",
+      templateFile,
+    );
     rawTemplate = await readFile(templateResolvedPath, { encoding: "utf-8" });
   } else if (template) {
     rawTemplate = template;

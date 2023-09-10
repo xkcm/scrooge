@@ -1,0 +1,21 @@
+@use "sass:math";
+
+@mixin defaultOutlineOnFocus {
+  outline: 2px getColor(beta) solid;
+}
+
+@mixin useBgColor($colorName, $weight: 400, $opacity: 1) {
+  background-color: getColor($colorName, $weight, $opacity);
+}
+
+@mixin useTextColor($colorName, $opacity: 1) {
+  color: getTextColor($colorName, $opacity);
+}
+
+@function getColor($colorName, $weight: 400, $opacity: 1) {
+  @return rgba(var(--color-#{$colorName}-#{$weight}), $opacity);
+}
+
+@function getTextColor($colorName, $opacity: 1) {
+  @return rgba(var(--text-color-#{$colorName}), $opacity);
+}

@@ -23,6 +23,14 @@ operationRouter.get(
   }),
   wrapExpressErrorHandler(operationController.getOperations),
 );
+operationRouter.get(
+  "/latest",
+  tokenMiddleware.strict,
+  createRequestQueryVerifier({
+    schema: schemas.operation.GetLatestOperationsQuerySchema,
+  }),
+  wrapExpressErrorHandler(operationController.getLatestOperations),
+);
 operationRouter.delete(
   "/:operationId",
   tokenMiddleware.strict,
@@ -50,6 +58,14 @@ operationRouter.get(
     allowEmptyObject: true,
   }),
   wrapExpressErrorHandler(operationController.getOperationsSum),
+);
+operationRouter.get(
+  "/sum/period",
+  tokenMiddleware.strict,
+  createRequestQueryVerifier({
+    schema: schemas.operation.GetOperationsPeriodSummaryQuerySchema,
+  }),
+  wrapExpressErrorHandler(operationController.getOperationsPeriodSummary),
 );
 
 operationRouter.post(

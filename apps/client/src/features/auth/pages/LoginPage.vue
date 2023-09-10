@@ -22,12 +22,13 @@
 
       <a id="forgot-password-text" href="#">I forgot my password</a>
 
-      <FilledButton
+      <AppButton
         id="submit-button"
-        caption="Log in"
         icon="mdi:sign-in"
         @click="submitForm(mail, password)"
-      ></FilledButton>
+      >
+        Log in
+      </AppButton>
 
       <span id="new-account-text">
         You don't have an account? <a href="#">Sign up</a>
@@ -38,22 +39,19 @@
 
 <script setup lang="ts">
 // todo: add form validation
+import { Icon } from "@iconify/vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
-import { Icon } from "@iconify/vue";
+import { ApiError } from "@scrooge/shared";
+import { AppButton, PasswordInput, TextInput } from "@scrooge/ui-library";
 
+import authService from "../auth.service";
 import AuthLayout from "../layouts/AuthLayout.vue";
 
-import FilledButton from "@core/components/Buttons/FilledButton.vue";
-import PasswordInput from "@core/components/Inputs/PasswordInput.vue";
-import TextInput from "@core/components/Inputs/TextInput.vue";
-
+import notificationService from "@/features/notifications/notification.service";
 import { NotificationWithActions } from "@/features/notifications/notification.types";
-import { pushNotification } from "@/features/notifications/notification.utils";
-
-import { ApiError } from "@scrooge/shared";
-import { logIn } from "../auth.service";
+import { prepareNotificationInputFromApiError } from "@/features/notifications/notification.utils";
 
 const mail = ref("");
 const password = ref("");
@@ -67,22 +65,21 @@ const submitForm = async (mailValue: string, passwordValue: string) => {
   }
 
   try {
-    await logIn(mailValue, passwordValue);
+    await authService.logIn(mailValue, passwordValue);
 
     router.push("dashboard");
-    pushNotification({
+    notificationService.pushNotification({
       title: "You're logged in",
       type: "success",
     });
   } catch (apiError) {
-    console.error({ apiError });
-    lastErrorNotification = pushNotification({
-      title: "Login attempt failed",
-      body: (apiError as ApiError).message,
-      type: "error",
-      duration: 15000,
-      onDispose: () => (lastErrorNotification = null),
-    });
+    lastErrorNotification = notificationService.pushNotification(
+      prepareNotificationInputFromApiError(apiError as ApiError, {
+        title: "Login attempt failed",
+        duration: 1500000,
+        onDispose: () => (lastErrorNotification = null),
+      }),
+    );
   }
 };
 </script>
@@ -163,4 +160,3 @@ const submitForm = async (mailValue: string, passwordValue: string) => {
   }
 }
 </style>
-../auth.store ../auth.service

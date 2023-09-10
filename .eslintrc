@@ -44,7 +44,8 @@
     "@typescript-eslint/indent": "off",
     "import/no-named-as-default": 0,
     "simple-import-sort/imports": "error",
-    "simple-import-sort/exports": "error"
+    "simple-import-sort/exports": "error",
+    "@typescript-eslint/no-explicit-any": "off"
   },
   "settings": {
     "import/parsers": {
