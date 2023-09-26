@@ -10,11 +10,11 @@ datasource db {
 }
 
 model User {
-  id          String                   @id @default(cuid())
-  email       String                   @unique
+  id          String                    @id @default(cuid())
+  email       String                    @unique
   username    String
-  password    String                   @db.Char(60)
-  definedTags Unsupported("UserTag")[]
+  password    String                    @db.Char(60)
+  definedTags Unsupported("_UserTag")[]
   operations  Operation[]
   sessions    Session[]
 }
@@ -26,7 +26,7 @@ model Operation {
   amount      Decimal       @db.Money
   tags        String[]
   title       String
-  description String?       @db.Text
+  description String?
   type        OperationType
   owner       User          @relation(fields: [ownerId], references: [id])
 
@@ -40,7 +40,7 @@ model Session {
   expiresAt   DateTime
   sourceIp    String?  @db.Inet
   agent       String?  @db.VarChar
-  geolocation Float[]  @db.DoublePrecision
+  geolocation Float[]
   refreshable Boolean
   user        User     @relation(fields: [userId], references: [id])
 

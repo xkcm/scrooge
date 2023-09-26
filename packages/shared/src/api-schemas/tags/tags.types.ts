@@ -14,8 +14,8 @@ export type ModifyTagBody = z.infer<typeof ModifyTagBodySchema>;
 
 export interface Tag {
   label: string;
-  icon: string;
-  color: string;
+  icon: string | null;
+  color: string | null;
 }
 export type GetTagsResponse = {
   tags: Tag[];

@@ -1,4 +1,7 @@
+import { schemas } from "@scrooge/shared";
 import { Tag } from "@scrooge/shared/dist/api-schemas/tags/tags.types.js";
+
+import { RawDefinedTags } from "./tags.service.types.js";
 
 export const parseTags = (rawTags: string[]): Tag[] =>
   rawTags.map((rawTag) => JSON.parse(rawTag));
@@ -22,3 +25,12 @@ export const mergeTags = (baseTag: Tag, newTag: Partial<Tag>): Tag => ({
   color: newTag.color || baseTag.color,
   icon: newTag.icon || baseTag.icon,
 });
+
+export const parseDefinedTagsRecord = (
+  rawTags: RawDefinedTags,
+): schemas.tags.Tag[] =>
+  rawTags.definedTags.flat().map((tag) => ({
+    label: tag.label.trim(),
+    color: tag.color?.trim() || null,
+    icon: tag.icon?.trim() || null,
+  }));

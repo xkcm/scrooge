@@ -25,3 +25,7 @@ export interface TagsService {
     tagPayload: Partial<schemas.tags.Tag>,
   ): Promise<schemas.tags.Tag[]>;
 }
+
+export type RawDefinedTags = {
+  definedTags: [schemas.tags.Tag[]];
+};

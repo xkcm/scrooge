@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { schemas } from "@scrooge/shared";
 
 import serverConfig from "#core/config/server.config.js";
@@ -6,28 +7,30 @@ import { createPrismaErrorParser } from "#core/prisma/prisma.utils.js";
 import { UserWithGivenIdNotFoundError } from "#root/api/features/auth/services/user/user.service.errors.js";
 
 import { UndefinedTagError } from "../../tags.errors.js";
-import { TagsService } from "./tags.service.types.js";
+import { RawDefinedTags, TagsService } from "./tags.service.types.js";
 import {
   findNewTags,
   mergeTags,
+  parseDefinedTagsRecord,
   parseTags,
   stringifyTags,
 } from "./tags.service.utils.js";
 
 const tagsService: TagsService = {
   async getUserTags(userId) {
-    const { definedTags } = await prismaClient.user
-      .findFirstOrThrow({
-        where: { id: userId },
-        select: { definedTags: true },
-      })
+    const query = Prisma.sql`
+      SELECT jsonb_agg("definedTags") as "definedTags" FROM "User" WHERE id = ${userId}
+    `;
+
+    const [result] = await prismaClient
+      .$queryRaw<RawDefinedTags[]>(query)
       .catch(
         createPrismaErrorParser({
           P2025: UserWithGivenIdNotFoundError.withMetadata({ userId }),
         }),
       );
 
-    return parseTags(definedTags);
+    return parseDefinedTagsRecord(result);
   },
 
   async addUserTags(userId, paramTags) {
@@ -38,14 +41,16 @@ const tagsService: TagsService = {
     if (newTags.length === 0) {
       return userTags;
     }
-
+    // @ts-ignore
     const { definedTags: updatedTags } = await prismaClient.user.update({
       where: { id: userId },
       data: {
+        // @ts-ignore
         definedTags: {
           push: stringifyTags(newTags),
         },
       },
+      // @ts-ignore
       select: { definedTags: true },
     });
 
@@ -62,11 +67,14 @@ const tagsService: TagsService = {
       return userTags;
     }
 
+    // @ts-ignore
     const { definedTags } = await prismaClient.user.update({
       where: { id: userId },
       data: {
+        // @ts-ignore
         definedTags: stringifyTags(updatedTags),
       },
+      // @ts-ignore
       select: { definedTags: true },
     });
 
@@ -121,9 +129,11 @@ const tagsService: TagsService = {
     const newTag = mergeTags(userTags[matchingTagIndex], tagPayload);
     userTags.splice(matchingTagIndex, 1, newTag);
 
+    // @ts-ignore
     const { definedTags } = await prismaClient.user.update({
       where: { id: userId },
       data: {
+        // @ts-ignore
         definedTags: {
           set: stringifyTags(userTags),
         },
