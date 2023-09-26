@@ -1,3 +1,13 @@
+---Custom Migrations
+---UserTag
+CREATE DOMAIN "UserTagLabel" as TEXT CHECK (value IS NOT NULL);
+CREATE TYPE "UserTag" AS (
+    "label" "UserTagLabel",
+    "icon" TEXT,
+    "color" VARCHAR(7)
+);
+---/Custom Migrations
+
 -- CreateEnum
 CREATE TYPE "OperationType" AS ENUM ('EXPENSE', 'INCOME');
 
@@ -7,7 +17,7 @@ CREATE TABLE "User" (
     "email" TEXT NOT NULL,
     "username" TEXT NOT NULL,
     "password" CHAR(60) NOT NULL,
-    "definedTags" UserTag[],
+    "definedTags" "UserTag"[],
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
