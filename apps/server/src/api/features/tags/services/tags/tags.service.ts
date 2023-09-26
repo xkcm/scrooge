@@ -14,6 +14,7 @@ import {
   parseDefinedTagsRecord,
   parseTags,
   stringifyTags,
+  stringifyTagsPushOperation,
 } from "./tags.service.utils.js";
 
 const tagsService: TagsService = {
@@ -41,20 +42,13 @@ const tagsService: TagsService = {
     if (newTags.length === 0) {
       return userTags;
     }
-    // @ts-ignore
-    const { definedTags: updatedTags } = await prismaClient.user.update({
-      where: { id: userId },
-      data: {
-        // @ts-ignore
-        definedTags: {
-          push: stringifyTags(newTags),
-        },
-      },
-      // @ts-ignore
-      select: { definedTags: true },
-    });
 
-    return parseTags(updatedTags);
+    const result = await prismaClient.$queryRawUnsafe(`
+    UPDATE "User"
+    SET "definedTags" = ${stringifyTagsPushOperation(newTags)}
+    WHERE "id" = ${Prisma.sql`${userId}`}
+  `);
+    return result as any;
   },
 
   async deleteUserTag(userId, tagLabel) {

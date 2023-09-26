@@ -34,3 +34,14 @@ export const parseDefinedTagsRecord = (
     color: tag.color?.trim() || null,
     icon: tag.icon?.trim() || null,
   }));
+
+export const stringifyNullable = (value: string | null) =>
+  value !== null ? `'${value}'` : "NULL";
+
+export const stringifyTag = (tag: schemas.tags.Tag) =>
+  `('${tag.label}',${stringifyNullable(tag.icon)},${stringifyNullable(
+    tag.color,
+  )})::"UserTag"`;
+
+export const stringifyTagsPushOperation = (tags: schemas.tags.Tag[]) =>
+  `array_cat("definedTags", ARRAY[${tags.map(stringifyTag).join(",")}])`;
