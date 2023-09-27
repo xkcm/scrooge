@@ -52,6 +52,10 @@ const authController = bindObjectMethods({
       password,
       email: decodedToken.email,
       username: req.body.username,
+      currency: req.body.currency,
+      language: req.body.language,
+      locale: req.body.locale,
+      theme: req.body.theme,
     });
 
     const newReq = req as unknown as ApiRequest<schemas.auth.LoginBody>;
@@ -64,8 +68,8 @@ const authController = bindObjectMethods({
   },
 
   async logOut(req, res: ApiResponse<schemas.auth.GetAuthStateResponse>) {
-    res.clearCookie("authToken");
-    res.clearCookie("refreshToken");
+    clearCookie(res, "authToken");
+    clearCookie(res, "refreshToken");
 
     res.json({ isAuthenticated: false });
   },
@@ -125,9 +129,11 @@ const authController = bindObjectMethods({
       refreshResult.expiresIn,
     );
 
+    const preferences = await userService.getPreferences(user.id);
+
     return res.json({
-      isAuthTokenSet: true,
-      isRefreshTokenSet: true,
+      isAuthenticated: true,
+      preferences,
     });
   },
 
@@ -135,13 +141,20 @@ const authController = bindObjectMethods({
     req,
     res: ApiResponse<schemas.auth.GetAuthStateResponse, AuthLocals<"safe">>,
   ) {
-    if (res.locals.auth.isAuthenticated) {
-      return res.json({ isAuthenticated: true });
+    if (!res.locals.auth.isAuthenticated) {
+      return res.status(401).json({
+        isAuthenticated: false,
+        error: res.locals.auth.error.toApiResponse(),
+      });
     }
 
-    return res.status(401).json({
-      isAuthenticated: false,
-      error: res.locals.auth.error.toApiResponse(),
+    const preferences = await userService.getPreferences(
+      res.locals.auth.userId,
+    );
+
+    return res.json({
+      isAuthenticated: true,
+      preferences,
     });
   },
 } satisfies ApiControllerObject);

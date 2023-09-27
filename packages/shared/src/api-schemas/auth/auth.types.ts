@@ -1,3 +1,4 @@
+import { UserPreferences } from "api-schemas/user/user.types.js";
 import { z } from "zod";
 
 import type { ApiErrorResponseBody } from "../../index.js";
@@ -20,14 +21,12 @@ export type BeginRegistrationResponse = {
   mailSent: boolean;
 };
 export type LoginResponse = {
-  isAuthTokenSet: boolean;
-  isRefreshTokenSet: boolean;
+  isAuthenticated: true;
+  preferences: UserPreferences;
 };
 export type RegisterUserResponse = LoginResponse;
 export type GetAuthStateResponse =
-  | {
-      isAuthenticated: true;
-    }
+  | LoginResponse
   | {
       isAuthenticated: false;
       error?: ApiErrorResponseBody;
