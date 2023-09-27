@@ -1,6 +1,7 @@
 import apiClient from "@/services/api-client/api-client";
 import notificationService from "../notifications/notification.service";
 import { useAuthStore } from "./auth.store";
+import { useUserPreferencesStore } from "../app/features/settings/stores/user-preferences.store";
 
 function isUserAuthenticated() {
   return useAuthStore().isUserAuthenticated;
@@ -19,6 +20,11 @@ async function resolveAuthState() {
       type: "info",
       body: "Current session expired, please re-log into the app",
     });
+  }
+
+  const userPreferencesStore = useUserPreferencesStore();
+  if (authState.isAuthenticated && !userPreferencesStore.isInitialized) {
+    userPreferencesStore.setUserPreferences(authState.preferences);
   }
 
   return authState;

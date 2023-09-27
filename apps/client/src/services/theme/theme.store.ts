@@ -1,20 +1,23 @@
 import { useLocalStorage } from "@vueuse/core";
 import { defineStore } from "pinia";
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { getCurrentThemeProperties } from "./theme.helpers";
 import { SupportedTheme } from "./theme.types";
 import themeService from "./theme";
 
+const DEFAULT_THEME = "system";
+
 export const useThemeStore = defineStore("themeStore", () => {
-  const theme = useLocalStorage<SupportedTheme>("scrooge__theme-id", "light");
+  const rawTheme = useLocalStorage<SupportedTheme | "">("scrooge-theme", "");
+  const theme = computed<SupportedTheme>(() => rawTheme.value || DEFAULT_THEME);
 
   const setTheme = (themeId: SupportedTheme) => {
-    theme.value = themeId;
-    themeService.setTheme(themeId);
+    rawTheme.value = themeId;
+    themeService.applyTheme(themeId);
   };
 
   const themeProperties = ref(getCurrentThemeProperties());
-  watch([theme], () => (themeProperties.value = getCurrentThemeProperties()));
+  watch(theme, () => (themeProperties.value = getCurrentThemeProperties()));
 
   return {
     theme,
