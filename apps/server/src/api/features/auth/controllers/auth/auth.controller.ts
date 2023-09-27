@@ -1,6 +1,10 @@
-import { schemas } from "@scrooge/shared";
+import { ApiError, schemas } from "@scrooge/shared";
 
-import { clearCookie, setCookie } from "#api/utils/cookies.util.js";
+import {
+  clearAllCookies,
+  clearCookie,
+  setCookie,
+} from "#api/utils/cookies.util.js";
 import { AuthLocals } from "#api:auth/middleware/token/token.middleware.types.js";
 import passwordService from "#api:auth/services/password/password.service.js";
 import { createPrismaErrorParser } from "#core/prisma/prisma.utils.js";
@@ -142,15 +146,23 @@ const authController = bindObjectMethods({
     res: ApiResponse<schemas.auth.GetAuthStateResponse, AuthLocals<"safe">>,
   ) {
     if (!res.locals.auth.isAuthenticated) {
+      clearAllCookies(res);
       return res.status(401).json({
         isAuthenticated: false,
         error: res.locals.auth.error.toApiResponse(),
       });
     }
 
-    const preferences = await userService.getPreferences(
-      res.locals.auth.userId,
-    );
+    let preferences;
+    try {
+      preferences = await userService.getPreferences(res.locals.auth.userId);
+    } catch (error) {
+      clearAllCookies(res);
+      return res.status(401).json({
+        isAuthenticated: false,
+        error: (error as ApiError).toApiResponse(),
+      });
+    }
 
     return res.json({
       isAuthenticated: true,

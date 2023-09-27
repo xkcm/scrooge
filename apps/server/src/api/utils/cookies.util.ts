@@ -17,3 +17,9 @@ export function setCookie(
 export function clearCookie(res: ApiResponse, key: SupportedCookieKey) {
   return res.clearCookie(key);
 }
+
+export function clearAllCookies(res: ApiResponse) {
+  clearCookie(res, "authToken");
+  clearCookie(res, "refreshToken");
+  clearCookie(res, "relogToken");
+}
