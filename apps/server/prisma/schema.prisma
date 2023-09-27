@@ -17,6 +17,10 @@ model User {
   definedTags String[]
   operations  Operation[]
   sessions    Session[]
+  currency    String      @default("USD")
+  language    String      @default("en-US")
+  locale      String      @default("en-US")
+  theme       String      @default("system")
 }
 
 model Operation {
