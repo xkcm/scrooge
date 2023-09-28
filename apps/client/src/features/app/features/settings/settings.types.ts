@@ -8,6 +8,7 @@ export type SettingsSectionItemProps = {
   options?: {
     caption: string;
     value: string;
+    selected?: boolean;
   }[];
 };
 

@@ -19,6 +19,7 @@
         v-for="option of options"
         :key="option.value"
         :value="option.value"
+        :selected="option.selected"
       >
         {{ option.caption }}
       </option>

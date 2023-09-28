@@ -62,6 +62,7 @@ const sections: SettingsSectionProps[] = [
         options: themeService.themesConfig.map(({ id, displayName }) => ({
           value: id,
           caption: displayName,
+          selected: preferencesStore.theme === id,
         })),
         onUpdate: (newTheme: SupportedTheme) =>
           preferencesStore.setTheme(newTheme),
