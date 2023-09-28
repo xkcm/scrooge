@@ -7,11 +7,6 @@ export function validateRoute(route: RouteLocationNormalized) {
     (matched) => matched.meta.requireAuthentication,
   );
 
-  console.info({
-    route,
-    isUserAuthenticated: authService.isUserAuthenticated(),
-  });
-
   if (requireAuthentication && !authService.isUserAuthenticated()) {
     return { name: "home" };
   }

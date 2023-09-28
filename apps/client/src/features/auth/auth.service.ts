@@ -1,7 +1,7 @@
 import apiClient from "@/services/api-client/api-client";
+import { usePreferencesStore } from "../app/features/settings/stores/preferences.store";
 import notificationService from "../notifications/notification.service";
 import { useAuthStore } from "./auth.store";
-import { useUserPreferencesStore } from "../app/features/settings/stores/user-preferences.store";
 
 function isUserAuthenticated() {
   return useAuthStore().isUserAuthenticated;
@@ -22,9 +22,9 @@ async function resolveAuthState() {
     });
   }
 
-  const userPreferencesStore = useUserPreferencesStore();
-  if (authState.isAuthenticated && !userPreferencesStore.isInitialized) {
-    userPreferencesStore.setUserPreferences(authState.preferences);
+  const userPreferencesStore = usePreferencesStore();
+  if (authState.isAuthenticated && !userPreferencesStore.isCustomized) {
+    userPreferencesStore.setPreferences(authState.preferences);
   }
 
   return authState;

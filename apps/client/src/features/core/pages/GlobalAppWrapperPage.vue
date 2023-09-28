@@ -27,7 +27,7 @@ import NotificationPortal from "@/features/notifications/components/Notification
 
 import { prepareNotificationInputFromApiError } from "@/features/notifications/notification.utils";
 import notificationService from "@/features/notifications/notification.service";
-import themeService from "@/services/theme/theme";
+import themeService from "@/services/theme/theme.service";
 
 themeService.initTheme();
 
@@ -47,3 +47,4 @@ onErrorCaptured((error) => {
   }
 });
 </script>
+@/services/theme/theme.service
