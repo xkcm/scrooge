@@ -58,6 +58,7 @@ export const usePreferencesStore = defineStore("Preferences", () => {
     setLocale,
     setLanguage,
     setCurrency,
+    setTheme,
     isCustomized,
   };
 });
