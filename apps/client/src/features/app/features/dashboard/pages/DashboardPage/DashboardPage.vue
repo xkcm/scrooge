@@ -129,9 +129,11 @@ import {
   isRefDefined,
   mapApiDataToChartDatasets,
 } from "./DashboardPage.helpers";
+import { usePreferencesStore } from "../../../settings/stores/preferences.store";
 
 const router = useRouter();
 const themeStore = useThemeStore();
+const preferencesStore = usePreferencesStore();
 
 const OPERATION_ITEM_HEIGHT = 41;
 const maxExpenseItemsNumber = ref(0);
@@ -229,7 +231,10 @@ onMounted(async () => {
       timezone: new Date().getTimezoneOffset(),
     });
 
-    const mappedData = mapApiDataToChartDatasets(summary, navigator.language);
+    const mappedData = mapApiDataToChartDatasets(
+      summary,
+      preferencesStore.locale,
+    );
 
     chartSize.height = height;
     chartSize.width = width;

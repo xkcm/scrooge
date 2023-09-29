@@ -8,7 +8,7 @@ import { SupportedTheme } from "./theme.types";
 export const useThemeStore = defineStore("Theme", () => {
   const preferencesStore = usePreferencesStore();
   const theme = computed(() => preferencesStore.theme);
-  const themeProperties = ref<ReturnType<typeof getCurrentThemeProperties>>();
+  const themeProperties = ref(getCurrentThemeProperties());
 
   const updateTheme = (themeId: SupportedTheme) => {
     themeService.applyThemeStyling(themeId);

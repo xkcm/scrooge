@@ -14,6 +14,8 @@
 </template>
 
 <script lang="ts" setup>
+import * as localeCodes from "locale-codes";
+import * as currencyCodes from "currency-codes";
 import AppLayout from "@app/layouts/AppLayout.vue";
 import SettingsSection from "../components/SettingsSection.vue";
 import { SettingsSectionProps } from "../settings.types";
@@ -70,14 +72,42 @@ const sections: SettingsSectionProps[] = [
       {
         icon: "mdi:translate",
         text: "Language",
+        inputType: "options",
+        // todo: implement this correctly
+        options: [
+          {
+            value: "en-US",
+            caption: "English",
+            selected: true,
+          },
+        ],
+        onUpdate: (newLanguage) => console.info({ newLanguage }),
       },
       {
         icon: "mdi:currency-usd",
         text: "Currency",
+        inputType: "options",
+        options: currencyCodes.codes().map((code) => ({
+          value: code,
+          caption: code,
+          selected: preferencesStore.currency === code,
+        })),
+        onUpdate: (newCurrency: string) =>
+          preferencesStore.setCurrency(newCurrency),
       },
       {
         icon: "mdi:flag",
         text: "Locale",
+        inputType: "options",
+        options: localeCodes.all.map(({ local, name, location, tag }) => ({
+          value: tag,
+          caption:
+            name +
+            (local ? ` - ${local}` : "") +
+            (location ? ` (${location})` : ""),
+          selected: preferencesStore.locale === tag,
+        })),
+        onUpdate: (newLocale: string) => preferencesStore.setLocale(newLocale),
       },
     ],
   },

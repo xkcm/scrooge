@@ -48,29 +48,25 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-import { Operation } from "../../types";
 import { router } from "@/router/router";
 import { FilterContainer, filters } from "@scrooge/shared";
 import { AppTooltip } from "@scrooge/ui-library";
+import { computed } from "vue";
+import { usePreferencesStore } from "../../../settings/stores/preferences.store";
+import { Operation } from "../../types";
 
 type LatestOperationItemProps = Operation & {
   rowNumber: number;
 };
+
 const { amount, createdAt, type } = defineProps<LatestOperationItemProps>();
+const preferencesStore = usePreferencesStore();
 
-// todo: implement this correctly
-const getUserPreferencies = () => ({
-  currency: "USD",
-  locale: navigator.language,
-});
-
-const { locale, currency } = getUserPreferencies();
-const currencyFormatter = new Intl.NumberFormat(locale, {
+const currencyFormatter = new Intl.NumberFormat(preferencesStore.locale, {
   style: "currency",
-  currency,
+  currency: preferencesStore.currency,
 });
-const dateFormatter = new Intl.DateTimeFormat(locale, {
+const dateFormatter = new Intl.DateTimeFormat(preferencesStore.locale, {
   month: "2-digit",
   day: "2-digit",
 });
