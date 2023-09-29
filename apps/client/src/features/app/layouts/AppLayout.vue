@@ -79,6 +79,15 @@ const NAV_ITEMS: NavItemProps[] = [
 
 $headerHeight: 100px;
 
+@include utils.useTheme(light) {
+  --p-logo-color: #{utils.getTextColor(secondary)};
+  --p-header-color: #{utils.getColor(beta)};
+}
+@include utils.useTheme(dark) {
+  --p-logo-color: #{utils.getTextColor(primary)};
+  --p-header-color: #{utils.getTextColor(primary)};
+}
+
 .app-layout {
   @include utils.useBgColor(alpha, 600);
   display: grid;
@@ -101,7 +110,7 @@ $headerHeight: 100px;
     align-items: center;
 
     h2 {
-      @include utils.useTextColor(secondary);
+      color: var(--p-logo-color);
       font-size: 2.25rem;
       font-weight: 600;
     }
@@ -122,7 +131,7 @@ $headerHeight: 100px;
   align-items: center;
 
   h2 {
-    color: utils.getColor(beta);
+    color: var(--p-header-color);
     font-size: 2.25rem;
     font-weight: 500;
   }

@@ -94,6 +94,8 @@ const openTagInHistory = (tag: string) => {
 
 .operation-item {
   @include utils.useBgColor(alpha);
+  @include utils.useTextColor(primary);
+
   display: grid;
   grid-template-columns: 40px minmax(0, 1fr) 140px 70px;
   grid-template-rows: 40px;

@@ -16,12 +16,15 @@
 <script lang="ts" setup>
 import * as localeCodes from "locale-codes";
 import * as currencyCodes from "currency-codes";
+
 import AppLayout from "@app/layouts/AppLayout.vue";
 import SettingsSection from "../components/SettingsSection.vue";
+
 import { SettingsSectionProps } from "../settings.types";
+import { SupportedTheme } from "@/services/theme/theme.types";
+
 import themeService from "@/services/theme/theme.service";
 import { usePreferencesStore } from "../stores/preferences.store";
-import { SupportedTheme } from "@/services/theme/theme.types";
 
 const preferencesStore = usePreferencesStore();
 
