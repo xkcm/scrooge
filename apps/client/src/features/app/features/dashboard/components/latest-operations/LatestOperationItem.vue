@@ -187,11 +187,15 @@ const openTagInHistory = (tag: string) => {
 
 .operation-item__amount {
   font-weight: 600;
+  display: flex;
+  align-items: center;
 }
 
 .operation-item__date {
   text-align: right;
   font-weight: 300;
   padding-right: 10px;
+  display: flex;
+  align-items: center;
 }
 </style>
