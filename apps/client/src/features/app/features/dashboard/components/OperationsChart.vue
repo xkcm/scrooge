@@ -78,7 +78,10 @@ const resolvedChartOptions = computed<ChartOptions<"line">>(() => ({
           weight: "500",
           size: 12,
         },
-        color: themeColorToRgba(themeStore.themeProperties.colors.gamma[400]),
+        color: themeColorToRgba(
+          themeStore.themeProperties.textColors.primary,
+          0.5,
+        ),
       },
     },
     y: {
