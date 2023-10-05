@@ -41,12 +41,16 @@ const onButtonClick = (event: MouseEvent) => {
 $navItemHeight: 60px;
 
 @include utils.useTheme(light) {
-  --p-text-color: #{utils.getTextColor(secondary, 0.8)};
-  --p-text-color--active: #{utils.getTextColor(secondary)};
+  .nav-item {
+    --p-text-color: #{utils.getTextColor(secondary, 0.8)};
+    --p-text-color--active: #{utils.getTextColor(secondary)};
+  }
 }
 @include utils.useTheme(dark) {
-  --p-text-color: #{utils.getTextColor(primary, 0.8)};
-  --p-text-color--active: #{utils.getTextColor(primary)};
+  .nav-item {
+    --p-text-color: #{utils.getTextColor(primary, 0.8)};
+    --p-text-color--active: #{utils.getTextColor(primary)};
+  }
 }
 
 .nav-item {

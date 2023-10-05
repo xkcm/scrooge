@@ -80,12 +80,16 @@ const NAV_ITEMS: NavItemProps[] = [
 $headerHeight: 100px;
 
 @include utils.useTheme(light) {
-  --p-logo-color: #{utils.getTextColor(secondary)};
-  --p-header-color: #{utils.getColor(beta)};
+  .app-layout {
+    --p-logo-color: #{utils.getTextColor(secondary)};
+    --p-header-color: #{utils.getColor(beta)};
+  }
 }
 @include utils.useTheme(dark) {
-  --p-logo-color: #{utils.getTextColor(primary)};
-  --p-header-color: #{utils.getTextColor(primary)};
+  .app-layout {
+    --p-logo-color: #{utils.getTextColor(primary)};
+    --p-header-color: #{utils.getTextColor(primary)};
+  }
 }
 
 .app-layout {

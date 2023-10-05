@@ -1,18 +1,24 @@
-// todo: type this better
+import { AppSelectOption } from "@scrooge/ui-library";
+
+export type SettingsSectionItemLinkProps = {
+  href: string;
+};
+
+export type SettingsSectionItemOptionsProps = {
+  onUpdate: (newValue: any) => void;
+  inputType: "options";
+  options: AppSelectOption[];
+  selectedOption: string;
+};
+
 export type SettingsSectionItemProps = {
   icon: string;
   text: string;
-  href?: string;
-  onUpdate?: (newValue: any) => void;
-  inputType?: "options";
-  options?: {
-    caption: string;
-    value: string;
-    selected?: boolean;
-  }[];
-};
+} & Partial<SettingsSectionItemLinkProps> &
+  Partial<SettingsSectionItemOptionsProps>;
 
 export type SettingsSectionProps = {
-  header: Pick<SettingsSectionItemProps, "href" | "icon" | "text">;
+  header: Pick<SettingsSectionItemProps, "icon" | "text"> &
+    Partial<SettingsSectionItemLinkProps>;
   items?: SettingsSectionItemProps[];
 };

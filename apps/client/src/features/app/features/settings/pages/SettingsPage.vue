@@ -16,6 +16,7 @@
 <script lang="ts" setup>
 import * as localeCodes from "locale-codes";
 import * as currencyCodes from "currency-codes";
+import { computed } from "vue";
 
 import AppLayout from "@app/layouts/AppLayout.vue";
 import SettingsSection from "../components/SettingsSection.vue";
@@ -28,7 +29,7 @@ import { usePreferencesStore } from "../stores/preferences.store";
 
 const preferencesStore = usePreferencesStore();
 
-const sections: SettingsSectionProps[] = [
+const sections = computed<SettingsSectionProps[]>(() => [
   {
     header: {
       icon: "mdi:card-account-details",
@@ -67,8 +68,8 @@ const sections: SettingsSectionProps[] = [
         options: themeService.themesConfig.map(({ id, displayName }) => ({
           value: id,
           caption: displayName,
-          selected: preferencesStore.theme === id,
         })),
+        selectedOption: preferencesStore.theme,
         onUpdate: (newTheme: SupportedTheme) =>
           preferencesStore.setTheme(newTheme),
       },
@@ -81,9 +82,9 @@ const sections: SettingsSectionProps[] = [
           {
             value: "en-US",
             caption: "English",
-            selected: true,
           },
         ],
+        selectedOption: "en-US",
         onUpdate: (newLanguage) => console.info({ newLanguage }),
       },
       {
@@ -93,8 +94,8 @@ const sections: SettingsSectionProps[] = [
         options: currencyCodes.codes().map((code) => ({
           value: code,
           caption: code,
-          selected: preferencesStore.currency === code,
         })),
+        selectedOption: preferencesStore.currency,
         onUpdate: (newCurrency: string) =>
           preferencesStore.setCurrency(newCurrency),
       },
@@ -108,13 +109,13 @@ const sections: SettingsSectionProps[] = [
             name +
             (local ? ` - ${local}` : "") +
             (location ? ` (${location})` : ""),
-          selected: preferencesStore.locale === tag,
         })),
+        selectedOption: preferencesStore.locale,
         onUpdate: (newLocale: string) => preferencesStore.setLocale(newLocale),
       },
     ],
   },
-];
+]);
 </script>
 
 <style lang="scss">

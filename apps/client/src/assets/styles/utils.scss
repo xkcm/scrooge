@@ -54,7 +54,7 @@
 
   &::-webkit-scrollbar-thumb {
     border-radius: math.div($scrollbarWidth, 2);
-    background: getColor($scrollbarColor);
+    background: $scrollbarColor;
   }
 }
 

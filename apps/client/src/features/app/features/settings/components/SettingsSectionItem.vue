@@ -11,7 +11,13 @@
       @click="router.push({ name: href })"
     ></Icon>
 
-    <select
+    <AppSelect
+      v-else-if="inputType === 'options'"
+      :options="options"
+      :model-value="selectedOption"
+      @update:model-value="onUpdate"
+    ></AppSelect>
+    <!-- <select
       v-else-if="inputType === 'options'"
       @change="onUpdate?.(($event.target as HTMLSelectElement).value)"
     >
@@ -23,7 +29,7 @@
       >
         {{ option.caption }}
       </option>
-    </select>
+    </select> -->
   </div>
 </template>
 
@@ -31,6 +37,7 @@
 import { Icon } from "@iconify/vue";
 import { useRouter } from "vue-router";
 import { SettingsSectionItemProps } from "../settings.types";
+import { AppSelect } from "@scrooge/ui-library";
 
 defineProps<SettingsSectionItemProps>();
 
