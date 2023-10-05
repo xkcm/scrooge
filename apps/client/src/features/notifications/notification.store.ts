@@ -3,7 +3,7 @@ import { ref } from "vue";
 
 import type { Notification } from "./notification.types";
 
-export const useNotificationStore = defineStore("notificationStore", () => {
+export const useNotificationStore = defineStore("Notification", () => {
   const items = ref<Notification[]>([]);
 
   const setItems = (newItems: Notification[]) => {

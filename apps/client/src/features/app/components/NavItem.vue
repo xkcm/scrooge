@@ -40,11 +40,24 @@ const onButtonClick = (event: MouseEvent) => {
 
 $navItemHeight: 60px;
 
+@include utils.useTheme(light) {
+  .nav-item {
+    --p-text-color: #{utils.getTextColor(secondary, 0.8)};
+    --p-text-color--active: #{utils.getTextColor(secondary)};
+  }
+}
+@include utils.useTheme(dark) {
+  .nav-item {
+    --p-text-color: #{utils.getTextColor(primary, 0.8)};
+    --p-text-color--active: #{utils.getTextColor(primary)};
+  }
+}
+
 .nav-item {
   @include utils.clearHrefStyles;
   @include utils.clearButtonStyles;
-  @include utils.useTextColor(secondary, 0.8);
 
+  color: var(--p-text-color);
   display: grid;
   height: $navItemHeight;
   grid-template-columns: $navItemHeight auto;
@@ -57,7 +70,7 @@ $navItemHeight: 60px;
   &.active,
   &:active {
     @include utils.useBgColor(beta, 600);
-    @include utils.useTextColor(secondary);
+    color: var(--p-text-color--active);
   }
 
   &:focus-visible {

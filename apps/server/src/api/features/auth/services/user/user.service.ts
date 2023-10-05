@@ -10,7 +10,8 @@ import { UserService } from "./user.service.types.js";
 
 const userService: UserService = {
   async createUser(payload) {
-    const { email, password, username } = payload;
+    const { email, password, username, currency, language, locale, theme } =
+      payload;
 
     return prismaClient.user
       .create({
@@ -18,6 +19,10 @@ const userService: UserService = {
           email,
           password,
           username,
+          currency,
+          language,
+          locale,
+          theme,
         },
       })
       .catch(
@@ -47,6 +52,24 @@ const userService: UserService = {
       .findFirstOrThrow({
         where: { id: userId },
         select,
+      })
+      .catch(
+        createPrismaErrorParser({
+          P2025: UserWithGivenIdNotFoundError.withMetadata({ userId }),
+        }),
+      );
+  },
+
+  getPreferences(userId) {
+    return prismaClient.user
+      .findFirstOrThrow({
+        where: { id: userId },
+        select: {
+          currency: true,
+          language: true,
+          locale: true,
+          theme: true,
+        },
       })
       .catch(
         createPrismaErrorParser({

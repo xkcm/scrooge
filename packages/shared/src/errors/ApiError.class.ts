@@ -32,11 +32,11 @@ export class ApiError<M extends SupportedMetadata = {}> extends BetterError<
   } & M
 > {
   public static fromApiResponse(
-    apiResponse: ApiErrorResponseBody,
+    apiResponse?: ApiErrorResponseBody,
     httpCode?: number,
   ) {
     const metadata: InferMetadata<ApiError> = {};
-    if (apiResponse.attachments) {
+    if (apiResponse?.attachments) {
       metadata.attachments = apiResponse.attachments;
     }
     if (httpCode) {
@@ -44,8 +44,8 @@ export class ApiError<M extends SupportedMetadata = {}> extends BetterError<
     }
 
     const error = new ApiError({
-      code: apiResponse.code,
-      message: apiResponse.message,
+      code: apiResponse?.code,
+      message: apiResponse?.message,
       metadata,
     });
 

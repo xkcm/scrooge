@@ -45,6 +45,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
+      "@client-assets": path.resolve(__dirname, "../../apps/client/src/assets"),
     },
   },
 });

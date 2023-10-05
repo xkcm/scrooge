@@ -19,7 +19,6 @@ export function mapApiDataToChartDatasets(
   >,
   locale: string,
 ) {
-  // todo: implement locale correctly
   const dateFormatter = Intl.DateTimeFormat(locale, {
     day: "2-digit",
     month: "2-digit",

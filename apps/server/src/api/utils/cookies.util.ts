@@ -13,6 +13,13 @@ export function setCookie(
   });
 }
 
+// alias function for consistency with setCookie function
 export function clearCookie(res: ApiResponse, key: SupportedCookieKey) {
   return res.clearCookie(key);
+}
+
+export function clearAllCookies(res: ApiResponse) {
+  clearCookie(res, "authToken");
+  clearCookie(res, "refreshToken");
+  clearCookie(res, "relogToken");
 }

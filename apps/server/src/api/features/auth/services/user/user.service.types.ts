@@ -1,8 +1,9 @@
 import { Prisma, User } from "@prisma/client";
+import { schemas } from "@scrooge/shared";
 
-type RegisterUserPayload = Pick<
+type RegisterUserPayload = Omit<
   Prisma.UserCreateInput,
-  "email" | "password" | "username"
+  "id" | "operations" | "sessions" | "definedTags"
 >;
 
 export interface UserService {
@@ -14,4 +15,6 @@ export interface UserService {
     userId: User["id"],
     select?: Prisma.UserSelect,
   ): Promise<Partial<User>>;
+
+  getPreferences(userId: User["id"]): Promise<schemas.user.UserPreferences>;
 }

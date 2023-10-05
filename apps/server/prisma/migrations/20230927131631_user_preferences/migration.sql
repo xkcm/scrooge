@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "currency" TEXT NOT NULL DEFAULT 'USD',
+ADD COLUMN     "language" TEXT NOT NULL DEFAULT 'en-US',
+ADD COLUMN     "locale" TEXT NOT NULL DEFAULT 'en-US',
+ADD COLUMN     "theme" TEXT NOT NULL DEFAULT 'system';

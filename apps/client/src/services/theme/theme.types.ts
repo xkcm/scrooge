@@ -3,4 +3,4 @@ export interface ThemeConfig {
   displayName?: string;
 }
 
-export type SupportedTheme = "light" | "dark";
+export type SupportedTheme = "light" | "dark" | "system";

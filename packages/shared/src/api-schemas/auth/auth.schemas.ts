@@ -8,6 +8,10 @@ export const RegisterUserBodySchema = z
   .object({
     password: z.string(),
     username: z.string(),
+    locale: z.string().optional(),
+    currency: z.string().optional(),
+    language: z.string().optional(),
+    theme: z.string().optional(),
   })
   .strict();
 

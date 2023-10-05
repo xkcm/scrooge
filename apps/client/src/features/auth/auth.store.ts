@@ -1,15 +1,15 @@
-import { useLocalStorage } from "@vueuse/core";
+import { revalidateCurrentRoute } from "@/router/router.utils";
 import { defineStore } from "pinia";
+import { ref, watch } from "vue";
 
-export const useAuthStore = defineStore("authStore", () => {
-  const isUserAuthenticated = useLocalStorage<boolean>(
-    "scrooge__is-authenticated",
-    false,
-  );
+export const useAuthStore = defineStore("Auth", () => {
+  const isUserAuthenticated = ref<boolean>(false);
 
   const setAuthState = (isAuthenticated: boolean) => {
     isUserAuthenticated.value = isAuthenticated;
   };
+
+  watch(isUserAuthenticated, revalidateCurrentRoute);
 
   return { isUserAuthenticated, setAuthState };
 });
