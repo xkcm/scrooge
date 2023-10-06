@@ -5,6 +5,7 @@ import DashboardPage from "@app/features/dashboard/pages/DashboardPage/Dashboard
 import HistoryPage from "@app/features/history/pages/HistoryPage.vue";
 import NewOperationPage from "@app/features/new-operation/pages/NewOperationPage.vue";
 import SettingsPage from "@app/features/settings/pages/SettingsPage/SettingsPage.vue";
+import SessionsPage from "@app/features/settings/pages/SessionsPage.vue";
 
 import LoginPage from "@/features/auth/pages/LoginPage.vue";
 
@@ -30,6 +31,12 @@ const routes: RouteRecordRaw[] = [
     name: "settings",
     path: "/settings",
     component: SettingsPage,
+    meta: { requireAuthentication: true },
+  },
+  {
+    name: "sessions",
+    path: "/settings/sessions",
+    component: SessionsPage,
     meta: { requireAuthentication: true },
   },
   {
