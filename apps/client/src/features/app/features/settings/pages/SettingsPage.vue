@@ -65,10 +65,17 @@ const sections = computed<SettingsSectionProps[]>(() => [
         icon: "mdi:palette",
         text: "Theme",
         inputType: "options",
-        options: themeService.themesConfig.map(({ id, displayName }) => ({
-          value: id,
-          caption: displayName,
-        })),
+        options: themeService.themesConfig
+          .map(({ id, displayName }) => ({
+            value: id,
+            caption: displayName,
+          }))
+          .concat([
+            {
+              caption: "System preference",
+              value: "system",
+            },
+          ]),
         selectedOption: preferencesStore.theme,
         onUpdate: (newTheme: SupportedTheme) =>
           preferencesStore.setTheme(newTheme),

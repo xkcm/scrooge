@@ -1,3 +1,4 @@
+// todo: this type should be sourced from @scrooge/shared
 export type Operation = {
   id: string;
   title: string;

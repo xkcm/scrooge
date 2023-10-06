@@ -14,7 +14,14 @@ function applyThemeStyling(themeId: SupportedTheme) {
 }
 
 function getThemeConfig(themeId: string): ThemeConfig {
-  const foundTheme = themesConfig.find(({ id }) => id === themeId);
+  let resolvedThemeId = themeId;
+  if (themeId === "system") {
+    resolvedThemeId = window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  }
+
+  const foundTheme = themesConfig.find(({ id }) => id === resolvedThemeId);
   return foundTheme || themesConfig[0];
 }
 

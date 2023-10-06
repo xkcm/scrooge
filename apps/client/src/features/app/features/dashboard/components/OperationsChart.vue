@@ -60,6 +60,7 @@ const { height, width, chartData, chartOptions } = defineProps<{
   chartOptions: ChartOptions<"line">;
 }>();
 
+// todo: externalize this function
 const chartConfiguration = computed<ChartOptions<"line">>(() => ({
   plugins: {
     tooltip: {
