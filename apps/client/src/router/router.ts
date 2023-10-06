@@ -37,7 +37,10 @@ const routes: RouteRecordRaw[] = [
     name: "sessions",
     path: "/settings/sessions",
     component: SessionsPage,
-    meta: { requireAuthentication: true },
+    meta: {
+      requireAuthentication: true,
+      childOfNavigationItem: "settings",
+    },
   },
   {
     name: "new-operation",

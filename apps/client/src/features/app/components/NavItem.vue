@@ -20,10 +20,13 @@ import { NavItemProps } from "../types/NavItem.types";
 const { onClick, to } = defineProps<NavItemProps>();
 const router = useRouter();
 
-const isActive = computed(() =>
-  router.currentRoute.value.matched.some(
-    (matchedRoute) => matchedRoute.name === to?.name,
-  ),
+const isActive = computed(
+  () =>
+    router.currentRoute.value.matched.some(
+      (matchedRoute) => matchedRoute.name === to?.name,
+    ) ||
+    (to?.name &&
+      router.currentRoute.value.meta.childOfNavigationItem === to?.name),
 );
 
 const onButtonClick = (event: MouseEvent) => {
