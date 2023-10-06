@@ -1,7 +1,7 @@
 <template>
   <SelectRoot v-model="modelValue">
     <SelectTrigger class="app-select__trigger">
-      <span>{{ caption }}</span>
+      <SelectValue>{{ caption }}</SelectValue>
       <Icon icon="mdi:chevron-down" :width="16"></Icon>
     </SelectTrigger>
 
@@ -12,19 +12,23 @@
         position="popper"
         align="end"
       >
-        <SelectItem
-          v-for="(option, index) of options"
-          :key="index"
-          class="app-select__item"
-          :value="option.value"
-        >
-          <SelectItemIndicator class="app-select__item-indicator">
-            <Icon icon="mdi:check" :width="12"></Icon>
-          </SelectItemIndicator>
-          <span>
-            {{ option.caption }}
-          </span>
-        </SelectItem>
+        <div v-bind="containerProps" class="app-select__container">
+          <SelectViewport v-bind="wrapperProps">
+            <SelectItem
+              v-for="option of list"
+              :key="option.index"
+              class="app-select__item"
+              :value="option.data.value"
+            >
+              <SelectItemIndicator class="app-select__item-indicator">
+                <Icon icon="mdi:check" :width="12"></Icon>
+              </SelectItemIndicator>
+              <SelectItemText>
+                {{ option.data.caption }}
+              </SelectItemText>
+            </SelectItem>
+          </SelectViewport>
+        </div>
       </SelectContent>
     </SelectPortal>
   </SelectRoot>
@@ -32,6 +36,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
+import { useVirtualList } from "@vueuse/core";
 import { Icon } from "@iconify/vue";
 import {
   SelectContent,
@@ -40,17 +45,27 @@ import {
   SelectPortal,
   SelectRoot,
   SelectTrigger,
+  SelectViewport,
+  SelectItemText,
+  SelectValue,
 } from "radix-vue";
 
 import { AppSelectOption } from "./AppSelect.types";
 
 const modelValue = defineModel<string>();
-// todo: add virtual lists
-const { options = [] } = defineProps<{
+const { options } = defineProps<{
   options?: AppSelectOption[];
 }>();
+
+const { list, containerProps, wrapperProps } = useVirtualList(
+  computed(() => options ?? []),
+  {
+    itemHeight: 35,
+    overscan: 9,
+  },
+);
 const caption = computed(
-  () => options.find((option) => option.value === modelValue.value)?.caption,
+  () => options?.find((option) => option.value === modelValue.value)?.caption,
 );
 </script>
 
@@ -69,7 +84,6 @@ const caption = computed(
   --p-hover-bg-color: #{utils.getColor(alpha, 600)};
   --p-selected-text-color: #{utils.getColor(gamma)};
   --p-scrollbar-color: #{utils.getColor(beta)};
-  @include utils.useCustomScrollbar(var(--p-scrollbar-color), 5px);
 
   border-radius: 4px;
   max-height: 400px;
@@ -78,9 +92,14 @@ const caption = computed(
   background-color: var(--p-bg-color);
   color: var(--p-text-color);
   padding: 0.25rem 0;
-  min-width: 200px;
+  width: 200px;
   box-sizing: border-box;
   font-weight: 300;
+
+  &__container {
+    max-height: 300px;
+    @include utils.useCustomScrollbar(var(--p-scrollbar-color), 5px);
+  }
 
   &__item {
     font-family: "Poppins";
@@ -89,6 +108,9 @@ const caption = computed(
     padding: 0.2rem 1.5rem;
     font-size: 0.75rem;
     cursor: pointer;
+    min-height: 35px;
+    width: 100%;
+    box-sizing: border-box;
 
     &:hover {
       background-color: var(--p-hover-bg-color);
@@ -123,7 +145,7 @@ const caption = computed(
   border-radius: 4px;
   font-size: 0.8rem;
   padding: 0.2rem 0.8rem;
-  min-width: 200px;
+  width: 200px;
   box-sizing: border-box;
   font-weight: 300;
 

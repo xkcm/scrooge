@@ -39,7 +39,7 @@ const toggleType = () =>
 </script>
 
 <style lang="scss">
-@use "@/assets/styles/utils.scss";
+@use "@client-assets/styles/utils.scss";
 
 button.input__icon {
   @include utils.useBgColor(alpha);

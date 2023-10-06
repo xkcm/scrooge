@@ -14,18 +14,21 @@
 </template>
 
 <script lang="ts" setup>
-import * as localeCodes from "locale-codes";
-import * as currencyCodes from "currency-codes";
 import { computed } from "vue";
 
 import AppLayout from "@app/layouts/AppLayout.vue";
-import SettingsSection from "../components/SettingsSection.vue";
-
-import { SettingsSectionProps } from "../settings.types";
 import { SupportedTheme } from "@/services/theme/theme.types";
 
-import themeService from "@/services/theme/theme.service";
-import { usePreferencesStore } from "../stores/preferences.store";
+import { SettingsSectionProps } from "../../settings.types";
+import SettingsSection from "../../components/SettingsSection.vue";
+import {
+  currencyOptions,
+  languageOptions,
+  localeOptions,
+  themeOptions,
+} from "./SettingsPage.helpers";
+
+import { usePreferencesStore } from "../../stores/preferences.store";
 
 const preferencesStore = usePreferencesStore();
 
@@ -65,17 +68,7 @@ const sections: SettingsSectionProps[] = [
         icon: "mdi:palette",
         text: "Theme",
         inputType: "options",
-        options: themeService.themesConfig
-          .map(({ id, displayName }) => ({
-            value: id,
-            caption: displayName,
-          }))
-          .concat([
-            {
-              caption: "System preference",
-              value: "system",
-            },
-          ]),
+        options: themeOptions,
         selectedOption: computed(() => preferencesStore.theme),
         onUpdate: (newTheme: SupportedTheme) =>
           preferencesStore.setTheme(newTheme),
@@ -84,24 +77,15 @@ const sections: SettingsSectionProps[] = [
         icon: "mdi:translate",
         text: "Language",
         inputType: "options",
-        // todo: implement this correctly
-        options: [
-          {
-            value: "en-US",
-            caption: "English",
-          },
-        ],
+        options: languageOptions,
         selectedOption: computed(() => "en-US"),
-        onUpdate: (newLanguage) => console.info({ newLanguage }),
+        onUpdate: (newLanguage: string) => console.info({ newLanguage }),
       },
       {
         icon: "mdi:currency-usd",
         text: "Currency",
         inputType: "options",
-        options: currencyCodes.codes().map((code) => ({
-          value: code,
-          caption: code,
-        })),
+        options: currencyOptions,
         selectedOption: computed(() => preferencesStore.currency),
         onUpdate: (newCurrency: string) =>
           preferencesStore.setCurrency(newCurrency),
@@ -110,13 +94,7 @@ const sections: SettingsSectionProps[] = [
         icon: "mdi:flag",
         text: "Locale",
         inputType: "options",
-        options: localeCodes.all.map(({ local, name, location, tag }) => ({
-          value: tag,
-          caption:
-            name +
-            (local ? ` - ${local}` : "") +
-            (location ? ` (${location})` : ""),
-        })),
+        options: localeOptions,
         selectedOption: computed(() => preferencesStore.locale),
         onUpdate: (newLocale: string) => preferencesStore.setLocale(newLocale),
       },

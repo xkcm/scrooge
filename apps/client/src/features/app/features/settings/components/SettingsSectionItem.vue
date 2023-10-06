@@ -21,12 +21,13 @@
 </template>
 
 <script setup lang="ts">
-import { Icon } from "@iconify/vue";
 import { useRouter } from "vue-router";
-import { SettingsSectionItemProps } from "../settings.types";
+import { Icon } from "@iconify/vue";
 import { AppSelect } from "@scrooge/ui-library";
 
-defineProps<SettingsSectionItemProps>();
+import { SettingsSectionItemProps } from "../settings.types";
+
+const { options } = defineProps<SettingsSectionItemProps>();
 const router = useRouter();
 </script>
 

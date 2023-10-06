@@ -1,4 +1,4 @@
-@use "@/assets/styles/utils.scss";
+@use "@client-assets/styles/utils.scss";
 
 .input {
   @include utils.useBgColor(alpha);

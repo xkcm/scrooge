@@ -10,7 +10,7 @@ const { animationDelay = "0s", animationDuration = "2s" } = defineProps<{
 </script>
 
 <style lang="scss">
-@use "@/assets/styles/utils.scss";
+@use "@client-assets/styles/utils.scss";
 
 .app-skeleton-box {
   --p-bg-color: #{utils.getColor(beta, 400, 0.1)};

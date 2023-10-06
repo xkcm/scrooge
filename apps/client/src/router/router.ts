@@ -4,7 +4,7 @@ import { validateRoute } from "./router.utils";
 import DashboardPage from "@app/features/dashboard/pages/DashboardPage/DashboardPage.vue";
 import HistoryPage from "@app/features/history/pages/HistoryPage.vue";
 import NewOperationPage from "@app/features/new-operation/pages/NewOperationPage.vue";
-import SettingsPage from "@app/features/settings/pages/SettingsPage.vue";
+import SettingsPage from "@app/features/settings/pages/SettingsPage/SettingsPage.vue";
 
 import LoginPage from "@/features/auth/pages/LoginPage.vue";
 

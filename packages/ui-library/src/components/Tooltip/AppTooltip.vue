@@ -1,20 +1,22 @@
 <template>
-  <TooltipRoot>
-    <TooltipTrigger class="app-tooltip__trigger">
-      <slot name="trigger" />
-    </TooltipTrigger>
-    <Teleport to="body">
-      <TooltipContent
-        class="app-tooltip__content"
-        :class="tooltipClass"
-        :side="side"
-        :side-offset="sideOffset"
-      >
-        <slot />
-        <TooltipArrow size="8" class="app-tooltip__arrow" />
-      </TooltipContent>
-    </Teleport>
-  </TooltipRoot>
+  <TooltipProvider>
+    <TooltipRoot>
+      <TooltipTrigger class="app-tooltip__trigger">
+        <slot name="trigger" />
+      </TooltipTrigger>
+      <Teleport to="body">
+        <TooltipContent
+          class="app-tooltip"
+          :class="tooltipClass"
+          :side="side"
+          :side-offset="sideOffset"
+        >
+          <slot />
+          <TooltipArrow size="8" class="app-tooltip__arrow" />
+        </TooltipContent>
+      </Teleport>
+    </TooltipRoot>
+  </TooltipProvider>
 </template>
 
 <script lang="ts" setup>
@@ -23,6 +25,7 @@ import {
   TooltipTrigger,
   TooltipContent,
   TooltipArrow,
+  TooltipProvider,
 } from "radix-vue";
 
 const { side = "top", sideOffset = 0 } = defineProps<{
@@ -33,13 +36,9 @@ const { side = "top", sideOffset = 0 } = defineProps<{
 </script>
 
 <style lang="scss">
-@use "@/assets/styles/utils.scss";
+@use "@client-assets/styles/utils.scss";
 
-.app-tooltip__trigger {
-  all: unset;
-}
-
-.app-tooltip__content {
+.app-tooltip {
   --p-tooltip-color: #{utils.getColor(gamma)};
   @include utils.useTextColor(secondary, 1);
 
@@ -52,5 +51,9 @@ const { side = "top", sideOffset = 0 } = defineProps<{
 
 .app-tooltip__arrow {
   fill: var(--p-tooltip-color);
+}
+
+.app-tooltip__trigger {
+  @include utils.clearButtonStyles;
 }
 </style>

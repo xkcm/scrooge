@@ -39,7 +39,7 @@ const iconHeight = computed(() => iconSize ?? (compact ? 24 : 18));
 </script>
 
 <style lang="scss">
-@use "@/assets/styles/utils.scss";
+@use "@client-assets/styles/utils.scss";
 
 .app-button {
   all: unset;
