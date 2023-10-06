@@ -72,18 +72,15 @@ const caption = computed(
 <style lang="scss">
 @use "@client-assets/styles/utils.scss";
 
-@include utils.useTheme(dark) {
-  .app-select {
-    --p-scrollbar-color: #{utils.getTextColor(primary)};
-  }
-}
-
 .app-select {
   --p-bg-color: #{utils.getColor(alpha, 500)};
   --p-text-color: #{utils.getTextColor(primary, 0.9)};
   --p-hover-bg-color: #{utils.getColor(alpha, 600)};
   --p-selected-text-color: #{utils.getColor(gamma)};
   --p-scrollbar-color: #{utils.getColor(beta)};
+  @include utils.useTheme(dark) {
+    --p-scrollbar-color: #{utils.getTextColor(primary)};
+  }
 
   border-radius: 4px;
   max-height: 400px;

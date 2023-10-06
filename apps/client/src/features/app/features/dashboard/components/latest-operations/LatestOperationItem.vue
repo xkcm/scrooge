@@ -154,6 +154,10 @@ const openTagInHistory = (tag: string) => {
 .operation-item__tag {
   @include utils.useBgColor(gamma);
   @include utils.useTextColor(secondary);
+  @include utils.useTheme(dark) {
+    @include utils.useTextColor(primary);
+  }
+
   display: flex;
   justify-content: center;
   align-items: center;

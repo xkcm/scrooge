@@ -1,5 +1,6 @@
 <template>
-  <AppLayout header-text="Dashboard">
+  <AppLayout>
+    <template #header><h2>Dashboard</h2></template>
     <div id="dashboard" :class="loading && 'dashboard--loading'">
       <DashboardTile
         id="chart"

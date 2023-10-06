@@ -59,7 +59,7 @@
 }
 
 @mixin useTheme($themeId) {
-  :root[data-theme="#{$themeId}"] {
+  @at-root :root[data-theme="#{$themeId}"] #{&} {
     @content;
   }
 }

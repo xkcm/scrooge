@@ -17,7 +17,7 @@
       </nav>
     </div>
     <div class="app-layout__header">
-      <h2>{{ headerText }}</h2>
+      <slot name="header" />
     </div>
 
     <div class="app-layout__main">
@@ -33,10 +33,6 @@ import NavItem from "../components/NavItem.vue";
 import { NavItemProps } from "../types/NavItem.types";
 
 import authService from "@features/auth/auth.service";
-
-defineProps<{
-  headerText: string;
-}>();
 
 const NAV_ITEMS: NavItemProps[] = [
   {
@@ -79,20 +75,16 @@ const NAV_ITEMS: NavItemProps[] = [
 
 $headerHeight: 100px;
 
-@include utils.useTheme(light) {
-  .app-layout {
+.app-layout {
+  @include utils.useTheme(light) {
     --p-logo-color: #{utils.getTextColor(secondary)};
     --p-header-color: #{utils.getColor(beta)};
   }
-}
-@include utils.useTheme(dark) {
-  .app-layout {
+  @include utils.useTheme(dark) {
     --p-logo-color: #{utils.getTextColor(primary)};
     --p-header-color: #{utils.getTextColor(primary)};
   }
-}
 
-.app-layout {
   @include utils.useBgColor(alpha, 600);
   display: grid;
   grid-template-columns: 300px auto;

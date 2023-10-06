@@ -1,5 +1,10 @@
 <template>
-  <AppLayout header-text="Settings">
+  <AppLayout>
+    <template #header>
+      <div class="app-layout__header-wrapper">
+        <h2>Settings</h2>
+      </div>
+    </template>
     <div class="settings-container">
       <div class="settings-wrapper">
         <SettingsSection
@@ -108,7 +113,8 @@ const sections: SettingsSectionProps[] = [
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 10px;
+  // padding-top: 10px;
+  padding: 10px 25px 0;
 }
 
 .settings-wrapper {
@@ -116,5 +122,11 @@ const sections: SettingsSectionProps[] = [
   display: flex;
   flex-direction: column;
   gap: 10px;
+  box-sizing: border-box;
+}
+
+.app-layout__header-wrapper {
+  width: 60%;
+  margin: 0 20%;
 }
 </style>

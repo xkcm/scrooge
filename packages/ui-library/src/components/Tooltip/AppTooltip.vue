@@ -40,9 +40,13 @@ const { side = "top", sideOffset = 0 } = defineProps<{
 
 .app-tooltip {
   --p-tooltip-color: #{utils.getColor(gamma)};
-  @include utils.useTextColor(secondary, 1);
+  --p-tooltip-text-color: #{utils.getTextColor(secondary)};
+  @include utils.useTheme(dark) {
+    --p-tooltip-text-color: #{utils.getTextColor(primary)};
+  }
 
   background-color: var(--p-tooltip-color);
+  color: var(--p-tooltip-text-color);
   font-size: 0.8rem;
   padding: 2px 12px;
   border-radius: 6px;

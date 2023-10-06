@@ -1,5 +1,8 @@
 <template>
-  <AppLayout header-text="History"> History! </AppLayout>
+  <AppLayout>
+    <template #header><h2>History</h2></template>
+    History!
+  </AppLayout>
 </template>
 
 <script lang="ts" setup>
