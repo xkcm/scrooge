@@ -16,7 +16,7 @@
 
 <script lang="ts" setup>
 import { useRouter } from "vue-router";
-import { Operation } from "../../types";
+import { Operation } from "../../dashboard.types";
 import LatestOperationItem from "./LatestOperationItem.vue";
 import NoOperationsText from "../NoOperationsText.vue";
 

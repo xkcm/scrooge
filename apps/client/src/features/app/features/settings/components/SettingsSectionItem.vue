@@ -14,22 +14,9 @@
     <AppSelect
       v-else-if="inputType === 'options'"
       :options="options"
-      :model-value="selectedOption"
+      :model-value="selectedOption?.value"
       @update:model-value="onUpdate"
     ></AppSelect>
-    <!-- <select
-      v-else-if="inputType === 'options'"
-      @change="onUpdate?.(($event.target as HTMLSelectElement).value)"
-    >
-      <option
-        v-for="option of options"
-        :key="option.value"
-        :value="option.value"
-        :selected="option.selected"
-      >
-        {{ option.caption }}
-      </option>
-    </select> -->
   </div>
 </template>
 
@@ -40,7 +27,6 @@ import { SettingsSectionItemProps } from "../settings.types";
 import { AppSelect } from "@scrooge/ui-library";
 
 defineProps<SettingsSectionItemProps>();
-
 const router = useRouter();
 </script>
 

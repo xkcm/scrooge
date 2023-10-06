@@ -123,7 +123,7 @@ import { useThemeStore } from "@/services/theme/theme.store";
 import { themeColorToRgb } from "@/services/theme/theme.utils";
 import operationService from "@app/services/operation.service";
 import { ChartData, ChartDataset } from "chart.js";
-import { Operation } from "../../types";
+import { Operation } from "../../dashboard.types";
 import {
   calculateMaxItemsNumber,
   isRefDefined,

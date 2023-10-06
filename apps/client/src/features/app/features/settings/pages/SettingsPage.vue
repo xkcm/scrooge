@@ -29,7 +29,7 @@ import { usePreferencesStore } from "../stores/preferences.store";
 
 const preferencesStore = usePreferencesStore();
 
-const sections = computed<SettingsSectionProps[]>(() => [
+const sections: SettingsSectionProps[] = [
   {
     header: {
       icon: "mdi:card-account-details",
@@ -76,7 +76,7 @@ const sections = computed<SettingsSectionProps[]>(() => [
               value: "system",
             },
           ]),
-        selectedOption: preferencesStore.theme,
+        selectedOption: computed(() => preferencesStore.theme),
         onUpdate: (newTheme: SupportedTheme) =>
           preferencesStore.setTheme(newTheme),
       },
@@ -91,7 +91,7 @@ const sections = computed<SettingsSectionProps[]>(() => [
             caption: "English",
           },
         ],
-        selectedOption: "en-US",
+        selectedOption: computed(() => "en-US"),
         onUpdate: (newLanguage) => console.info({ newLanguage }),
       },
       {
@@ -102,7 +102,7 @@ const sections = computed<SettingsSectionProps[]>(() => [
           value: code,
           caption: code,
         })),
-        selectedOption: preferencesStore.currency,
+        selectedOption: computed(() => preferencesStore.currency),
         onUpdate: (newCurrency: string) =>
           preferencesStore.setCurrency(newCurrency),
       },
@@ -117,12 +117,12 @@ const sections = computed<SettingsSectionProps[]>(() => [
             (local ? ` - ${local}` : "") +
             (location ? ` (${location})` : ""),
         })),
-        selectedOption: preferencesStore.locale,
+        selectedOption: computed(() => preferencesStore.locale),
         onUpdate: (newLocale: string) => preferencesStore.setLocale(newLocale),
       },
     ],
   },
-]);
+];
 </script>
 
 <style lang="scss">

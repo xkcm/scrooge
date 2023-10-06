@@ -53,7 +53,7 @@ import { FilterContainer, filters } from "@scrooge/shared";
 import { AppTooltip } from "@scrooge/ui-library";
 import { computed } from "vue";
 import { usePreferencesStore } from "../../../settings/stores/preferences.store";
-import { Operation } from "../../types";
+import { Operation } from "../../dashboard.types";
 
 type LatestOperationItemProps = Operation & {
   rowNumber: number;

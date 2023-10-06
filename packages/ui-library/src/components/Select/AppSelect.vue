@@ -45,6 +45,7 @@ import {
 import { AppSelectOption } from "./AppSelect.types";
 
 const modelValue = defineModel<string>();
+// todo: add virtual lists
 const { options = [] } = defineProps<{
   options?: AppSelectOption[];
 }>();
