@@ -4,7 +4,7 @@
       v-for="index in itemsNumber"
       :key="index"
       class="skeleton-box"
-      :animation-delay="`${Math.floor(index * 100)}px`"
+      :animation-delay="`${Math.floor(index * 100)}ms`"
     />
   </div>
 </template>
