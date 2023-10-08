@@ -9,10 +9,15 @@
 </template>
 
 <script setup lang="ts">
+import { useQuery } from "vue-query";
+
 import AppLayout from "@/features/app/layouts/AppLayout.vue";
 import apiClient from "@/services/api-client/api-client";
 
-const sessions = await apiClient.session.getActiveSessions();
+const { data: sessions } = useQuery(
+  "sessions",
+  apiClient.session.getActiveSessions,
+);
 </script>
 
 <style lang="scss"></style>

@@ -50,7 +50,7 @@ button.input__icon {
   padding: 0;
 
   &:focus-visible {
-    @include utils.defaultOutlineOnFocus;
+    @include utils.useDefaultOutline;
   }
 }
 </style>

@@ -1,7 +1,9 @@
 <template>
-  <SelectRoot v-model="modelValue">
+  <SelectRoot v-model="modelValue" @update:open="scrollToCurrentItem">
     <SelectTrigger class="app-select__trigger">
-      <SelectValue>{{ caption }}</SelectValue>
+      <SelectValue class="app-select__trigger__content">{{
+        caption
+      }}</SelectValue>
       <Icon icon="mdi:chevron-down" :width="16"></Icon>
     </SelectTrigger>
 
@@ -35,20 +37,20 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { useVirtualList } from "@vueuse/core";
 import { Icon } from "@iconify/vue";
+import { useVirtualList } from "@vueuse/core";
 import {
   SelectContent,
   SelectItem,
   SelectItemIndicator,
+  SelectItemText,
   SelectPortal,
   SelectRoot,
   SelectTrigger,
-  SelectViewport,
-  SelectItemText,
   SelectValue,
+  SelectViewport,
 } from "radix-vue";
+import { computed, nextTick } from "vue";
 
 import { AppSelectOption } from "./AppSelect.types";
 
@@ -57,16 +59,25 @@ const { options } = defineProps<{
   options?: AppSelectOption[];
 }>();
 
-const { list, containerProps, wrapperProps } = useVirtualList(
+const caption = computed(
+  () => options?.find((option) => option.value === modelValue.value)?.caption,
+);
+const { list, containerProps, wrapperProps, scrollTo } = useVirtualList(
   computed(() => options ?? []),
   {
     itemHeight: 35,
     overscan: 9,
   },
 );
-const caption = computed(
-  () => options?.find((option) => option.value === modelValue.value)?.caption,
-);
+
+const scrollToCurrentItem = (isOpen: boolean) => {
+  if (!isOpen) {
+    return;
+  }
+  const currentIndex =
+    options?.findIndex(({ value }) => value === modelValue.value) ?? 0;
+  nextTick(() => scrollTo(currentIndex));
+};
 </script>
 
 <style lang="scss">
@@ -99,6 +110,10 @@ const caption = computed(
   }
 
   &__item {
+    &:focus-visible {
+      outline: none;
+    }
+
     font-family: "Poppins";
     display: flex;
     align-items: center;
@@ -145,6 +160,12 @@ const caption = computed(
   width: 200px;
   box-sizing: border-box;
   font-weight: 300;
+
+  &__content {
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 
   span {
     flex-grow: 1;

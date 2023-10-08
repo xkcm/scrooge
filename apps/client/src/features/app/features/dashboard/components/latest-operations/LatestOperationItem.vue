@@ -20,7 +20,7 @@
           @keyup.enter.stop="openTagInHistory(tag)"
         >
           <AppTooltip
-            side="right"
+            side="top"
             :side-offset="6"
             tooltip-class="show-tag-history-tooltip"
           >

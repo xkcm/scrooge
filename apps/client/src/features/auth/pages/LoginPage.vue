@@ -94,6 +94,10 @@ const submitForm = async (mailValue: string, passwordValue: string) => {
   margin-top: 338px;
   width: 400px;
 
+  > h2 {
+    @include utils.useTextColor(primary);
+  }
+
   #details-info {
     @include utils.useTextColor(primary, 0.5);
     margin-left: 5px;
@@ -113,6 +117,9 @@ const submitForm = async (mailValue: string, passwordValue: string) => {
 
   #forgot-password-text {
     color: utils.getColor(beta);
+    @include utils.useTheme(dark) {
+      color: utils.getTextColor(primary);
+    }
     display: block;
     align-self: flex-end;
     margin-top: 8px;
@@ -122,7 +129,7 @@ const submitForm = async (mailValue: string, passwordValue: string) => {
     text-decoration: none;
 
     &:focus-visible {
-      @include utils.defaultOutlineOnFocus;
+      @include utils.useDefaultOutline;
       border-radius: 2px;
     }
   }
@@ -148,12 +155,16 @@ const submitForm = async (mailValue: string, passwordValue: string) => {
 
     a {
       color: utils.getColor(beta);
+      @include utils.useTheme(dark) {
+        color: utils.getTextColor(primary);
+      }
+
       font-family: Poppins;
       font-weight: 600;
       text-decoration: none;
 
       &:focus-visible {
-        @include utils.defaultOutlineOnFocus;
+        @include utils.useDefaultOutline;
         border-radius: 2px;
       }
     }

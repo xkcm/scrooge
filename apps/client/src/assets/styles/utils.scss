@@ -1,7 +1,7 @@
 @use "sass:math";
 
-@mixin defaultOutlineOnFocus($colorName: gamma) {
-  outline: 2px getColor($colorName) solid;
+@mixin useDefaultOutline($color: getColor(gamma), $width: 2px) {
+  outline: $width $color solid;
 }
 
 @mixin useBgColor($colorName, $weight: 400, $opacity: 1) {

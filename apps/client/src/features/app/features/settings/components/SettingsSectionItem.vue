@@ -1,5 +1,9 @@
 <template>
-  <div class="settings-section__item">
+  <div
+    class="settings-section__item"
+    :class="{ 'settings-section__item--href': href }"
+    @click="href && router.push({ name: href })"
+  >
     <Icon :icon="icon" :width="24"></Icon>
     <span>{{ text }}</span>
 
@@ -8,7 +12,6 @@
       class="settings-section__item__link"
       icon="mdi:chevron-right"
       :width="24"
-      @click="router.push({ name: href })"
     ></Icon>
 
     <AppSelect
@@ -48,7 +51,8 @@ const router = useRouter();
     flex-grow: 1;
   }
 
-  &__link {
+  &--href:hover {
+    @include utils.useBgColor(alpha, 500);
     cursor: pointer;
   }
 }

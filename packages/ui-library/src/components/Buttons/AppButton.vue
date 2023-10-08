@@ -61,12 +61,15 @@ const iconHeight = computed(() => iconSize ?? (compact ? 24 : 18));
   color: var(--p-text-color);
 
   &:focus-visible {
-    @include utils.defaultOutlineOnFocus;
+    @include utils.useDefaultOutline;
   }
 
   &--filled {
     --p-bg-color: #{utils.getColor(beta)};
     --p-text-color: #{utils.getTextColor(secondary)};
+    @include utils.useTheme(dark) {
+      --p-text-color: #{utils.getTextColor(primary)};
+    }
 
     &:hover {
       --p-bg-color: #{utils.getColor(beta, 500)};

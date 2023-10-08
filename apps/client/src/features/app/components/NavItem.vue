@@ -72,7 +72,7 @@ $navItemHeight: 60px;
   }
 
   &:focus-visible {
-    @include utils.defaultOutlineOnFocus(alpha);
+    @include utils.useDefaultOutline(utils.getColor(alpha));
   }
 }
 

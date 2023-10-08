@@ -1,4 +1,5 @@
 import { createPinia } from "pinia";
+import { VueQueryPlugin } from "vue-query";
 import { createApp } from "vue";
 
 import GlobalAppWrapper from "@core/pages/GlobalAppWrapperPage.vue";
@@ -15,11 +16,11 @@ async function initApp() {
   const pinia = createPinia();
 
   vueApp.use(pinia);
-
   await authService.resolveAuthState();
   themeService.initTheme();
   await fontLoaderService.loadFonts();
 
+  vueApp.use(VueQueryPlugin);
   vueApp.use(router);
   vueApp.mount("#app");
 }
