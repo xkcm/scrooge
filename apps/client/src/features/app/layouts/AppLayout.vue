@@ -134,5 +134,6 @@ $headerHeight: 100px;
 
 .app-layout__main {
   overflow: auto;
+  padding: 0 25px;
 }
 </style>

@@ -251,14 +251,11 @@ onMounted(async () => {
 <style lang="scss">
 @use "@/assets/styles/utils.scss";
 
-$dashboardGap: 25px;
-
 #dashboard {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: minmax(0, 1fr) 50%;
-  gap: $dashboardGap;
-  padding: $dashboardGap;
+  gap: 25px;
   height: 100%;
   box-sizing: border-box;
   overflow: auto;

@@ -2,15 +2,11 @@
   <!-- todo: add current session indicator -->
   <AppLayout>
     <template #header>
-      <div id="sessions-header">
-        <div id="sessions-header__text">
-          <Icon icon="mdi:chevron-left" :height="36" @click="router.back()" />
-          <h2>Sessions</h2>
-        </div>
-        <AppBreadcrumbs :items="sessionsPageBreadcrumbs">
-          <template #separator> > </template>
-        </AppBreadcrumbs>
-      </div>
+      <AppHeaderWithBreadcrumbs
+        id="sessions-header"
+        :breadcrumbs="sessionsPageBreadcrumbs"
+        header-text="Sessions"
+      />
     </template>
 
     <div class="sessions-table__container">
@@ -64,7 +60,7 @@ import { computed } from "vue";
 import { useQuery } from "vue-query";
 import { useRouter } from "vue-router";
 
-import AppBreadcrumbs from "@/features/app/components/Breadcrumbs/AppBreadcrumbs.vue";
+import AppHeaderWithBreadcrumbs from "@/features/app/components/AppHeaderWithBreadcrumbs.vue";
 import AppLayout from "@/features/app/layouts/AppLayout.vue";
 import apiClient from "@/services/api-client/api-client";
 import {
@@ -89,6 +85,7 @@ const sessions = computed(
 
 <style lang="scss">
 @use "@/assets/styles/utils.scss";
+
 $contentWidth: 80%;
 #sessions-header {
   width: $contentWidth;
@@ -113,7 +110,7 @@ div.sessions-table {
   grid-template-columns: 60px repeat(5, minmax(50px, auto)) 100px;
 
   &__container {
-    padding: 1rem 25px 25px;
+    padding-top: 1rem;
     box-sizing: border-box;
   }
 

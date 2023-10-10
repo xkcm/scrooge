@@ -113,8 +113,7 @@ const sections: SettingsSectionProps[] = [
   display: flex;
   flex-direction: column;
   align-items: center;
-  // padding-top: 10px;
-  padding: 10px 25px 0;
+  padding-top: 10px;
 }
 
 .settings-wrapper {
