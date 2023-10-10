@@ -3,11 +3,20 @@
     <div class="session-detail__label">
       {{ label }}
     </div>
-    <div class="session-detail__content">
-      <slot />
+    <div class="session-detail__content" :data-unknown="!value">
+      <slot>{{ value || "N/A" }}</slot>
     </div>
-    <div class="session-detail__copy-button">
-      <Icon icon="mdi:content-copy" height="18" />
+    <div v-if="value" class="session-detail__copy-button">
+      <AppTooltip side="left">
+        <template #trigger>
+          <Icon
+            icon="mdi:content-copy"
+            height="18"
+            @click="value && copyText(value)"
+          />
+        </template>
+        Copy to clipboard
+      </AppTooltip>
     </div>
   </div>
 </template>
@@ -15,9 +24,23 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
 
+import { AppTooltip } from "@scrooge/ui-library";
+
+import notificationService from "@/features/notifications/notification.service";
+
 defineProps<{
   label: string;
+  value?: string | null;
 }>();
+
+const copyText = async (value: string) => {
+  await navigator.clipboard.writeText(value);
+
+  notificationService.pushNotification({
+    title: "Copied to clipboard",
+    type: "info",
+  });
+};
 </script>
 
 <style lang="scss">
@@ -30,9 +53,9 @@ defineProps<{
   height: 50px;
   padding: 0 1rem;
   border: 1px utils.getColor(alpha) solid;
+  @include utils.useTextColor(primary);
 
   &__label {
-    @include utils.useTextColor(primary);
     font-weight: 600;
   }
 
@@ -41,6 +64,10 @@ defineProps<{
   &__copy-button {
     display: flex;
     align-items: center;
+  }
+
+  &__content[data-unknown="true"] {
+    @include utils.useTextColor(primary, 0.4);
   }
 
   &:hover {

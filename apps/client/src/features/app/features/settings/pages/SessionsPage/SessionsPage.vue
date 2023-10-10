@@ -18,11 +18,7 @@
       >
         <template #row="row">
           <div
-            class="app-table__row"
-            :class="{
-              'sessions-table__active-session':
-                row.id === sessionsData?.current,
-            }"
+            class="app-table__row sessions-table__row"
             @click="
               router.push({
                 name: 'session-details',
@@ -37,12 +33,26 @@
               class="app-table__cell sessions-table__os"
               :data-unknown="!row.os"
             >
-              {{ row.os ?? "Unknown OS" }}
+              {{ row.os ?? "N/A" }}
             </div>
             <div class="app-table__cell">{{ row.sourceIp }}</div>
             <div class="app-table__cell">{{ row.lastUsed }}</div>
             <div class="app-table__cell">{{ row.createdAt }}</div>
             <div class="app-table__cell">{{ row.expiresAt }}</div>
+            <div
+              class="app-table__cell sessions-table__current-session-indicator"
+            >
+              <AppTooltip v-if="row.id === sessionsData?.current" side="left">
+                <template #trigger>
+                  <Icon
+                    icon="mdi:signal-variant"
+                    :height="24"
+                    class="sessions-table__current-session-indicator"
+                  />
+                </template>
+                You are currently logged in using this session
+              </AppTooltip>
+            </div>
             <div class="app-table__cell sessions-table__context-menu-trigger">
               <Icon icon="mdi:dots-vertical" :height="24" />
             </div>
@@ -55,7 +65,7 @@
 
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
-import { AppDataTable } from "@scrooge/ui-library";
+import { AppDataTable, AppTooltip } from "@scrooge/ui-library";
 import { computed } from "vue";
 import { useQuery } from "vue-query";
 import { useRouter } from "vue-router";
@@ -107,10 +117,10 @@ $contentWidth: 80%;
 div.sessions-table {
   width: $contentWidth;
   margin: 0 calc((100% - $contentWidth) / 2);
-  grid-template-columns: 60px repeat(5, minmax(50px, auto)) 100px;
+  grid-template-columns: 60px repeat(5, minmax(50px, auto)) 50px 50px;
 
   &__container {
-    padding-top: 1rem;
+    padding: 1rem 0;
     box-sizing: border-box;
   }
 
@@ -120,26 +130,35 @@ div.sessions-table {
   }
 
   &__os[data-unknown="true"] {
-    color: utils.getColor(warning);
+    @include utils.useTextColor(primary, 0.4);
   }
 
   &__context-menu-trigger {
     @include utils.useTextColor(primary, 0.6);
     justify-content: flex-end;
 
-    svg {
+    svg:not(.sessions-table__current-session-indicator) {
       display: none;
     }
   }
 
-  .app-table__row {
+  &__row {
     cursor: pointer;
-    grid-column: 1 / 8;
+    grid-column: 1 / 9;
     padding-right: 1rem;
     padding-left: 1rem;
 
     &:hover .sessions-table__context-menu-trigger svg {
       display: block;
+    }
+  }
+
+  .sessions-table__current-session-indicator {
+    color: utils.getColor(green);
+    justify-self: flex-start;
+    .app-tooltip__trigger {
+      display: grid;
+      place-items: center;
     }
   }
 }
