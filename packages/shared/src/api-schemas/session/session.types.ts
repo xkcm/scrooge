@@ -16,6 +16,13 @@ export type PublicSession = Pick<
   "agent" | "createdAt" | "expiresAt" | "geolocation" | "id" | "sourceIp"
 >;
 export type GetSessionsResponse = {
-  sessions: PublicSession[];
+  sessions: (Pick<
+    PublicSession,
+    "agent" | "geolocation" | "id" | "sourceIp"
+  > & {
+    expiresAt: string;
+    createdAt: string;
+    lastUsed: string;
+  })[];
   current: PublicSession["id"];
 };

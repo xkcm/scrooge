@@ -8,7 +8,10 @@ import {
 export async function sendApiRequest<T = unknown>(
   options: SendApiRequestOptions,
 ): Promise<SendApiRequestResult<T>> {
-  let fullUrl = joinUrlParts(import.meta.env.VITE_API_URL, options.path);
+  let fullUrl = joinUrlParts(
+    `http://${window.location.hostname}:5000/api`,
+    options.path,
+  );
 
   if (options.query) {
     fullUrl += "?" + options.query.toString();

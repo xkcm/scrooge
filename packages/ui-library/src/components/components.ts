@@ -10,3 +10,6 @@ export { default as AppSwitch } from "./Switch/AppSwitch.vue";
 
 export * from "./Select/AppSelect.types";
 export { default as AppSelect } from "./Select/AppSelect.vue";
+
+export * from "./DataTable/AppDataTable.types";
+export { default as AppDataTable } from "./DataTable/AppDataTable.vue";
