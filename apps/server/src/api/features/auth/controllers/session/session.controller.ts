@@ -13,11 +13,14 @@ export const sessionController = {
     req,
     res: ApiResponse<schemas.session.GetSessionsResponse, AuthLocals>,
   ) {
-    const { userId } = res.locals.auth.token.payload;
+    const { userId, sessionId } = res.locals.auth.token.payload;
 
     const sessions = await sessionService.getSessionsByUserId(userId);
 
-    res.json(sessions);
+    res.json({
+      sessions,
+      current: sessionId,
+    });
   },
 
   async invalidateSession(

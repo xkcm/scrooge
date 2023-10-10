@@ -39,7 +39,7 @@ const routes: RouteRecordRaw[] = [
     component: SessionsPage,
     meta: {
       requireAuthentication: true,
-      childOfNavigationItem: "settings",
+      highlightedNavItem: "settings",
     },
   },
   {

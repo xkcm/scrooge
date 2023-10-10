@@ -26,7 +26,7 @@ const isActive = computed(
       (matchedRoute) => matchedRoute.name === to?.name,
     ) ||
     (to?.name &&
-      router.currentRoute.value.meta.childOfNavigationItem === to?.name),
+      router.currentRoute.value.meta.highlightedNavItem === to?.name),
 );
 
 const onButtonClick = (event: MouseEvent) => {

@@ -16,13 +16,13 @@
         ></NavItem>
       </nav>
     </div>
-    <div class="app-layout__header">
+    <header class="app-layout__header">
       <slot name="header" />
-    </div>
+    </header>
 
-    <div class="app-layout__main">
+    <main class="app-layout__main">
       <slot />
-    </div>
+    </main>
   </div>
 </template>
 
@@ -76,10 +76,9 @@ const NAV_ITEMS: NavItemProps[] = [
 $headerHeight: 100px;
 
 .app-layout {
-  @include utils.useTheme(light) {
-    --p-logo-color: #{utils.getTextColor(secondary)};
-    --p-header-color: #{utils.getColor(beta)};
-  }
+  --p-logo-color: #{utils.getTextColor(secondary)};
+  --p-header-color: #{utils.getColor(beta)};
+
   @include utils.useTheme(dark) {
     --p-logo-color: #{utils.getTextColor(primary)};
     --p-header-color: #{utils.getTextColor(primary)};
@@ -123,11 +122,11 @@ $headerHeight: 100px;
 .app-layout__header {
   box-sizing: border-box;
   padding: 0 25px;
+  padding-top: 1rem;
   display: flex;
-  align-items: center;
+  color: var(--p-header-color);
 
   h2 {
-    color: var(--p-header-color);
     font-size: 2.25rem;
     font-weight: 500;
   }

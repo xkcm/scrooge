@@ -4,13 +4,17 @@
       <h2>Welcome back!</h2>
       <span id="details-info">Log in to your Scrooge account</span>
 
-      <TextInput id="mail-input" v-model="mail" placeholder="yourmail@mail.com">
+      <AppTextInput
+        id="mail-input"
+        v-model="mail"
+        placeholder="yourmail@mail.com"
+      >
         <template #icon>
           <Icon icon="mdi:email-outline" height="24" />
         </template>
-      </TextInput>
+      </AppTextInput>
 
-      <PasswordInput
+      <AppPasswordInput
         id="password-input"
         v-model="password"
         placeholder="Your password"
@@ -18,7 +22,7 @@
         <template #icon>
           <Icon icon="mdi:key-outline" height="24" />
         </template>
-      </PasswordInput>
+      </AppPasswordInput>
 
       <a id="forgot-password-text" href="#">I forgot my password</a>
 
@@ -44,7 +48,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 import { ApiError } from "@scrooge/shared";
-import { AppButton, PasswordInput, TextInput } from "@scrooge/ui-library";
+import { AppButton, AppPasswordInput, AppTextInput } from "@scrooge/ui-library";
 
 import authService from "../auth.service";
 import AuthLayout from "../layouts/AuthLayout.vue";

@@ -1,2 +1,2 @@
-export { default as PasswordInput } from "./PasswordInput.vue";
-export { default as TextInput } from "./TextInput.vue";
+export { default as AppPasswordInput } from "./AppPasswordInput.vue";
+export { default as AppTextInput } from "./AppTextInput.vue";

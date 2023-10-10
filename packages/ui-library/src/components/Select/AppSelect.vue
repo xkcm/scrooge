@@ -102,7 +102,6 @@ const scrollToCurrentItem = (isOpen: boolean) => {
   padding: 0.25rem 0;
   width: 200px;
   box-sizing: border-box;
-  font-weight: 300;
 
   &__container {
     max-height: 300px;
@@ -112,9 +111,11 @@ const scrollToCurrentItem = (isOpen: boolean) => {
   &__item {
     &:focus-visible {
       outline: none;
+      background-color: var(--p-hover-bg-color);
     }
 
     font-family: "Poppins";
+    font-weight: 300;
     display: flex;
     align-items: center;
     padding: 0.2rem 1.5rem;

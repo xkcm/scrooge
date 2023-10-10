@@ -15,4 +15,7 @@ export type PublicSession = Pick<
   Session,
   "agent" | "createdAt" | "expiresAt" | "geolocation" | "id" | "sourceIp"
 >;
-export type GetSessionsResponse = PublicSession[];
+export type GetSessionsResponse = {
+  sessions: PublicSession[];
+  current: PublicSession["id"];
+};
