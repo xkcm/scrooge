@@ -72,10 +72,6 @@ const submitForm = async (mailValue: string, passwordValue: string) => {
     await authService.logIn(mailValue, passwordValue);
 
     router.push("dashboard");
-    notificationService.pushNotification({
-      title: "You're logged in",
-      type: "success",
-    });
   } catch (apiError) {
     lastErrorNotification = notificationService.pushNotification(
       prepareNotificationInputFromApiError(apiError as ApiError, {
@@ -136,6 +132,10 @@ const submitForm = async (mailValue: string, passwordValue: string) => {
       @include utils.useDefaultOutline;
       border-radius: 2px;
     }
+  }
+
+  #submit-button .app-button__caption {
+    font-size: 1.25rem;
   }
 
   #new-account-text {

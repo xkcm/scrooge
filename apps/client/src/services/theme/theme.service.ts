@@ -1,4 +1,5 @@
 import themesConfig from "@/assets/themes/themes.config.json";
+// todo: fix circular dependency
 import { useThemeStore } from "./theme.store.js";
 import { SupportedTheme, ThemeConfig } from "./theme.types.js";
 

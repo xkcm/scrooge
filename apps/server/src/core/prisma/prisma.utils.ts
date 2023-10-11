@@ -8,6 +8,10 @@ import { UnknownPrismaError } from "./prisma.errors.js";
 export function parsePrismaError<
   T extends Constructor<BetterError, ConstructorParameters<typeof BetterError>>,
 >(error: any, errorCodeMap: Record<string, T>) {
+  if (error instanceof ApiError) {
+    return error;
+  }
+
   const ErrorClass =
     errorCodeMap[error.code || error.errorCode] ??
     errorCodeMap?.default ??

@@ -280,7 +280,7 @@ onMounted(async () => {
 }
 
 .operations-list__wrapper {
-  @include utils.useCustomScrollbar(gamma, 6px);
+  @include utils.useCustomScrollbar(utils.getColor(gamma), 6px);
 
   flex-grow: 1;
   overflow: auto;

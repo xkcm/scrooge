@@ -1,6 +1,6 @@
 @use "sass:math";
 
-@mixin useDefaultOutline($color: getColor(gamma), $width: 2px) {
+@mixin useDefaultOutline($color: getColor(beta), $width: 2px) {
   outline: $width $color solid;
 }
 
@@ -43,7 +43,10 @@
   font-family: inherit;
 }
 
-@mixin useCustomScrollbar($scrollbarColor: beta, $scrollbarWidth: 10px) {
+@mixin useCustomScrollbar(
+  $scrollbarColor: utils.getColor(beta),
+  $scrollbarWidth: 10px
+) {
   &::-webkit-scrollbar {
     width: $scrollbarWidth;
   }

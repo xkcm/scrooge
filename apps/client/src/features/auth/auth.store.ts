@@ -1,4 +1,4 @@
-import { revalidateCurrentRoute } from "@/router/router.utils";
+import { revalidateCurrentRoute } from "@/router/router";
 import { defineStore } from "pinia";
 import { ref, watch } from "vue";
 

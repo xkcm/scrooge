@@ -15,7 +15,7 @@ export interface SessionService {
 
   getSessionsByUserId(
     userId: User["id"],
-  ): Promise<schemas.session.PublicSession[]>;
+  ): Promise<Array<schemas.session.PublicSession & { lastUsed: Date }>>;
 
   getSessionById(sessionId: Session["id"]): Promise<Session>;
 

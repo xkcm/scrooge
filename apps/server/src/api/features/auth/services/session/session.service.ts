@@ -49,6 +49,7 @@ const sessionService: SessionService = {
           sourceIp: true,
           agent: true,
           geolocation: true,
+          refreshable: true,
         },
       })
       .catch(createPrismaErrorParser());
@@ -76,6 +77,8 @@ const sessionService: SessionService = {
   },
 
   async invalidateSession(userId, sessionId) {
+    await sessionRedisService.removeAllSessionInfo(sessionId);
+
     const { count } = await prismaClient.session
       .deleteMany({
         where: {
@@ -94,8 +97,6 @@ const sessionService: SessionService = {
         metadata: { sessionId },
       });
     }
-
-    await sessionRedisService.removeAllSessionInfo(sessionId);
 
     return {
       count,

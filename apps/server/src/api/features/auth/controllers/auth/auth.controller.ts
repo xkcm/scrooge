@@ -7,7 +7,6 @@ import {
 } from "#api/utils/cookies.util.js";
 import { AuthLocals } from "#api:auth/middleware/token/token.middleware.types.js";
 import passwordService from "#api:auth/services/password/password.service.js";
-import { createPrismaErrorParser } from "#core/prisma/prisma.utils.js";
 import {
   ApiControllerObject,
   ApiRequest,
@@ -82,11 +81,7 @@ const authController = bindObjectMethods({
     req: ApiRequest<schemas.auth.LoginBody>,
     res: ApiResponse<schemas.auth.LoginResponse>,
   ) {
-    const user = await userService.findUserByEmail(req.body.email).catch(
-      createPrismaErrorParser({
-        P2025: LoginAttemptFailedError,
-      }),
-    );
+    const user = await userService.findUserByEmail(req.body.email);
 
     const passwordMatches = await passwordService.compare(
       req.body.password,

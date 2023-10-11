@@ -8,7 +8,7 @@ import HistoryPage from "@app/features/history/pages/HistoryPage.vue";
 import NewOperationPage from "@app/features/new-operation/pages/NewOperationPage.vue";
 import SettingsPage from "@app/features/settings/pages/SettingsPage/SettingsPage.vue";
 import SessionsPage from "@app/features/settings/pages/SessionsPage/SessionsPage.vue";
-import SessionDetails from "@/features/app/features/settings/pages/SessionDetails/SessionDetails.vue";
+import SessionDetails from "@/features/app/features/settings/pages/SessionDetailsPage/SessionDetailsPage.vue";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -93,3 +93,10 @@ const router = createRouter({
 router.beforeEach(validateRoute);
 
 export { router };
+
+export async function revalidateCurrentRoute() {
+  const validationResult = validateRoute(router.currentRoute.value);
+  if (validationResult) {
+    return router.replace(validationResult);
+  }
+}

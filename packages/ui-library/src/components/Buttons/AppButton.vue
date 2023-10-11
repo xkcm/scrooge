@@ -7,7 +7,7 @@
       v-if="icon"
       class="app-button__icon"
       :icon="icon"
-      :height="iconHeight"
+      :height="resolvedIconSize"
     />
   </button>
 </template>
@@ -35,7 +35,7 @@ const classList = computed(() => {
   return classes;
 });
 
-const iconHeight = computed(() => iconSize ?? (compact ? 24 : 18));
+const resolvedIconSize = computed(() => iconSize ?? (compact ? 24 : 18));
 </script>
 
 <style lang="scss">
@@ -48,7 +48,7 @@ const iconHeight = computed(() => iconSize ?? (compact ? 24 : 18));
   cursor: pointer;
   font-family: inherit;
 
-  padding: 8px 20px;
+  padding: 5px 20px;
   box-sizing: border-box;
   border-radius: 10px;
   outline-offset: 1px;
@@ -67,6 +67,7 @@ const iconHeight = computed(() => iconSize ?? (compact ? 24 : 18));
   &--filled {
     --p-bg-color: #{utils.getColor(beta)};
     --p-text-color: #{utils.getTextColor(secondary)};
+
     @include utils.useTheme(dark) {
       --p-text-color: #{utils.getTextColor(primary)};
     }
@@ -110,7 +111,7 @@ const iconHeight = computed(() => iconSize ?? (compact ? 24 : 18));
 }
 
 .app-button__caption {
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 400;
   letter-spacing: -0.15px;
 }

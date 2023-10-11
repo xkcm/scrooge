@@ -29,13 +29,12 @@
             <div class="app-table__cell sessions-table__device-icon">
               <Icon :icon="row.deviceIcon" :height="24" />
             </div>
-            <div
-              class="app-table__cell sessions-table__os"
-              :data-unknown="!row.os"
-            >
-              {{ row.os ?? "N/A" }}
+            <div class="app-table__cell" :data-unknown="row.os === 'N/A'">
+              {{ row.os }}
             </div>
-            <div class="app-table__cell">{{ row.sourceIp }}</div>
+            <div class="app-table__cell" :data-unknown="row.sourceIp === 'N/A'">
+              {{ row.sourceIp }}
+            </div>
             <div class="app-table__cell">{{ row.lastUsed }}</div>
             <div class="app-table__cell">{{ row.createdAt }}</div>
             <div class="app-table__cell">{{ row.expiresAt }}</div>
@@ -67,29 +66,21 @@
 import { Icon } from "@iconify/vue";
 import { AppDataTable, AppTooltip } from "@scrooge/ui-library";
 import { computed } from "vue";
-import { useQuery } from "vue-query";
 import { useRouter } from "vue-router";
 
 import AppHeaderWithBreadcrumbs from "@/features/app/components/AppHeaderWithBreadcrumbs.vue";
 import AppLayout from "@/features/app/layouts/AppLayout.vue";
-import apiClient from "@/services/api-client/api-client";
+import { useSessions } from "../../composables/useSessions";
 import {
-  mapPublicSession,
+  mapPublicSessionToRowData,
   sessionTableHeaderConfig,
   sessionsPageBreadcrumbs,
 } from "./SessionsPage.helpers";
 
 const router = useRouter();
-const { data: sessionsData, isSuccess } = useQuery(
-  "sessions",
-  apiClient.session.getActiveSessions,
-  {
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-  },
-);
+const { data: sessionsData, isSuccess } = useSessions();
 const sessions = computed(
-  () => sessionsData.value?.sessions.map(mapPublicSession) ?? [],
+  () => sessionsData.value?.sessions.map(mapPublicSessionToRowData) ?? [],
 );
 </script>
 
@@ -129,7 +120,7 @@ div.sessions-table {
     justify-content: center;
   }
 
-  &__os[data-unknown="true"] {
+  .app-table__cell[data-unknown="true"] {
     @include utils.useTextColor(primary, 0.4);
   }
 

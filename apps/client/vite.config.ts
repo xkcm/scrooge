@@ -22,6 +22,17 @@ export default defineConfig({
       exclude: path.join(__dirname, "../../packages/**/*"),
     }),
     tsconfigPaths(),
+    {
+      name: "singleHMR",
+      handleHotUpdate({ modules }) {
+        modules.map((m) => {
+          m.importedModules = new Set();
+          m.importers = new Set();
+        });
+
+        return modules;
+      },
+    },
   ],
   resolve: {
     alias: {

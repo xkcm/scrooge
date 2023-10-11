@@ -5,3 +5,5 @@ export const InvalidateSessionParamsSchema = z
     sessionId: z.string().cuid(),
   })
   .strict();
+
+export const RefreshSessionParamsSchema = InvalidateSessionParamsSchema;

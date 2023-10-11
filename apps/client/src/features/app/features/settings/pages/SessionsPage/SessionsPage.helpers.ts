@@ -24,7 +24,7 @@ export const sessionTableHeaderConfig: AppDataTableHeaderConfig = [
   { caption: "Expires at", key: "expiresAt" },
 ];
 
-export function mapPublicSession(
+export function mapPublicSessionToRowData(
   session: schemas.session.GetSessionsResponse["sessions"][number],
 ) {
   const uaParser = new UAParser(session.agent ?? "");
@@ -33,8 +33,8 @@ export function mapPublicSession(
 
   return {
     id: session.id,
-    os: uaParser.getOS().name,
-    sourceIp: session.sourceIp,
+    os: uaParser.getOS().name || "N/A",
+    sourceIp: session.sourceIp || "N/A",
     lastUsed: session.lastUsed,
     createdAt: session.createdAt,
     expiresAt: session.expiresAt,

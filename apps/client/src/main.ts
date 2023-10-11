@@ -1,5 +1,5 @@
 import { createPinia } from "pinia";
-import { VueQueryPlugin } from "vue-query";
+import { VueQueryPlugin } from "@tanstack/vue-query";
 import { createApp } from "vue";
 
 import GlobalAppWrapper from "@core/pages/GlobalAppWrapperPage.vue";

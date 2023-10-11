@@ -1,17 +1,17 @@
 <template>
-  <span class="app-breadcrumbs">
+  <nav class="app-breadcrumbs">
     <span v-for="(item, key) of items" :key="key" class="app-breadcrumbs__item">
-      <span
+      <a
         class="app-breadcrumbs__item-content"
         @click="handleClick(item.routeName, item.onClick)"
       >
         {{ item.caption }}
-      </span>
+      </a>
       <span class="app-breadcrumbs__item-separator">
         <slot name="separator"> / </slot>
       </span>
     </span>
-  </span>
+  </nav>
 </template>
 
 <script setup lang="ts">
@@ -37,7 +37,6 @@ const handleClick = (routeName?: string, onClick?: () => any) => {
 
 .app-breadcrumbs__item {
   @include utils.useTextColor(primary, 0.6);
-  // color: utils.getColor(gamma);
 
   font-size: 0.75rem;
   font-weight: 300;

@@ -83,8 +83,8 @@ $headerHeight: 100px;
     --p-logo-color: #{utils.getTextColor(primary)};
     --p-header-color: #{utils.getTextColor(primary)};
   }
-
   @include utils.useBgColor(alpha, 600);
+
   display: grid;
   grid-template-columns: 300px auto;
   grid-template-rows: $headerHeight auto;
@@ -135,5 +135,7 @@ $headerHeight: 100px;
 .app-layout__main {
   overflow: auto;
   padding: 0 25px;
+
+  @include utils.useCustomScrollbar(utils.getColor(beta), 10px);
 }
 </style>

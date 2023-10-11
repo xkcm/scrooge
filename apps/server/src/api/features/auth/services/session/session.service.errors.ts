@@ -3,13 +3,13 @@ import { withCode, withMessage, withMetadata } from "@xkcm/better-errors";
 
 @withMessage("Session with id '%{metadata.sessionId}' can't be invalidated")
 @withCode("api.auth.session.cant_invalidate_session")
-@withMetadata({ httpCode: 401 })
+@withMetadata({ httpCode: 403 })
 export class CantInvalidateSessionError extends ApiError<{
   sessionId?: string;
 }> {}
 @withMessage("Session is invalid")
 @withCode("api.auth.session.invalid_session")
-@withMetadata({ httpCode: 401 })
+@withMetadata({ httpCode: 403 })
 export class InvalidSessionError extends ApiError {}
 
 @withMessage(
