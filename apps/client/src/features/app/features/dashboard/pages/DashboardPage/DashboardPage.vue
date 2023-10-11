@@ -224,7 +224,7 @@ onMounted(async () => {
 
   if (isRefDefined(operationsChart)) {
     const { height, width } = operationsChart.value.getBoundingClientRect();
-
+    // todo: implement useQuery
     const summary = await operationService.getOperationsPeriodSummary({
       periodGroup: "day",
       from: moment().startOf("day").subtract(28, "days").valueOf(),

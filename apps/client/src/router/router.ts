@@ -89,14 +89,14 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 });
-
 router.beforeEach(validateRoute);
 
-export { router };
-
-export async function revalidateCurrentRoute() {
+export async function validateCurrentRoute() {
   const validationResult = validateRoute(router.currentRoute.value);
+
   if (validationResult) {
-    return router.replace(validationResult);
+    return router.push(validationResult);
   }
 }
+
+export { router };

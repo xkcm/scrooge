@@ -46,6 +46,7 @@
 import { Icon } from "@iconify/vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useQueryClient } from "@tanstack/vue-query";
 
 import { ApiError } from "@scrooge/shared";
 import { AppButton, AppPasswordInput, AppTextInput } from "@scrooge/ui-library";
@@ -61,7 +62,7 @@ const mail = ref("");
 const password = ref("");
 
 const router = useRouter();
-let lastErrorNotification: NotificationWithActions | null = null;
+useQueryClient().resetQueries();
 
 const submitForm = async (mailValue: string, passwordValue: string) => {
   if (lastErrorNotification) {
@@ -70,7 +71,6 @@ const submitForm = async (mailValue: string, passwordValue: string) => {
 
   try {
     await authService.logIn(mailValue, passwordValue);
-
     router.push("dashboard");
   } catch (apiError) {
     lastErrorNotification = notificationService.pushNotification(
@@ -82,6 +82,8 @@ const submitForm = async (mailValue: string, passwordValue: string) => {
     );
   }
 };
+
+let lastErrorNotification: NotificationWithActions | null = null;
 </script>
 
 <style lang="scss">

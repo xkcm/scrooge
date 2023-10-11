@@ -2,18 +2,18 @@ import authService from "@/features/auth/auth.service";
 import { RouteLocationNormalized } from "vue-router";
 
 export function validateRoute(route: RouteLocationNormalized) {
-  const requireAuthentication = route.matched.some(
+  const isUserAuthenticated = authService.isUserAuthenticated();
+  const routeRequiresAuth = route.matched.some(
     (matched) => matched.meta.requireAuthentication,
   );
-
-  if (requireAuthentication && !authService.isUserAuthenticated()) {
-    return { name: "home" };
+  if (routeRequiresAuth && !isUserAuthenticated) {
+    return { name: "login" };
   }
 
-  const rejectAuthenticatedUsers = route.matched.some(
+  const routeRejectsAuth = route.matched.some(
     (matched) => matched.meta.rejectAuthenticatedUsers,
   );
-  if (rejectAuthenticatedUsers && authService.isUserAuthenticated()) {
+  if (routeRejectsAuth && isUserAuthenticated) {
     return { name: "dashboard" };
   }
 }

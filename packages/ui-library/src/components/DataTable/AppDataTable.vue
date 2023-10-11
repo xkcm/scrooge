@@ -51,7 +51,7 @@ $baseCellHeight: 50px;
   @include utils.useTextColor(primary, 0.8);
   border-radius: 5px;
   padding-bottom: 5px;
-  gap: 5px;
+  column-gap: 5px;
   border: 1px utils.getColor(alpha) solid;
 
   &__header,
@@ -60,6 +60,7 @@ $baseCellHeight: 50px;
     font-size: 0.9rem;
     display: grid;
     grid-template-columns: subgrid;
+    border-bottom: 1px utils.getColor(alpha, 500) solid;
   }
 
   &__header {
@@ -71,6 +72,9 @@ $baseCellHeight: 50px;
     font-weight: 500;
     &:hover {
       @include utils.useBgColor(alpha, 500);
+    }
+    &:last-child {
+      border: none;
     }
   }
 

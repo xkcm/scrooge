@@ -8,64 +8,72 @@
       />
     </template>
 
-    <div v-if="session" class="session-details__container">
-      <div v-if="isCurrent" class="current-session-indicator">
-        <AppTooltip side="right">
-          <template #trigger>
-            <Icon icon="mdi:signal-variant" :height="16" />
-            <span>Current Session</span>
-          </template>
-          You are currently logged in using this session
-        </AppTooltip>
-      </div>
+    <div class="session-details__container">
+      <template v-if="session">
+        <div v-if="isCurrent" class="current-session-indicator">
+          <AppTooltip side="right">
+            <template #trigger>
+              <Icon icon="mdi:signal-variant" :height="16" />
+              <span>Current Session</span>
+            </template>
+            You are currently logged in using this session
+          </AppTooltip>
+        </div>
 
-      <div class="session-details">
-        <SessionDetail label="Session ID" :value="session.id" />
-        <SessionDetail label="Agent name" :value="session.agent" />
-        <SessionDetail label="Device type" :value="session.agent" />
-        <SessionDetail label="IP Address" :value="session.sourceIp" />
-        <SessionDetail label="Last used at" :value="session.lastUsed" />
-        <SessionDetail label="Expires at" :value="session.expiresAt" />
-        <SessionDetail label="Created at" :value="session.createdAt" />
-        <SessionDetail
-          class="session-details__geolocation"
-          label="Approximate geolocation"
-          :value="session.geolocation.join(', ')"
-        >
-          <template v-if="session.geolocation.length > 0">
-            <AppTooltip side="right">
-              <template #trigger>
-                <a
-                  :href="`https://www.openstreetmap.org/search?query=${encodeURIComponent(
-                    session.geolocation.join(','),
-                  )}`"
-                  target="_blank"
-                >
-                  {{ session.geolocation.join(", ") }}
-                </a>
-              </template>
-              Open these coordinates in <i>Open Street Map</i>
-            </AppTooltip>
-            <Icon icon="mdi:map-search-outline" :height="22" />
-          </template>
-        </SessionDetail>
-      </div>
-      <div class="session-actions">
-        <AppButton
-          v-if="session.refreshable"
-          icon="mdi:refresh"
-          data-action="refresh"
-          @click="refreshSession"
-        >
-          Refresh
-        </AppButton>
-        <AppButton
-          icon="mdi:trash-can-outline"
-          data-action="invalidate"
-          @click="invalidateSession"
-        >
-          Invalidate
-        </AppButton>
+        <div class="session-details">
+          <SessionDetail label="Session ID" :value="session.id" />
+          <SessionDetail label="Agent name" :value="session.agent" />
+          <SessionDetail label="Device type" :value="session.agent" />
+          <SessionDetail label="IP Address" :value="session.sourceIp" />
+          <SessionDetail label="Last used at" :value="session.lastUsed" />
+          <SessionDetail label="Expires at" :value="session.expiresAt" />
+          <SessionDetail label="Created at" :value="session.createdAt" />
+          <SessionDetail
+            class="session-details__geolocation"
+            label="Approximate geolocation"
+            :value="session.geolocation.join(', ')"
+          >
+            <template v-if="session.geolocation.length > 0">
+              <AppTooltip side="right">
+                <template #trigger>
+                  <a
+                    :href="`https://www.openstreetmap.org/search?query=${encodeURIComponent(
+                      session.geolocation.join(','),
+                    )}`"
+                    target="_blank"
+                  >
+                    {{ session.geolocation.join(", ") }}
+                  </a>
+                </template>
+                Open these coordinates in <i>Open Street Map</i>
+              </AppTooltip>
+              <Icon icon="mdi:map-search-outline" :height="22" />
+            </template>
+          </SessionDetail>
+        </div>
+        <div class="session-actions">
+          <AppButton
+            v-if="session.refreshable"
+            icon="mdi:refresh"
+            data-action="refresh"
+            :loading="isRefreshing"
+            @click="refreshSession"
+          >
+            Refresh
+          </AppButton>
+          <!-- todo: add popup to make sure if invalidating current session -->
+          <AppButton
+            icon="mdi:trash-can-outline"
+            data-action="invalidate"
+            :loading="isInvalidating"
+            @click="invalidateSession"
+          >
+            Invalidate
+          </AppButton>
+        </div>
+      </template>
+      <div v-else class="no-session-found">
+        No session with ID <i>{{ sessionId }}</i> was found
       </div>
     </div>
   </AppLayout>
@@ -89,14 +97,17 @@ import { useSession } from "../../composables/useSession";
 import { useInvalidate } from "../../composables/useInvalidate";
 import { useRefresh } from "../../composables/useRefresh";
 import { sessionDetailsBreadcrumbs } from "./SessionDetailsPage.helpers";
+import authService from "@/features/auth/auth.service";
 
 const { params } = useRoute();
 const router = useRouter();
 
 const sessionId = params.sessionId as string;
-const { mutateAsync: refresh } = useRefresh(sessionId);
-const { mutateAsync: invalidate } = useInvalidate(sessionId);
 const { session, isCurrent } = useSession(sessionId);
+const { mutateAsync: performRefreshMutation, isLoading: isRefreshing } =
+  useRefresh(sessionId);
+const { mutateAsync: performInvalidateMutation, isLoading: isInvalidating } =
+  useInvalidate(sessionId);
 
 const refreshSession = async () => {
   const sessionId = session.value?.id;
@@ -109,20 +120,18 @@ const refreshSession = async () => {
     });
   }
 
-  const response = await refresh().catch((error) => {
+  await performRefreshMutation().catch((error) => {
     notificationService.pushNotification(
       prepareNotificationInputFromApiError(error),
     );
   });
-
-  console.info(response);
 };
 
 const invalidateSession = async () => {
   const sessionId = session.value?.id;
   if (!sessionId) return;
 
-  await invalidate(sessionId).catch((error) => {
+  await performInvalidateMutation(sessionId).catch((error) => {
     notificationService.pushNotification(
       prepareNotificationInputFromApiError(error),
     );
@@ -133,7 +142,11 @@ const invalidateSession = async () => {
     type: "info",
   });
 
-  router.push({ name: "sessions" });
+  if (!isCurrent.value) {
+    router.push({ name: "sessions" });
+  }
+
+  await authService.logOut();
 };
 </script>
 
@@ -204,11 +217,11 @@ $contentWidth: 80%;
     &[data-action="invalidate"] {
       @include utils.useBgColor(red, 400, 0.8);
 
-      &:hover {
+      &:not([disabled]):hover {
         @include utils.useBgColor(red, 400, 0.9);
       }
 
-      &:active {
+      &:not([disabled]):active {
         @include utils.useBgColor(red);
       }
     }
@@ -218,5 +231,11 @@ $contentWidth: 80%;
     font-size: 1rem;
     font-weight: 500;
   }
+}
+
+.no-session-found {
+  @include utils.useTextColor(primary);
+  padding: 0 1rem;
+  font-weight: 500;
 }
 </style>
