@@ -77,6 +77,7 @@ const sessionService: SessionService = {
   },
 
   async invalidateSession(userId, sessionId) {
+    console.info({ userId, sessionId });
     await sessionRedisService.removeAllSessionInfo(sessionId);
 
     const { count } = await prismaClient.session

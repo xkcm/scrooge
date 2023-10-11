@@ -37,9 +37,7 @@
               <AppTooltip side="right">
                 <template #trigger>
                   <a
-                    :href="`https://www.openstreetmap.org/search?query=${encodeURIComponent(
-                      session.geolocation.join(','),
-                    )}`"
+                    :href="buildOpenStreetMapsLink(session.geolocation)"
                     target="_blank"
                   >
                     {{ session.geolocation.join(", ") }}
@@ -57,7 +55,11 @@
             icon="mdi:refresh"
             data-action="refresh"
             :loading="isRefreshing"
-            @click="refreshSession"
+            @click="
+              refreshSession(session.id, session.refreshable, {
+                mutate: performRefreshMutation,
+              })
+            "
           >
             Refresh
           </AppButton>
@@ -66,7 +68,12 @@
             icon="mdi:trash-can-outline"
             data-action="invalidate"
             :loading="isInvalidating"
-            @click="invalidateSession"
+            @click="
+              invalidateSession(session.id, isCurrent, {
+                mutate: performInvalidateMutation,
+                router,
+              })
+            "
           >
             Invalidate
           </AppButton>
@@ -88,16 +95,17 @@ import { AppButton, AppTooltip } from "@scrooge/ui-library";
 import AppHeaderWithBreadcrumbs from "@/features/app/components/AppHeaderWithBreadcrumbs.vue";
 import AppLayout from "@/features/app/layouts/AppLayout.vue";
 
-import notificationService from "@/features/notifications/notification.service";
-import { prepareNotificationInputFromApiError } from "@/features/notifications/notification.utils";
-
 import SessionDetail from "../../components/SessionDetail.vue";
 import { useSession } from "../../composables/useSession";
+import { buildOpenStreetMapsLink } from "../../helpers/session.helpers";
 
 import { useInvalidate } from "../../composables/useInvalidate";
 import { useRefresh } from "../../composables/useRefresh";
+import {
+  refreshSession,
+  invalidateSession,
+} from "../../helpers/session.helpers";
 import { sessionDetailsBreadcrumbs } from "./SessionDetailsPage.helpers";
-import authService from "@/features/auth/auth.service";
 
 const { params } = useRoute();
 const router = useRouter();
@@ -105,49 +113,9 @@ const router = useRouter();
 const sessionId = params.sessionId as string;
 const { session, isCurrent } = useSession(sessionId);
 const { mutateAsync: performRefreshMutation, isLoading: isRefreshing } =
-  useRefresh(sessionId);
+  useRefresh();
 const { mutateAsync: performInvalidateMutation, isLoading: isInvalidating } =
-  useInvalidate(sessionId);
-
-const refreshSession = async () => {
-  const sessionId = session.value?.id;
-  if (!sessionId) return;
-  if (!session.value?.refreshable) {
-    return notificationService.pushNotification({
-      title: "Couldn't refresh this session",
-      body: "This session cannot be refreshed",
-      type: "error",
-    });
-  }
-
-  await performRefreshMutation().catch((error) => {
-    notificationService.pushNotification(
-      prepareNotificationInputFromApiError(error),
-    );
-  });
-};
-
-const invalidateSession = async () => {
-  const sessionId = session.value?.id;
-  if (!sessionId) return;
-
-  await performInvalidateMutation(sessionId).catch((error) => {
-    notificationService.pushNotification(
-      prepareNotificationInputFromApiError(error),
-    );
-  });
-
-  notificationService.pushNotification({
-    title: "Session invalidated",
-    type: "info",
-  });
-
-  if (!isCurrent.value) {
-    router.push({ name: "sessions" });
-  }
-
-  await authService.logOut();
-};
+  useInvalidate();
 </script>
 
 <style lang="scss">

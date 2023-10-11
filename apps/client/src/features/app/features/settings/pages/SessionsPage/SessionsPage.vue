@@ -16,32 +16,38 @@
         :header="sessionTableHeaderConfig"
         :rows="sessions"
       >
-        <template #row="row">
+        <template #row="session">
           <div
             class="app-table__row sessions-table__row"
             @click="
               router.push({
                 name: 'session-details',
-                params: { sessionId: row.id },
+                params: { sessionId: session.id },
               })
             "
           >
             <div class="app-table__cell sessions-table__device-icon">
-              <Icon :icon="row.deviceIcon" :height="24" />
+              <Icon :icon="session.deviceIcon" :height="24" />
             </div>
-            <div class="app-table__cell" :data-unknown="row.os === 'N/A'">
-              {{ row.os }}
+            <div class="app-table__cell" :data-unknown="session.os === 'N/A'">
+              {{ session.os }}
             </div>
-            <div class="app-table__cell" :data-unknown="row.sourceIp === 'N/A'">
-              {{ row.sourceIp }}
+            <div
+              class="app-table__cell"
+              :data-unknown="session.sourceIp === 'N/A'"
+            >
+              {{ session.sourceIp }}
             </div>
-            <div class="app-table__cell">{{ row.lastUsed }}</div>
-            <div class="app-table__cell">{{ row.createdAt }}</div>
-            <div class="app-table__cell">{{ row.expiresAt }}</div>
+            <div class="app-table__cell">{{ session.lastUsed }}</div>
+            <div class="app-table__cell">{{ session.createdAt }}</div>
+            <div class="app-table__cell">{{ session.expiresAt }}</div>
             <div
               class="app-table__cell sessions-table__current-session-indicator"
             >
-              <AppTooltip v-if="row.id === sessionsData?.current" side="left">
+              <AppTooltip
+                v-if="session.id === sessionsData?.current"
+                side="left"
+              >
                 <template #trigger>
                   <Icon
                     icon="mdi:signal-variant"
@@ -52,8 +58,25 @@
                 You are currently logged in using this session
               </AppTooltip>
             </div>
-            <div class="app-table__cell sessions-table__context-menu-trigger">
-              <Icon icon="mdi:dots-vertical" :height="24" />
+
+            <div
+              class="app-table__cell sessions-table__context-menu-trigger"
+              @click.stop
+            >
+              <AppContextMenu
+                :items="
+                  createContextMenuItems(session, {
+                    router,
+                    isCurrent: session.id === sessionsData?.current,
+                    mutateRefresh,
+                    mutateInvalidate,
+                  })
+                "
+              >
+                <template #trigger>
+                  <AppInteractiveIcon icon="mdi:dots-vertical" :size="24" />
+                </template>
+              </AppContextMenu>
             </div>
           </div>
         </template>
@@ -62,23 +85,36 @@
   </AppLayout>
 </template>
 
-<script setup lang="ts">
+<script setup lang="tsx">
 import { Icon } from "@iconify/vue";
-import { AppDataTable, AppTooltip } from "@scrooge/ui-library";
+import {
+  AppContextMenu,
+  AppDataTable,
+  AppInteractiveIcon,
+  AppTooltip,
+} from "@scrooge/ui-library";
 import { computed } from "vue";
 import { useRouter } from "vue-router";
 
 import AppHeaderWithBreadcrumbs from "@/features/app/components/AppHeaderWithBreadcrumbs.vue";
 import AppLayout from "@/features/app/layouts/AppLayout.vue";
+
 import { useSessions } from "../../composables/useSessions";
+
 import {
   mapPublicSessionToRowData,
   sessionTableHeaderConfig,
   sessionsPageBreadcrumbs,
+  createContextMenuItems,
 } from "./SessionsPage.helpers";
+import { useRefresh } from "../../composables/useRefresh";
+import { useInvalidate } from "../../composables/useInvalidate";
 
 const router = useRouter();
 const { data: sessionsData, isSuccess } = useSessions();
+const { mutateAsync: mutateRefresh } = useRefresh();
+const { mutateAsync: mutateInvalidate } = useInvalidate();
+
 const sessions = computed(
   () => sessionsData.value?.sessions.map(mapPublicSessionToRowData) ?? [],
 );
@@ -152,5 +188,14 @@ div.sessions-table {
       place-items: center;
     }
   }
+}
+
+.app-context-menu .app-context-menu__item[data-key="invalidate"]:hover {
+  color: color-mix(
+    in srgb,
+    #{utils.getColor(red, 400)} 80%,
+    #{utils.getTextColor(primary)}
+  );
+  @include utils.useBgColor(red, 400, 0.15);
 }
 </style>

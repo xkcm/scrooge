@@ -9,9 +9,9 @@
     <div v-if="value" class="session-detail__copy-button">
       <AppTooltip side="left">
         <template #trigger>
-          <Icon
+          <AppInteractiveIcon
             icon="mdi:content-copy"
-            height="18"
+            :size="18"
             @click="value && copyText(value)"
           />
         </template>
@@ -22,9 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { Icon } from "@iconify/vue";
-
-import { AppTooltip } from "@scrooge/ui-library";
+import { AppInteractiveIcon, AppTooltip } from "@scrooge/ui-library";
 
 import notificationService from "@/features/notifications/notification.service";
 

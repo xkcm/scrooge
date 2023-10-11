@@ -2,22 +2,29 @@ import apiClient from "@/services/api-client/api-client";
 import { schemas } from "@scrooge/shared";
 import { useMutation, useQueryClient } from "@tanstack/vue-query";
 
-export function useInvalidate(sessionId: schemas.session.PublicSession["id"]) {
+export function useInvalidate() {
   const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: () => apiClient.session.invalidateSession(sessionId),
+    mutationFn: (sessionId: schemas.session.PublicSession["id"]) =>
+      apiClient.session.invalidateSession(sessionId),
+
     onMutate: (sessionId: schemas.operation.PublicOperation["id"]) => {
       const previousSessions = queryClient.getQueryData(["sessions"]);
 
       queryClient.setQueryData(
         ["sessions"],
-        (sessionsResponse: schemas.session.GetSessionsResponse | undefined) => {
-          if (!sessionsResponse) return;
+        (
+          sessionsQueryData: schemas.session.GetSessionsResponse | undefined,
+        ) => {
+          if (!sessionsQueryData) return;
 
-          sessionsResponse.sessions = sessionsResponse?.sessions.filter(
-            ({ id }) => id !== sessionId,
-          );
-          return sessionsResponse;
+          return {
+            sessions: sessionsQueryData.sessions.filter(
+              ({ id }) => id !== sessionId,
+            ),
+            current: sessionsQueryData.current,
+          };
         },
       );
 
@@ -25,6 +32,7 @@ export function useInvalidate(sessionId: schemas.session.PublicSession["id"]) {
         previousSessions,
       };
     },
+
     onError(error, variables, context) {
       // rollback
       queryClient.setQueryData(["sessions"], context?.previousSessions);

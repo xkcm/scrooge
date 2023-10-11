@@ -13,3 +13,8 @@ export { default as AppSelect } from "./Select/AppSelect.vue";
 
 export * from "./DataTable/AppDataTable.types";
 export { default as AppDataTable } from "./DataTable/AppDataTable.vue";
+
+export { default as AppContextMenu } from "./ContextMenu/AppContextMenu.vue";
+export * from "./ContextMenu/AppContextMenu.types";
+
+export { default as AppInteractiveIcon } from "./InteractiveIcon/AppInteractiveIcon.vue";

@@ -2,11 +2,13 @@ import apiClient from "@/services/api-client/api-client";
 import { schemas } from "@scrooge/shared";
 import { useMutation, useQueryClient } from "@tanstack/vue-query";
 
-export function useRefresh(sessionId: schemas.session.PublicSession["id"]) {
+export function useRefresh() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: () => apiClient.session.refreshSession(sessionId),
-    onSuccess(data) {
+    mutationFn: (sessionId: schemas.session.PublicSession["id"]) =>
+      apiClient.session.refreshSession(sessionId),
+
+    onSuccess(data, sessionId) {
       const sessionsCacheData =
         queryClient.getQueryData<schemas.session.GetSessionsResponse>([
           "sessions",

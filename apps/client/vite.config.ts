@@ -4,6 +4,7 @@ import url from "node:url";
 import { defineConfig } from "vite";
 
 import vue from "@vitejs/plugin-vue";
+import vueJsx from "@vitejs/plugin-vue-jsx";
 import eslint from "vite-plugin-eslint";
 import tsconfigPaths from "vite-tsconfig-paths";
 
@@ -22,6 +23,7 @@ export default defineConfig({
       exclude: path.join(__dirname, "../../packages/**/*"),
     }),
     tsconfigPaths(),
+    vueJsx(),
     {
       name: "singleHMR",
       handleHotUpdate({ modules }) {
