@@ -63,7 +63,7 @@
               class="app-table__cell sessions-table__context-menu-trigger"
               @click.stop
             >
-              <AppContextMenu
+              <AppMenubar
                 :items="
                   createContextMenuItems(session, {
                     router,
@@ -76,7 +76,7 @@
                 <template #trigger>
                   <AppInteractiveIcon icon="mdi:dots-vertical" :size="24" />
                 </template>
-              </AppContextMenu>
+              </AppMenubar>
             </div>
           </div>
         </template>
@@ -88,9 +88,9 @@
 <script setup lang="tsx">
 import { Icon } from "@iconify/vue";
 import {
-  AppContextMenu,
   AppDataTable,
   AppInteractiveIcon,
+  AppMenubar,
   AppTooltip,
 } from "@scrooge/ui-library";
 import { computed } from "vue";
@@ -101,14 +101,14 @@ import AppLayout from "@/features/app/layouts/AppLayout.vue";
 
 import { useSessions } from "../../composables/useSessions";
 
+import { useInvalidate } from "../../composables/useInvalidate";
+import { useRefresh } from "../../composables/useRefresh";
 import {
+  createContextMenuItems,
   mapPublicSessionToRowData,
   sessionTableHeaderConfig,
   sessionsPageBreadcrumbs,
-  createContextMenuItems,
 } from "./SessionsPage.helpers";
-import { useRefresh } from "../../composables/useRefresh";
-import { useInvalidate } from "../../composables/useInvalidate";
 
 const router = useRouter();
 const { data: sessionsData, isSuccess } = useSessions();
@@ -190,7 +190,7 @@ div.sessions-table {
   }
 }
 
-.app-context-menu .app-context-menu__item[data-key="invalidate"]:hover {
+.app-menubar .app-menubar__item[data-key="invalidate"]:hover {
   color: color-mix(
     in srgb,
     #{utils.getColor(red, 400)} 80%,

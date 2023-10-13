@@ -1,4 +1,4 @@
-export type ContextMenuItem = {
+export type MenubarItem = {
   caption: string;
   key: string;
   icon: string;
