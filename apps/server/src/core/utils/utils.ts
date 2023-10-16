@@ -42,8 +42,28 @@ export function bindObjectMethods<T extends Record<string | symbol, any>>(
   return newObject;
 }
 
-export function createErrorParser(RethrownError: Constructor<BetterError>) {
+export function createErrorRethrower(RethrownError: Constructor<BetterError>) {
   return (error: any) => {
     throw new RethrownError({ cause: error });
+  };
+}
+
+export function createErrorMapper(
+  errorMap: Map<Constructor<Error>, Constructor<Error>>,
+  DefaultError?: Constructor<Error>,
+) {
+  return (error: any) => {
+    const foundEntry = [...errorMap.entries()].find(
+      ([ErrorConstructor]) => error instanceof ErrorConstructor,
+    );
+
+    if (foundEntry) {
+      const FoundError = foundEntry[1];
+      throw new FoundError();
+    } else if (DefaultError) {
+      throw new DefaultError();
+    } else {
+      throw error;
+    }
   };
 }

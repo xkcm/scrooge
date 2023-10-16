@@ -10,7 +10,7 @@ export class CantInvalidateSessionError extends ApiError<{
 @withMessage("Session is invalid")
 @withCode("api.auth.session.invalid_session")
 @withMetadata({ httpCode: 403 })
-export class InvalidSessionError extends ApiError {}
+export class InvalidSessionError extends ApiError<{ sessionId?: string }> {}
 
 @withMessage(
   "Requester doesn't have sufficient permissions to refresh the session",

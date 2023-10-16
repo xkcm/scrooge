@@ -15,13 +15,13 @@ export interface RegistrationTokenPayload {
   email: string;
 }
 
-type CreateTokenResult = {
+export type CreateTokenResult = {
   token: string;
   expiresIn: number;
 };
 
 export interface TokenService {
-  extractTokenPayload<T extends Record<PropertyKey, any>>(
+  decodeTokenPayload<T extends Record<PropertyKey, any>>(
     token: string,
   ): T & GenericTokenPayload;
 
@@ -31,28 +31,28 @@ export interface TokenService {
     key?: string,
   ): CreateTokenResult;
 
-  decodeGenericToken<T extends JwtPayload = {}>(
+  verifyGenericToken<T extends JwtPayload = {}>(
     token: string,
     key?: string,
   ): T & GenericTokenPayload;
 
   createAuthToken(tokenPayload: AuthTokenPayload): CreateTokenResult;
 
-  decodeAuthToken(token: string): AuthTokenPayload & GenericTokenPayload;
+  verifyAuthToken(token: string): AuthTokenPayload & GenericTokenPayload;
 
   createRefreshToken(tokenPayload: RefreshTokenPayload): CreateTokenResult;
 
-  decodeRefreshToken(token: string): RefreshTokenPayload & GenericTokenPayload;
+  verifyRefreshToken(token: string): RefreshTokenPayload & GenericTokenPayload;
 
   createRegistrationToken(
     tokenPayload: RegistrationTokenPayload,
   ): CreateTokenResult;
 
-  decodeRegistrationToken(
+  verifyRegistrationToken(
     token: string,
   ): RegistrationTokenPayload & GenericTokenPayload;
 
   createRelogToken(tokenPayload: RelogTokenPayload): CreateTokenResult;
 
-  decodeRelogToken(token: string): RelogTokenPayload & GenericTokenPayload;
+  verifyRelogToken(token: string): RelogTokenPayload & GenericTokenPayload;
 }

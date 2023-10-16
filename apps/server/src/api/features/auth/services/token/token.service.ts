@@ -24,11 +24,11 @@ const tokenService: TokenService = {
     return { token, expiresIn };
   },
 
-  extractTokenPayload<T>(token: string) {
+  decodeTokenPayload<T>(token: string) {
     return jwt.decode(token) as T;
   },
 
-  decodeGenericToken(token, key = env.AUTH_TOKEN_SECRET) {
+  verifyGenericToken(token, key = env.AUTH_TOKEN_SECRET) {
     try {
       return jwt.verify(token, key, {
         audience: env.SERVER_APP_NAME,
@@ -46,8 +46,8 @@ const tokenService: TokenService = {
     });
   },
 
-  decodeAuthToken(token) {
-    return this.decodeGenericToken(token);
+  verifyAuthToken(token) {
+    return this.verifyGenericToken(token);
   },
 
   createRefreshToken(tokenPayload) {
@@ -61,8 +61,8 @@ const tokenService: TokenService = {
     );
   },
 
-  decodeRefreshToken(token) {
-    return this.decodeGenericToken(token, env.REFRESH_TOKEN_SECRET);
+  verifyRefreshToken(token) {
+    return this.verifyGenericToken(token, env.REFRESH_TOKEN_SECRET);
   },
 
   createRegistrationToken(tokenPayload) {
@@ -75,8 +75,8 @@ const tokenService: TokenService = {
     );
   },
 
-  decodeRegistrationToken(token) {
-    return this.decodeGenericToken(token, env.REGISTRATION_TOKEN_SECRET);
+  verifyRegistrationToken(token) {
+    return this.verifyGenericToken(token, env.REGISTRATION_TOKEN_SECRET);
   },
 
   createRelogToken(tokenPayload) {
@@ -89,8 +89,8 @@ const tokenService: TokenService = {
     );
   },
 
-  decodeRelogToken(token) {
-    return this.decodeGenericToken(token, env.RELOG_TOKEN_SECRET);
+  verifyRelogToken(token) {
+    return this.verifyGenericToken(token, env.RELOG_TOKEN_SECRET);
   },
 };
 

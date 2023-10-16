@@ -9,7 +9,7 @@ import morganMiddleware from "#core/middleware/morgan.middleware.js";
 import prismaClient from "#core/prisma/prisma.js";
 import { createPrismaErrorParser } from "#core/prisma/prisma.utils.js";
 import redisClient from "#core/redis/redis.js";
-import { createErrorParser } from "#core/utils/utils.js";
+import { createErrorRethrower } from "#core/utils/utils.js";
 import { apiRouter } from "#root/api/api.js";
 
 import {
@@ -49,7 +49,9 @@ export async function assertDatabaseConnection() {
   );
   logger.info("PostgreSQL connection estabilished");
 
-  await redisClient.connect().catch(createErrorParser(RedisUnavailableError));
+  await redisClient
+    .connect()
+    .catch(createErrorRethrower(RedisUnavailableError));
   logger.info("Redis connection estabilished");
 }
 

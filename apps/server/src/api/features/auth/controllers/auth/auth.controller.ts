@@ -46,7 +46,7 @@ const authController = bindObjectMethods({
     res: ApiResponse<schemas.auth.RegisterUserResponse>,
     next,
   ) {
-    const decodedToken = tokenService.decodeGenericToken<{ email: string }>(
+    const decodedToken = tokenService.verifyGenericToken<{ email: string }>(
       req.query.registrationToken,
     );
 
@@ -96,7 +96,7 @@ const authController = bindObjectMethods({
 
     if (relogToken) {
       try {
-        const relogPayload = tokenService.decodeRelogToken(relogToken);
+        const relogPayload = tokenService.verifyRelogToken(relogToken);
         sessionId = relogPayload.sessionId;
         clearCookie(res, "relogToken");
       } catch {

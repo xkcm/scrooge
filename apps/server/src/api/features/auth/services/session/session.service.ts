@@ -64,10 +64,10 @@ const sessionService: SessionService = {
     return sessionsWithRedisInfo;
   },
 
-  getSessionById(sessionId) {
+  getSession(userId, sessionId) {
     return prismaClient.session
       .findFirstOrThrow({
-        where: { id: sessionId },
+        where: { id: sessionId, userId },
       })
       .catch(
         createPrismaErrorParser({
@@ -77,7 +77,6 @@ const sessionService: SessionService = {
   },
 
   async invalidateSession(userId, sessionId) {
-    console.info({ userId, sessionId });
     await sessionRedisService.removeAllSessionInfo(sessionId);
 
     const { count } = await prismaClient.session
@@ -105,8 +104,16 @@ const sessionService: SessionService = {
     };
   },
 
+  async tryInvalidateSession(userId, sessionId) {
+    try {
+      await this.invalidateSession(userId, sessionId);
+    } catch {
+      // no problem
+    }
+  },
+
   async refreshSession(userId, sessionId) {
-    const session = await this.getSessionById(sessionId);
+    const session = await this.getSession(userId, sessionId);
 
     if (isSessionInvalid(session)) {
       await this.invalidateSession(userId, sessionId).catch(() => {});
@@ -131,12 +138,11 @@ const sessionService: SessionService = {
     return updatedSession;
   },
 
-  async verifySessionById(userId, sessionId) {
-    const session = await this.getSessionById(sessionId);
+  async verifySession(userId, sessionId) {
+    const session = await this.getSession(userId, sessionId);
 
     if (isSessionInvalid(session)) {
-      await this.invalidateSession(userId, sessionId);
-      throw new InvalidSessionError();
+      throw new InvalidSessionError({ metadata: { sessionId } });
     }
 
     return true;
