@@ -40,10 +40,10 @@ import {
   MenubarItem as RadixMenubarItem,
 } from "radix-vue";
 
-import { MenubarItem } from "./AppMenubar.types";
+import { AppMenubarItem } from "./AppMenubar.types";
 
 defineProps<{
-  items?: MenubarItem[];
+  items?: AppMenubarItem[];
 }>();
 </script>
 

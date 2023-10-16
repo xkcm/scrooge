@@ -63,16 +63,7 @@
               class="app-table__cell sessions-table__context-menu-trigger"
               @click.stop
             >
-              <AppMenubar
-                :items="
-                  createContextMenuItems(session, {
-                    router,
-                    isCurrent: session.id === sessionsData?.current,
-                    mutateRefresh,
-                    mutateInvalidate,
-                  })
-                "
-              >
+              <AppMenubar :items="prepareContextMenuItems(session)">
                 <template #trigger>
                   <AppInteractiveIcon icon="mdi:dots-vertical" :size="24" />
                 </template>
@@ -99,21 +90,18 @@ import { useRouter } from "vue-router";
 import AppHeaderWithBreadcrumbs from "@/features/app/components/AppHeaderWithBreadcrumbs.vue";
 import AppLayout from "@/features/app/layouts/AppLayout.vue";
 
-import { useSessions } from "../../composables/useSessions";
+import { useSessionsQuery } from "../../composables/useSessionsQuery";
 
-import { useInvalidate } from "../../composables/useInvalidate";
-import { useRefresh } from "../../composables/useRefresh";
+import { useContextMenuCreator } from "../../composables/useContextMenuCreator";
 import {
-  createContextMenuItems,
   mapPublicSessionToRowData,
   sessionTableHeaderConfig,
   sessionsPageBreadcrumbs,
 } from "./SessionsPage.helpers";
 
 const router = useRouter();
-const { data: sessionsData, isSuccess } = useSessions();
-const { mutateAsync: mutateRefresh } = useRefresh();
-const { mutateAsync: mutateInvalidate } = useInvalidate();
+const { isSuccess, data: sessionsData } = useSessionsQuery();
+const { prepareContextMenuItems } = useContextMenuCreator();
 
 const sessions = computed(
   () => sessionsData.value?.sessions.map(mapPublicSessionToRowData) ?? [],

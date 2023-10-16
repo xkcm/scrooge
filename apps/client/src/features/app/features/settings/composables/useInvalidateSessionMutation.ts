@@ -2,7 +2,7 @@ import apiClient from "@/services/api-client/api-client";
 import { schemas } from "@scrooge/shared";
 import { useMutation, useQueryClient } from "@tanstack/vue-query";
 
-export function useInvalidate() {
+export function useInvalidateSessionMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({

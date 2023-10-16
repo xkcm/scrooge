@@ -55,11 +55,7 @@
             icon="mdi:refresh"
             data-action="refresh"
             :loading="isRefreshing"
-            @click="
-              refreshSession(session.id, session.refreshable, {
-                mutate: performRefreshMutation,
-              })
-            "
+            @click="refreshSession(session.id)"
           >
             Refresh
           </AppButton>
@@ -68,12 +64,7 @@
             icon="mdi:trash-can-outline"
             data-action="invalidate"
             :loading="isInvalidating"
-            @click="
-              invalidateSession(session.id, isCurrent, {
-                mutate: performInvalidateMutation,
-                router,
-              })
-            "
+            @click="invalidateSession(session.id)"
           >
             Invalidate
           </AppButton>
@@ -88,7 +79,7 @@
 
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 
 import { AppButton, AppTooltip } from "@scrooge/ui-library";
 
@@ -99,23 +90,17 @@ import SessionDetail from "../../components/SessionDetail.vue";
 import { useSession } from "../../composables/useSession";
 import { buildOpenStreetMapsLink } from "../../helpers/session.helpers";
 
-import { useInvalidate } from "../../composables/useInvalidate";
-import { useRefresh } from "../../composables/useRefresh";
-import {
-  refreshSession,
-  invalidateSession,
-} from "../../helpers/session.helpers";
+import { useSessionInvalidator } from "../../composables/useSessionInvalidator";
+import { useSessionRefresher } from "../../composables/useSessionRefresher";
 import { sessionDetailsBreadcrumbs } from "./SessionDetailsPage.helpers";
 
 const { params } = useRoute();
-const router = useRouter();
 
 const sessionId = params.sessionId as string;
 const { session, isCurrent } = useSession(sessionId);
-const { mutateAsync: performRefreshMutation, isLoading: isRefreshing } =
-  useRefresh();
-const { mutateAsync: performInvalidateMutation, isLoading: isInvalidating } =
-  useInvalidate();
+const { refreshSession, isLoading: isRefreshing } = useSessionRefresher();
+const { invalidateSession, isLoading: isInvalidating } =
+  useSessionInvalidator();
 </script>
 
 <style lang="scss">

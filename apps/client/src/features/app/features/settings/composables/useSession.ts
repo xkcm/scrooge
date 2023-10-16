@@ -1,14 +1,14 @@
 import { computed } from "vue";
 import { schemas } from "@scrooge/shared";
 
-import { useSessions } from "./useSessions";
+import { useSessionsQuery } from "./useSessionsQuery";
 
 export function useSession(sessionId: schemas.session.PublicSession["id"]) {
-  const { data } = useSessions();
+  const { data: sessions } = useSessionsQuery();
   return {
     session: computed(() =>
-      data.value?.sessions.find(({ id }) => sessionId === id),
+      sessions.value?.sessions.find(({ id }) => sessionId === id),
     ),
-    isCurrent: computed(() => data.value?.current === sessionId),
+    isCurrent: computed(() => sessions.value?.current === sessionId),
   };
 }

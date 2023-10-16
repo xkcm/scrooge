@@ -1,4 +1,4 @@
-export type MenubarItem = {
+export type AppMenubarItem = {
   caption: string;
   key: string;
   icon: string;
