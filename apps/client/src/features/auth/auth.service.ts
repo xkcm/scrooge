@@ -1,6 +1,8 @@
 import apiClient from "@/services/api-client/api-client";
+
 import { usePreferencesStore } from "../app/features/settings/stores/preferences.store";
 import notificationService from "../notifications/notification.service";
+
 import { useAuthStore } from "./auth.store";
 
 function isUserAuthenticated() {
@@ -8,7 +10,10 @@ function isUserAuthenticated() {
 }
 
 async function resolveAuthState() {
-  const authState = await apiClient.auth.getAuthState();
+  const authState = (await apiClient.auth
+    .getAuthState()
+    .catch(console.error)) as any;
+
   useAuthStore().setAuthState(authState.isAuthenticated);
 
   if (

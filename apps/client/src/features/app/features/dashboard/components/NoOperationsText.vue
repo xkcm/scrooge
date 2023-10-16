@@ -1,6 +1,6 @@
 <template>
   <div class="operations-list__message">
-    No operations yet, you can add new operation
+    No operations yet, you can add a new operation
     <span tabindex="0" @keyup.enter="redirect" @click="redirect">here</span>.
   </div>
 </template>

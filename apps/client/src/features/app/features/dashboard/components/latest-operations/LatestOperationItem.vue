@@ -20,7 +20,7 @@
           @keyup.enter.stop="openTagInHistory(tag)"
         >
           <AppTooltip
-            side="right"
+            side="top"
             :side-offset="6"
             tooltip-class="show-tag-history-tooltip"
           >
@@ -53,7 +53,7 @@ import { FilterContainer, filters } from "@scrooge/shared";
 import { AppTooltip } from "@scrooge/ui-library";
 import { computed } from "vue";
 import { usePreferencesStore } from "../../../settings/stores/preferences.store";
-import { Operation } from "../../types";
+import { Operation } from "../../dashboard.types";
 
 type LatestOperationItemProps = Operation & {
   rowNumber: number;
@@ -154,6 +154,10 @@ const openTagInHistory = (tag: string) => {
 .operation-item__tag {
   @include utils.useBgColor(gamma);
   @include utils.useTextColor(secondary);
+  @include utils.useTheme(dark) {
+    @include utils.useTextColor(primary);
+  }
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -187,11 +191,15 @@ const openTagInHistory = (tag: string) => {
 
 .operation-item__amount {
   font-weight: 600;
+  display: flex;
+  align-items: center;
 }
 
 .operation-item__date {
   text-align: right;
   font-weight: 300;
   padding-right: 10px;
+  display: flex;
+  align-items: center;
 }
 </style>

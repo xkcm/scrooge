@@ -12,3 +12,34 @@ export async function getActiveSessions(): Promise<schemas.session.GetSessionsRe
 
   return body;
 }
+
+export async function invalidateSession(
+  sessionId: schemas.session.InvalidateSessionParams["sessionId"],
+): Promise<null> {
+  const path = `auth/session/${sessionId}`;
+  const method = "DELETE";
+
+  const { body } = await sendApiRequest<null>({
+    path,
+    method,
+    expectEmptyBody: true,
+  });
+
+  return body;
+}
+
+export async function refreshSession(
+  sessionId: schemas.session.RefreshSessionParams["sessionId"],
+) {
+  const path = `auth/session/${sessionId}`;
+  const method = "PATCH";
+
+  const { body } = await sendApiRequest<schemas.session.RefreshSessionResponse>(
+    {
+      path,
+      method,
+    },
+  );
+
+  return body;
+}

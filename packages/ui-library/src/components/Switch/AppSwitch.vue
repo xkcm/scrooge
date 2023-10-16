@@ -1,6 +1,6 @@
 <template>
   <SwitchRoot
-    v-model:open="modelValue"
+    v-model:checked="modelValue"
     class="app-switch"
     :class="modelValue && 'app-switch--enabled'"
   >
@@ -15,10 +15,12 @@ const modelValue = defineModel<boolean>();
 </script>
 
 <style lang="scss">
-@use "@/assets/styles/utils.scss";
+@use "@client-assets/styles/utils.scss";
 
 .app-switch {
+  @include utils.clearButtonStyles;
   --p-background-color: #{utils.getColor(gamma, 600, 0.4)};
+
   width: 30px;
   height: 14px;
   border-radius: 10px;

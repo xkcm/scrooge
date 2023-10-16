@@ -2,7 +2,7 @@
   <div class="app-bar-chart">
     <Line
       v-if="!isEmpty"
-      :options="resolvedChartOptions"
+      :options="chartConfiguration"
       :data="chartData"
       :style="style"
     />
@@ -31,9 +31,10 @@ import { computed } from "vue";
 import NoOperationsText from "./NoOperationsText.vue";
 import { useRouter } from "vue-router";
 import { useThemeStore } from "@/services/theme/theme.store";
+import { usePreferencesStore } from "../../settings/stores/preferences.store";
 import {
-  themeColorToRgb,
   themeColorToRgba,
+  themeColorToRgb,
 } from "@/services/theme/theme.utils";
 
 ChartJS.register(
@@ -48,6 +49,7 @@ ChartJS.register(
 
 const router = useRouter();
 const themeStore = useThemeStore();
+const preferencesStore = usePreferencesStore();
 
 const { height, width, chartData, chartOptions } = defineProps<{
   height?: number;
@@ -58,7 +60,8 @@ const { height, width, chartData, chartOptions } = defineProps<{
   chartOptions: ChartOptions<"line">;
 }>();
 
-const resolvedChartOptions = computed<ChartOptions<"line">>(() => ({
+// todo: externalize this function
+const chartConfiguration = computed<ChartOptions<"line">>(() => ({
   plugins: {
     tooltip: {
       enabled: true,
@@ -69,25 +72,24 @@ const resolvedChartOptions = computed<ChartOptions<"line">>(() => ({
   },
   scales: {
     x: {
-      grid: {
-        display: false,
-      },
+      grid: { display: false },
       ticks: {
         font: {
           family: "Poppins",
           weight: "500",
           size: 12,
         },
-        color: themeColorToRgba(themeStore.themeProperties.colors.gamma[400]),
+        color: themeColorToRgba(
+          themeStore.themeProperties.textColors.primary,
+          0.5,
+        ),
       },
     },
     y: {
       grid: {
         color: themeColorToRgb(themeStore.themeProperties.colors.alpha[600]),
       },
-      border: {
-        display: false,
-      },
+      border: { display: false },
       ticks: {
         color: themeColorToRgba(
           themeStore.themeProperties.textColors.primary,
@@ -102,10 +104,8 @@ const resolvedChartOptions = computed<ChartOptions<"line">>(() => ({
       beginAtZero: true,
     },
   },
-  locale: navigator.language,
-  interaction: {
-    mode: "nearest",
-  },
+  locale: preferencesStore.locale,
+  interaction: { mode: "nearest" },
   borderColor: "black",
   ...chartOptions,
 }));

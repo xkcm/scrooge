@@ -13,15 +13,23 @@ export const sessionController = {
     req,
     res: ApiResponse<schemas.session.GetSessionsResponse, AuthLocals>,
   ) {
-    const { userId } = res.locals.auth.token.payload;
+    const { userId, sessionId } = res.locals.auth.token.payload;
 
     const sessions = await sessionService.getSessionsByUserId(userId);
 
-    res.json(sessions);
+    res.json({
+      sessions: sessions.map((session) => ({
+        ...session,
+        lastUsed: session.lastUsed.toISOString(),
+        expiresAt: session.expiresAt.toISOString(),
+        createdAt: session.createdAt.toISOString(),
+      })),
+      current: sessionId,
+    });
   },
 
   async invalidateSession(
-    req: ApiRequest<schemas.session.InvalidateSessionBody>,
+    req: ApiRequest<{}, schemas.session.InvalidateSessionParams>,
     res: ApiResponse<{}, AuthLocals>,
   ) {
     const { sessionId } = req.params;
@@ -33,16 +41,17 @@ export const sessionController = {
   },
 
   async refreshSession(
-    req,
+    req: ApiRequest<{}, schemas.session.RefreshSessionParams>,
     res: ApiResponse<schemas.session.RefreshSessionResponse, AuthLocals>,
   ) {
-    const { sessionId, userId } = res.locals.auth.token.payload;
+    const { sessionId } = req.params;
+    const { userId } = res.locals.auth.token.payload;
 
     const { expiresAt } = await sessionService.refreshSession(
       userId,
       sessionId,
     );
 
-    res.json({ newExpiryDate: expiresAt.toDateString() });
+    res.json({ expiration: expiresAt.toISOString() });
   },
 } satisfies ApiControllerObject;

@@ -64,8 +64,11 @@ authRouter.delete(
   wrapExpressErrorHandler(sessionController.invalidateSession),
 );
 authRouter.patch(
-  "/session",
+  "/session/:sessionId",
   tokenMiddleware.strict,
+  createRequestParamsVerifier({
+    schema: schemas.session.RefreshSessionParamsSchema,
+  }),
   wrapExpressErrorHandler(sessionController.refreshSession),
 );
 

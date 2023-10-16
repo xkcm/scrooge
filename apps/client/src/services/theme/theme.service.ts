@@ -1,4 +1,5 @@
 import themesConfig from "@/assets/themes/themes.config.json";
+// todo: fix circular dependency
 import { useThemeStore } from "./theme.store.js";
 import { SupportedTheme, ThemeConfig } from "./theme.types.js";
 
@@ -14,7 +15,14 @@ function applyThemeStyling(themeId: SupportedTheme) {
 }
 
 function getThemeConfig(themeId: string): ThemeConfig {
-  const foundTheme = themesConfig.find(({ id }) => id === themeId);
+  let resolvedThemeId = themeId;
+  if (themeId === "system") {
+    resolvedThemeId = window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  }
+
+  const foundTheme = themesConfig.find(({ id }) => id === resolvedThemeId);
   return foundTheme || themesConfig[0];
 }
 

@@ -4,13 +4,17 @@
       <h2>Welcome back!</h2>
       <span id="details-info">Log in to your Scrooge account</span>
 
-      <TextInput id="mail-input" v-model="mail" placeholder="yourmail@mail.com">
+      <AppTextInput
+        id="mail-input"
+        v-model="mail"
+        placeholder="yourmail@mail.com"
+      >
         <template #icon>
           <Icon icon="mdi:email-outline" height="24" />
         </template>
-      </TextInput>
+      </AppTextInput>
 
-      <PasswordInput
+      <AppPasswordInput
         id="password-input"
         v-model="password"
         placeholder="Your password"
@@ -18,7 +22,7 @@
         <template #icon>
           <Icon icon="mdi:key-outline" height="24" />
         </template>
-      </PasswordInput>
+      </AppPasswordInput>
 
       <a id="forgot-password-text" href="#">I forgot my password</a>
 
@@ -42,9 +46,10 @@
 import { Icon } from "@iconify/vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useQueryClient } from "@tanstack/vue-query";
 
 import { ApiError } from "@scrooge/shared";
-import { AppButton, PasswordInput, TextInput } from "@scrooge/ui-library";
+import { AppButton, AppPasswordInput, AppTextInput } from "@scrooge/ui-library";
 
 import authService from "../auth.service";
 import AuthLayout from "../layouts/AuthLayout.vue";
@@ -57,7 +62,7 @@ const mail = ref("");
 const password = ref("");
 
 const router = useRouter();
-let lastErrorNotification: NotificationWithActions | null = null;
+useQueryClient().resetQueries();
 
 const submitForm = async (mailValue: string, passwordValue: string) => {
   if (lastErrorNotification) {
@@ -66,12 +71,7 @@ const submitForm = async (mailValue: string, passwordValue: string) => {
 
   try {
     await authService.logIn(mailValue, passwordValue);
-
     router.push("dashboard");
-    notificationService.pushNotification({
-      title: "You're logged in",
-      type: "success",
-    });
   } catch (apiError) {
     lastErrorNotification = notificationService.pushNotification(
       prepareNotificationInputFromApiError(apiError as ApiError, {
@@ -82,6 +82,8 @@ const submitForm = async (mailValue: string, passwordValue: string) => {
     );
   }
 };
+
+let lastErrorNotification: NotificationWithActions | null = null;
 </script>
 
 <style lang="scss">
@@ -93,6 +95,10 @@ const submitForm = async (mailValue: string, passwordValue: string) => {
   margin: auto;
   margin-top: 338px;
   width: 400px;
+
+  > h2 {
+    @include utils.useTextColor(primary);
+  }
 
   #details-info {
     @include utils.useTextColor(primary, 0.5);
@@ -113,6 +119,9 @@ const submitForm = async (mailValue: string, passwordValue: string) => {
 
   #forgot-password-text {
     color: utils.getColor(beta);
+    @include utils.useTheme(dark) {
+      color: utils.getTextColor(primary);
+    }
     display: block;
     align-self: flex-end;
     margin-top: 8px;
@@ -122,9 +131,13 @@ const submitForm = async (mailValue: string, passwordValue: string) => {
     text-decoration: none;
 
     &:focus-visible {
-      @include utils.defaultOutlineOnFocus;
+      @include utils.useDefaultOutline;
       border-radius: 2px;
     }
+  }
+
+  #submit-button .app-button__caption {
+    font-size: 1.25rem;
   }
 
   #new-account-text {
@@ -148,12 +161,16 @@ const submitForm = async (mailValue: string, passwordValue: string) => {
 
     a {
       color: utils.getColor(beta);
+      @include utils.useTheme(dark) {
+        color: utils.getTextColor(primary);
+      }
+
       font-family: Poppins;
       font-weight: 600;
       text-decoration: none;
 
       &:focus-visible {
-        @include utils.defaultOutlineOnFocus;
+        @include utils.useDefaultOutline;
         border-radius: 2px;
       }
     }

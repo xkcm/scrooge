@@ -1,4 +1,4 @@
-import { revalidateCurrentRoute } from "@/router/router.utils";
+import { validateCurrentRoute } from "@/router/router";
 import { defineStore } from "pinia";
 import { ref, watch } from "vue";
 
@@ -9,7 +9,7 @@ export const useAuthStore = defineStore("Auth", () => {
     isUserAuthenticated.value = isAuthenticated;
   };
 
-  watch(isUserAuthenticated, revalidateCurrentRoute);
+  watch(isUserAuthenticated, validateCurrentRoute);
 
   return { isUserAuthenticated, setAuthState };
 });

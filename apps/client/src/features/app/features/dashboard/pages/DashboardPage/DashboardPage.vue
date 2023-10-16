@@ -1,5 +1,6 @@
 <template>
-  <AppLayout header-text="Dashboard">
+  <AppLayout>
+    <template #header><h2>Dashboard</h2></template>
     <div id="dashboard" :class="loading && 'dashboard--loading'">
       <DashboardTile
         id="chart"
@@ -123,7 +124,7 @@ import { useThemeStore } from "@/services/theme/theme.store";
 import { themeColorToRgb } from "@/services/theme/theme.utils";
 import operationService from "@app/services/operation.service";
 import { ChartData, ChartDataset } from "chart.js";
-import { Operation } from "../../types";
+import { Operation } from "../../dashboard.types";
 import {
   calculateMaxItemsNumber,
   isRefDefined,
@@ -223,7 +224,7 @@ onMounted(async () => {
 
   if (isRefDefined(operationsChart)) {
     const { height, width } = operationsChart.value.getBoundingClientRect();
-
+    // todo: implement useQuery
     const summary = await operationService.getOperationsPeriodSummary({
       periodGroup: "day",
       from: moment().startOf("day").subtract(28, "days").valueOf(),
@@ -250,14 +251,11 @@ onMounted(async () => {
 <style lang="scss">
 @use "@/assets/styles/utils.scss";
 
-$dashboardGap: 25px;
-
 #dashboard {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: minmax(0, 1fr) 50%;
-  gap: $dashboardGap;
-  padding: $dashboardGap;
+  gap: 25px;
   height: 100%;
   box-sizing: border-box;
   overflow: auto;
@@ -282,7 +280,7 @@ $dashboardGap: 25px;
 }
 
 .operations-list__wrapper {
-  @include utils.useCustomScrollbar(gamma, 6px);
+  @include utils.useCustomScrollbar(utils.getColor(gamma), 6px);
 
   flex-grow: 1;
   overflow: auto;

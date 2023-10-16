@@ -15,9 +15,12 @@ export interface SessionService {
 
   getSessionsByUserId(
     userId: User["id"],
-  ): Promise<schemas.session.PublicSession[]>;
+  ): Promise<Array<schemas.session.PublicSession & { lastUsed: Date }>>;
 
-  getSessionById(sessionId: Session["id"]): Promise<Session>;
+  getSession(
+    userId: Session["userId"],
+    sessionId: Session["id"],
+  ): Promise<Session>;
 
   invalidateSession(
     userId: User["id"],
@@ -27,13 +30,15 @@ export interface SessionService {
     invalidated: true;
   }>;
 
+  tryInvalidateSession(
+    userId: User["id"],
+    sessionId: Session["id"],
+  ): Promise<void>;
+
   refreshSession(
     userId: User["id"],
     sessionId: Session["id"],
   ): Promise<Session>;
 
-  verifySessionById(
-    userId: User["id"],
-    sessionId: Session["id"],
-  ): Promise<boolean>;
+  verifySession(userId: User["id"], sessionId: Session["id"]): Promise<boolean>;
 }

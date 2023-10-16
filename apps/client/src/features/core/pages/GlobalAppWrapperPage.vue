@@ -6,7 +6,9 @@
   ></GlobalAppError>
 
   <Suspense v-else>
-    <GlobalApp></GlobalApp>
+    <div id="app-container">
+      <router-view></router-view>
+    </div>
     <template #fallback>
       <GlobalAppLoading></GlobalAppLoading>
     </template>
@@ -16,20 +18,16 @@
 </template>
 
 <script setup lang="ts">
-import { onErrorCaptured, reactive } from "vue";
 import { ApiError } from "@scrooge/shared";
+import { onErrorCaptured, reactive } from "vue";
 
-import GlobalApp from "./GlobalAppPage.vue";
 import GlobalAppError from "./GlobalAppErrorPage.vue";
 import GlobalAppLoading from "./GlobalAppLoadingPage.vue";
 
 import NotificationPortal from "@/features/notifications/components/NotificationList.vue";
 
-import { prepareNotificationInputFromApiError } from "@/features/notifications/notification.utils";
 import notificationService from "@/features/notifications/notification.service";
-import themeService from "@/services/theme/theme.service";
-
-themeService.initTheme();
+import { prepareNotificationInputFromApiError } from "@/features/notifications/notification.utils";
 
 const appError = reactive<{
   message?: string;
@@ -47,4 +45,16 @@ onErrorCaptured((error) => {
   }
 });
 </script>
-@/services/theme/theme.service
+
+<style lang="scss">
+@use "@/assets/styles/utils.scss";
+
+#app-container {
+  @include utils.useBgColor(alpha);
+
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+</style>

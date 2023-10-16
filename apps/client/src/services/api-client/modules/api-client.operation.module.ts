@@ -3,7 +3,7 @@ import { sendApiRequest } from "../api-client.utils";
 
 export async function getOperations(
   operationsFilters: filters.GetOperation = {},
-) {
+): Promise<schemas.operation.GetOperationsResponse> {
   const path = "operation";
 
   const filterContainer = FilterContainer.fromFilters(operationsFilters, {
@@ -20,7 +20,10 @@ export async function getOperations(
   return body;
 }
 
-export async function getLatestOperations(incomes: number, expenses: number) {
+export async function getLatestOperations(
+  incomes: number,
+  expenses: number,
+): Promise<schemas.operation.GetLatestOperationsResponse> {
   const path = "operation/latest";
   const query = new URLSearchParams([
     ["incomes", String(incomes)],
@@ -39,7 +42,7 @@ export async function getLatestOperations(incomes: number, expenses: number) {
 
 export async function getOperationsPeriodSummary(
   operationFilters: filters.GetOperationsPeriodSummary,
-) {
+): Promise<schemas.operation.GetOperationsPeriodSummaryResponse> {
   const path = "operation/sum/period";
   const filterContainer = FilterContainer.fromFilters(operationFilters, {
     schema: filters.GetOperationsPeriodSummarySchema,

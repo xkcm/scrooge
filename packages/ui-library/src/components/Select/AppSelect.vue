@@ -1,7 +1,9 @@
 <template>
-  <SelectRoot v-model="modelValue">
+  <SelectRoot v-model="modelValue" @update:open="scrollToCurrentItem">
     <SelectTrigger class="app-select__trigger">
-      <span>{{ caption }}</span>
+      <SelectValue class="app-select__trigger__content">{{
+        caption
+      }}</SelectValue>
       <Icon icon="mdi:chevron-down" :width="16"></Icon>
     </SelectTrigger>
 
@@ -12,55 +14,74 @@
         position="popper"
         align="end"
       >
-        <SelectItem
-          v-for="(option, index) of options"
-          :key="index"
-          class="app-select__item"
-          :value="option.value"
-        >
-          <SelectItemIndicator class="app-select__item-indicator">
-            <Icon icon="mdi:check" :width="12"></Icon>
-          </SelectItemIndicator>
-          <span>
-            {{ option.caption }}
-          </span>
-        </SelectItem>
+        <div v-bind="containerProps" class="app-select__container">
+          <SelectViewport v-bind="wrapperProps">
+            <SelectItem
+              v-for="option of list"
+              :key="option.index"
+              class="app-select__item"
+              :value="option.data.value"
+            >
+              <SelectItemIndicator class="app-select__item-indicator">
+                <Icon icon="mdi:check" :width="12"></Icon>
+              </SelectItemIndicator>
+              <SelectItemText>
+                {{ option.data.caption }}
+              </SelectItemText>
+            </SelectItem>
+          </SelectViewport>
+        </div>
       </SelectContent>
     </SelectPortal>
   </SelectRoot>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
 import { Icon } from "@iconify/vue";
+import { useVirtualList } from "@vueuse/core";
 import {
   SelectContent,
   SelectItem,
   SelectItemIndicator,
+  SelectItemText,
   SelectPortal,
   SelectRoot,
   SelectTrigger,
+  SelectValue,
+  SelectViewport,
 } from "radix-vue";
+import { computed, nextTick } from "vue";
 
 import { AppSelectOption } from "./AppSelect.types";
 
 const modelValue = defineModel<string>();
-const { options = [] } = defineProps<{
+const { options } = defineProps<{
   options?: AppSelectOption[];
 }>();
+
 const caption = computed(
-  () => options.find((option) => option.value === modelValue.value)?.caption,
+  () => options?.find((option) => option.value === modelValue.value)?.caption,
 );
+const { list, containerProps, wrapperProps, scrollTo } = useVirtualList(
+  computed(() => options ?? []),
+  {
+    itemHeight: 35,
+    overscan: 9,
+  },
+);
+
+const scrollToCurrentItem = (isOpen: boolean) => {
+  if (!isOpen) {
+    return;
+  }
+  const currentIndex =
+    options?.findIndex(({ value }) => value === modelValue.value) ?? 0;
+  nextTick(() => scrollTo(currentIndex));
+};
 </script>
 
 <style lang="scss">
 @use "@client-assets/styles/utils.scss";
-
-@include utils.useTheme(dark) {
-  .app-select {
-    --p-scrollbar-color: #{utils.getTextColor(primary)};
-  }
-}
 
 .app-select {
   --p-bg-color: #{utils.getColor(alpha, 500)};
@@ -68,7 +89,9 @@ const caption = computed(
   --p-hover-bg-color: #{utils.getColor(alpha, 600)};
   --p-selected-text-color: #{utils.getColor(gamma)};
   --p-scrollbar-color: #{utils.getColor(beta)};
-  @include utils.useCustomScrollbar(var(--p-scrollbar-color), 5px);
+  @include utils.useTheme(dark) {
+    --p-scrollbar-color: #{utils.getTextColor(primary)};
+  }
 
   border-radius: 4px;
   max-height: 400px;
@@ -77,17 +100,30 @@ const caption = computed(
   background-color: var(--p-bg-color);
   color: var(--p-text-color);
   padding: 0.25rem 0;
-  min-width: 200px;
+  width: 200px;
   box-sizing: border-box;
-  font-weight: 300;
+
+  &__container {
+    max-height: 300px;
+    @include utils.useCustomScrollbar(var(--p-scrollbar-color), 5px);
+  }
 
   &__item {
+    &:focus-visible {
+      outline: none;
+      background-color: var(--p-hover-bg-color);
+    }
+
     font-family: "Poppins";
+    font-weight: 300;
     display: flex;
     align-items: center;
     padding: 0.2rem 1.5rem;
     font-size: 0.75rem;
     cursor: pointer;
+    min-height: 35px;
+    width: 100%;
+    box-sizing: border-box;
 
     &:hover {
       background-color: var(--p-hover-bg-color);
@@ -122,9 +158,15 @@ const caption = computed(
   border-radius: 4px;
   font-size: 0.8rem;
   padding: 0.2rem 0.8rem;
-  min-width: 200px;
+  width: 200px;
   box-sizing: border-box;
   font-weight: 300;
+
+  &__content {
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 
   span {
     flex-grow: 1;

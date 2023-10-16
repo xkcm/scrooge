@@ -1,3 +1,4 @@
+import { ComputedRef } from "vue";
 import { AppSelectOption } from "@scrooge/ui-library";
 
 export type SettingsSectionItemLinkProps = {
@@ -8,7 +9,7 @@ export type SettingsSectionItemOptionsProps = {
   onUpdate: (newValue: any) => void;
   inputType: "options";
   options: AppSelectOption[];
-  selectedOption: string;
+  selectedOption: ComputedRef<string>;
 };
 
 export type SettingsSectionItemProps = {

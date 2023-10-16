@@ -16,13 +16,13 @@
         ></NavItem>
       </nav>
     </div>
-    <div class="app-layout__header">
-      <h2>{{ headerText }}</h2>
-    </div>
+    <header class="app-layout__header">
+      <slot name="header" />
+    </header>
 
-    <div class="app-layout__main">
+    <main class="app-layout__main">
       <slot />
-    </div>
+    </main>
   </div>
 </template>
 
@@ -33,10 +33,6 @@ import NavItem from "../components/NavItem.vue";
 import { NavItemProps } from "../types/NavItem.types";
 
 import authService from "@features/auth/auth.service";
-
-defineProps<{
-  headerText: string;
-}>();
 
 const NAV_ITEMS: NavItemProps[] = [
   {
@@ -79,21 +75,16 @@ const NAV_ITEMS: NavItemProps[] = [
 
 $headerHeight: 100px;
 
-@include utils.useTheme(light) {
-  .app-layout {
-    --p-logo-color: #{utils.getTextColor(secondary)};
-    --p-header-color: #{utils.getColor(beta)};
-  }
-}
-@include utils.useTheme(dark) {
-  .app-layout {
+.app-layout {
+  --p-logo-color: #{utils.getTextColor(secondary)};
+  --p-header-color: #{utils.getColor(beta)};
+
+  @include utils.useTheme(dark) {
     --p-logo-color: #{utils.getTextColor(primary)};
     --p-header-color: #{utils.getTextColor(primary)};
   }
-}
-
-.app-layout {
   @include utils.useBgColor(alpha, 600);
+
   display: grid;
   grid-template-columns: 300px auto;
   grid-template-rows: $headerHeight auto;
@@ -131,11 +122,11 @@ $headerHeight: 100px;
 .app-layout__header {
   box-sizing: border-box;
   padding: 0 25px;
+  padding-top: 1rem;
   display: flex;
-  align-items: center;
+  color: var(--p-header-color);
 
   h2 {
-    color: var(--p-header-color);
     font-size: 2.25rem;
     font-weight: 500;
   }
@@ -143,5 +134,8 @@ $headerHeight: 100px;
 
 .app-layout__main {
   overflow: auto;
+  padding: 0 25px;
+
+  @include utils.useCustomScrollbar(utils.getColor(beta), 10px);
 }
 </style>

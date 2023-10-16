@@ -40,7 +40,6 @@
     "redis": "^4.6.3",
     "reflect-metadata": "^0.1.13",
     "typedi": "^0.10.0",
-    "typescript": "^5.1.6",
     "winston": "^3.8.2",
     "yamljs": "^0.3.0",
     "zod": "^3.19.1",

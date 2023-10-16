@@ -9,4 +9,5 @@ export interface SendApiRequestOptions {
   query?: URLSearchParams;
   method?: string;
   ignoreBadStatusCode?: boolean;
+  expectEmptyBody?: boolean;
 }

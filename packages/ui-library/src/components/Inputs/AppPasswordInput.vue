@@ -39,7 +39,7 @@ const toggleType = () =>
 </script>
 
 <style lang="scss">
-@use "@/assets/styles/utils.scss";
+@use "@client-assets/styles/utils.scss";
 
 button.input__icon {
   @include utils.useBgColor(alpha);
@@ -50,7 +50,7 @@ button.input__icon {
   padding: 0;
 
   &:focus-visible {
-    @include utils.defaultOutlineOnFocus;
+    @include utils.useDefaultOutline;
   }
 }
 </style>

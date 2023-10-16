@@ -1,12 +1,14 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import { validateRoute } from "./router.utils";
 
+import LoginPage from "@/features/auth/pages/LoginPage.vue";
+
 import DashboardPage from "@app/features/dashboard/pages/DashboardPage/DashboardPage.vue";
 import HistoryPage from "@app/features/history/pages/HistoryPage.vue";
 import NewOperationPage from "@app/features/new-operation/pages/NewOperationPage.vue";
-import SettingsPage from "@app/features/settings/pages/SettingsPage.vue";
-
-import LoginPage from "@/features/auth/pages/LoginPage.vue";
+import SettingsPage from "@app/features/settings/pages/SettingsPage/SettingsPage.vue";
+import SessionsPage from "@app/features/settings/pages/SessionsPage/SessionsPage.vue";
+import SessionDetails from "@/features/app/features/settings/pages/SessionDetailsPage/SessionDetailsPage.vue";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -31,6 +33,24 @@ const routes: RouteRecordRaw[] = [
     path: "/settings",
     component: SettingsPage,
     meta: { requireAuthentication: true },
+  },
+  {
+    name: "sessions",
+    path: "/settings/sessions",
+    component: SessionsPage,
+    meta: {
+      requireAuthentication: true,
+      highlightedNavItem: "settings",
+    },
+  },
+  {
+    name: "session-details",
+    path: "/settings/session/:sessionId",
+    component: SessionDetails,
+    meta: {
+      requireAuthentication: true,
+      highlightedNavItem: "settings",
+    },
   },
   {
     name: "new-operation",
@@ -69,7 +89,14 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 });
-
 router.beforeEach(validateRoute);
+
+export async function validateCurrentRoute() {
+  const validationResult = validateRoute(router.currentRoute.value);
+
+  if (validationResult) {
+    return router.push(validationResult);
+  }
+}
 
 export { router };

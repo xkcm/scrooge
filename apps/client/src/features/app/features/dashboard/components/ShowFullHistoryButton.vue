@@ -20,12 +20,11 @@ import { AppButton } from "@scrooge/ui-library";
 import { computed } from "vue";
 import { RouteLocationRaw } from "vue-router";
 
-type ShowFullHistoryButtonProps = {
+const { variant } = defineProps<{
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   redirect: (location: RouteLocationRaw) => any;
   variant: "expense" | "income";
-};
-
-const { variant } = defineProps<ShowFullHistoryButtonProps>();
+}>();
 
 const filter = computed(() =>
   FilterContainer.fromFilters(

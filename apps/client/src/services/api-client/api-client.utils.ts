@@ -8,7 +8,10 @@ import {
 export async function sendApiRequest<T = unknown>(
   options: SendApiRequestOptions,
 ): Promise<SendApiRequestResult<T>> {
-  let fullUrl = joinUrlParts(import.meta.env.VITE_API_URL, options.path);
+  let fullUrl = joinUrlParts(
+    `http://${window.location.hostname}:5000/api`,
+    options.path,
+  );
 
   if (options.query) {
     fullUrl += "?" + options.query.toString();
@@ -33,13 +36,24 @@ export async function sendApiRequest<T = unknown>(
     throw new RequestFailedError({ cause: error });
   }
 
-  const body = await fetchResponse.json();
+  const rawBody = await fetchResponse.text();
+  if (!rawBody && options.expectEmptyBody) {
+    return {
+      body: rawBody as T,
+      response: fetchResponse,
+    };
+  }
+
+  const parsedBody = JSON.parse(rawBody);
   if (fetchResponse.status !== 200 && !options.ignoreBadStatusCode) {
-    throw RequestFailedError.fromApiResponse(body.error, fetchResponse.status);
+    throw RequestFailedError.fromApiResponse(
+      parsedBody.error,
+      fetchResponse.status,
+    );
   }
 
   return {
-    body: body as T,
+    body: parsedBody as T,
     response: fetchResponse,
   };
 }

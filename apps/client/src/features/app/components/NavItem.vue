@@ -20,10 +20,13 @@ import { NavItemProps } from "../types/NavItem.types";
 const { onClick, to } = defineProps<NavItemProps>();
 const router = useRouter();
 
-const isActive = computed(() =>
-  router.currentRoute.value.matched.some(
-    (matchedRoute) => matchedRoute.name === to?.name,
-  ),
+const isActive = computed(
+  () =>
+    router.currentRoute.value.matched.some(
+      (matchedRoute) => matchedRoute.name === to?.name,
+    ) ||
+    (to?.name &&
+      router.currentRoute.value.meta.highlightedNavItem === to?.name),
 );
 
 const onButtonClick = (event: MouseEvent) => {
@@ -40,22 +43,17 @@ const onButtonClick = (event: MouseEvent) => {
 
 $navItemHeight: 60px;
 
-@include utils.useTheme(light) {
-  .nav-item {
-    --p-text-color: #{utils.getTextColor(secondary, 0.8)};
-    --p-text-color--active: #{utils.getTextColor(secondary)};
-  }
-}
-@include utils.useTheme(dark) {
-  .nav-item {
-    --p-text-color: #{utils.getTextColor(primary, 0.8)};
-    --p-text-color--active: #{utils.getTextColor(primary)};
-  }
-}
-
 .nav-item {
   @include utils.clearHrefStyles;
   @include utils.clearButtonStyles;
+  @include utils.useTheme(light) {
+    --p-text-color: #{utils.getTextColor(secondary, 0.8)};
+    --p-text-color--active: #{utils.getTextColor(secondary)};
+  }
+  @include utils.useTheme(dark) {
+    --p-text-color: #{utils.getTextColor(primary, 0.8)};
+    --p-text-color--active: #{utils.getTextColor(primary)};
+  }
 
   color: var(--p-text-color);
   display: grid;
@@ -74,7 +72,7 @@ $navItemHeight: 60px;
   }
 
   &:focus-visible {
-    @include utils.defaultOutlineOnFocus(alpha);
+    @include utils.useDefaultOutline(utils.getColor(alpha));
   }
 }
 

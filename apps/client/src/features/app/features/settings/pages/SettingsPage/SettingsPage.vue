@@ -1,5 +1,10 @@
 <template>
-  <AppLayout header-text="Settings">
+  <AppLayout>
+    <template #header>
+      <div class="app-layout__header-wrapper">
+        <h2>Settings</h2>
+      </div>
+    </template>
     <div class="settings-container">
       <div class="settings-wrapper">
         <SettingsSection
@@ -14,22 +19,25 @@
 </template>
 
 <script lang="ts" setup>
-import * as localeCodes from "locale-codes";
-import * as currencyCodes from "currency-codes";
 import { computed } from "vue";
 
 import AppLayout from "@app/layouts/AppLayout.vue";
-import SettingsSection from "../components/SettingsSection.vue";
-
-import { SettingsSectionProps } from "../settings.types";
 import { SupportedTheme } from "@/services/theme/theme.types";
 
-import themeService from "@/services/theme/theme.service";
-import { usePreferencesStore } from "../stores/preferences.store";
+import { SettingsSectionProps } from "../../settings.types";
+import SettingsSection from "../../components/SettingsSection.vue";
+import {
+  currencyOptions,
+  languageOptions,
+  localeOptions,
+  themeOptions,
+} from "./SettingsPage.helpers";
+
+import { usePreferencesStore } from "../../stores/preferences.store";
 
 const preferencesStore = usePreferencesStore();
 
-const sections = computed<SettingsSectionProps[]>(() => [
+const sections: SettingsSectionProps[] = [
   {
     header: {
       icon: "mdi:card-account-details",
@@ -65,11 +73,8 @@ const sections = computed<SettingsSectionProps[]>(() => [
         icon: "mdi:palette",
         text: "Theme",
         inputType: "options",
-        options: themeService.themesConfig.map(({ id, displayName }) => ({
-          value: id,
-          caption: displayName,
-        })),
-        selectedOption: preferencesStore.theme,
+        options: themeOptions,
+        selectedOption: computed(() => preferencesStore.theme),
         onUpdate: (newTheme: SupportedTheme) =>
           preferencesStore.setTheme(newTheme),
       },
@@ -77,25 +82,16 @@ const sections = computed<SettingsSectionProps[]>(() => [
         icon: "mdi:translate",
         text: "Language",
         inputType: "options",
-        // todo: implement this correctly
-        options: [
-          {
-            value: "en-US",
-            caption: "English",
-          },
-        ],
-        selectedOption: "en-US",
-        onUpdate: (newLanguage) => console.info({ newLanguage }),
+        options: languageOptions,
+        selectedOption: computed(() => "en-US"),
+        onUpdate: (newLanguage: string) => console.info({ newLanguage }),
       },
       {
         icon: "mdi:currency-usd",
         text: "Currency",
         inputType: "options",
-        options: currencyCodes.codes().map((code) => ({
-          value: code,
-          caption: code,
-        })),
-        selectedOption: preferencesStore.currency,
+        options: currencyOptions,
+        selectedOption: computed(() => preferencesStore.currency),
         onUpdate: (newCurrency: string) =>
           preferencesStore.setCurrency(newCurrency),
       },
@@ -103,19 +99,13 @@ const sections = computed<SettingsSectionProps[]>(() => [
         icon: "mdi:flag",
         text: "Locale",
         inputType: "options",
-        options: localeCodes.all.map(({ local, name, location, tag }) => ({
-          value: tag,
-          caption:
-            name +
-            (local ? ` - ${local}` : "") +
-            (location ? ` (${location})` : ""),
-        })),
-        selectedOption: preferencesStore.locale,
+        options: localeOptions,
+        selectedOption: computed(() => preferencesStore.locale),
         onUpdate: (newLocale: string) => preferencesStore.setLocale(newLocale),
       },
     ],
   },
-]);
+];
 </script>
 
 <style lang="scss">
@@ -131,5 +121,11 @@ const sections = computed<SettingsSectionProps[]>(() => [
   display: flex;
   flex-direction: column;
   gap: 10px;
+  box-sizing: border-box;
+}
+
+.app-layout__header-wrapper {
+  width: 60%;
+  margin: 0 20%;
 }
 </style>

@@ -1,5 +1,9 @@
 <template>
-  <div class="settings-section__item">
+  <div
+    class="settings-section__item"
+    :class="{ 'settings-section__item--href': href }"
+    @click="href && router.push({ name: href })"
+  >
     <Icon :icon="icon" :width="24"></Icon>
     <span>{{ text }}</span>
 
@@ -8,39 +12,25 @@
       class="settings-section__item__link"
       icon="mdi:chevron-right"
       :width="24"
-      @click="router.push({ name: href })"
     ></Icon>
 
     <AppSelect
       v-else-if="inputType === 'options'"
       :options="options"
-      :model-value="selectedOption"
+      :model-value="selectedOption?.value"
       @update:model-value="onUpdate"
     ></AppSelect>
-    <!-- <select
-      v-else-if="inputType === 'options'"
-      @change="onUpdate?.(($event.target as HTMLSelectElement).value)"
-    >
-      <option
-        v-for="option of options"
-        :key="option.value"
-        :value="option.value"
-        :selected="option.selected"
-      >
-        {{ option.caption }}
-      </option>
-    </select> -->
   </div>
 </template>
 
 <script setup lang="ts">
-import { Icon } from "@iconify/vue";
 import { useRouter } from "vue-router";
-import { SettingsSectionItemProps } from "../settings.types";
+import { Icon } from "@iconify/vue";
 import { AppSelect } from "@scrooge/ui-library";
 
-defineProps<SettingsSectionItemProps>();
+import { SettingsSectionItemProps } from "../settings.types";
 
+const { options } = defineProps<SettingsSectionItemProps>();
 const router = useRouter();
 </script>
 
@@ -61,7 +51,8 @@ const router = useRouter();
     flex-grow: 1;
   }
 
-  &__link {
+  &--href:hover {
+    @include utils.useBgColor(alpha, 500);
     cursor: pointer;
   }
 }

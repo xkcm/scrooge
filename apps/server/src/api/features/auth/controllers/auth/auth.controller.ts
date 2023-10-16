@@ -7,7 +7,6 @@ import {
 } from "#api/utils/cookies.util.js";
 import { AuthLocals } from "#api:auth/middleware/token/token.middleware.types.js";
 import passwordService from "#api:auth/services/password/password.service.js";
-import { createPrismaErrorParser } from "#core/prisma/prisma.utils.js";
 import {
   ApiControllerObject,
   ApiRequest,
@@ -47,7 +46,7 @@ const authController = bindObjectMethods({
     res: ApiResponse<schemas.auth.RegisterUserResponse>,
     next,
   ) {
-    const decodedToken = tokenService.decodeGenericToken<{ email: string }>(
+    const decodedToken = tokenService.verifyGenericToken<{ email: string }>(
       req.query.registrationToken,
     );
 
@@ -82,11 +81,7 @@ const authController = bindObjectMethods({
     req: ApiRequest<schemas.auth.LoginBody>,
     res: ApiResponse<schemas.auth.LoginResponse>,
   ) {
-    const user = await userService.findUserByEmail(req.body.email).catch(
-      createPrismaErrorParser({
-        P2025: LoginAttemptFailedError,
-      }),
-    );
+    const user = await userService.findUserByEmail(req.body.email);
 
     const passwordMatches = await passwordService.compare(
       req.body.password,
@@ -101,7 +96,7 @@ const authController = bindObjectMethods({
 
     if (relogToken) {
       try {
-        const relogPayload = tokenService.decodeRelogToken(relogToken);
+        const relogPayload = tokenService.verifyRelogToken(relogToken);
         sessionId = relogPayload.sessionId;
         clearCookie(res, "relogToken");
       } catch {

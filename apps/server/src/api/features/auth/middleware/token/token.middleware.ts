@@ -1,69 +1,70 @@
-import { InferMetadata } from "@xkcm/better-errors";
-
+import { wrapExpressErrorHandler } from "#api/errors/errors.utils.js";
 import { setCookie } from "#api/utils/cookies.util.js";
-import sessionRedisService from "#api:auth/services/session-redis/session-redis.service.js";
+import { AuthFlowResult, runAuthFlow } from "#api:auth/flows/auth.flow.js";
 import tokenService from "#api:auth/services/token/token.service.js";
+import { AuthTokenPayload } from "#api:auth/services/token/token.service.types.js";
 import type { ApiHandler } from "#root/api/api.types.js";
 import { wrapMiddlewareWithSafeVariant } from "#root/api/utils/middleware.utils.js";
 
-import { RefreshTokenExpiredError } from "./token.middleware.errors.js";
-import { resolveAuthToken } from "./token.middleware.helpers.js";
+import {
+  RelogRequiredError,
+  UnrecognizedAuthFlowStateError,
+} from "./token.middleware.errors.js";
 
-const tokenMiddlewareRequestHandler: ApiHandler = async (req, res, next) => {
-  const { refreshToken, authToken } = req.cookies ?? {};
+const tokenMiddlewareRequestHandler: ApiHandler = wrapExpressErrorHandler(
+  async (req, res, next) => {
+    const { refreshToken, authToken } = req.cookies ?? {};
 
-  const [resolvedAuthToken, error] = await resolveAuthToken(
-    authToken,
-    refreshToken,
-  );
+    let resolvedAuthToken = authToken;
+    const authFlowResult = await runAuthFlow(authToken, refreshToken);
 
-  if (error instanceof RefreshTokenExpiredError) {
-    const { sessionId, userId } = error.metadata as Required<
-      InferMetadata<RefreshTokenExpiredError>
-    >;
-    const relogToken = tokenService.createRelogToken({
-      sessionId,
-      userId,
-    });
-    setCookie(res, "relogToken", relogToken.token, relogToken.expiresIn);
-    setCookie(res, "refreshToken", "", 0); // clearing cookie
+    switch (authFlowResult.state) {
+      case "relog_required":
+        // clear cookies
+        setCookie(res, "authToken", "", 0);
+        setCookie(res, "refreshToken", "", 0);
+        // set relog cookie
+        setCookie(
+          res,
+          "relogToken",
+          authFlowResult.relogToken.token,
+          authFlowResult.relogToken.expiresIn,
+        );
+        throw new RelogRequiredError();
 
-    return next(error);
-  }
-  if (error) {
-    return next(error);
-  }
+      case "refreshed":
+        setCookie(
+          res,
+          "authToken",
+          authFlowResult.newAuthToken.token,
+          authFlowResult.newAuthToken.expiresIn,
+        );
+        resolvedAuthToken = authFlowResult.newAuthToken.token;
+        break;
 
-  if (resolvedAuthToken?.token !== authToken) {
-    setCookie(
-      res,
-      "authToken",
-      resolvedAuthToken?.token as string,
-      resolvedAuthToken?.expiresIn as number,
-    );
-  }
+      case "authorized":
+        break;
 
-  const tokenPayload = tokenService.decodeAuthToken(
-    resolvedAuthToken?.token as string,
-  );
+      default:
+        throw new UnrecognizedAuthFlowStateError({
+          metadata: { state: (authFlowResult as AuthFlowResult).state },
+        });
+    }
 
-  await sessionRedisService.saveSessionInfo(
-    tokenPayload.sessionId,
-    "last_used",
-    Date.now(),
-  );
+    const tokenPayload =
+      tokenService.decodeTokenPayload<AuthTokenPayload>(resolvedAuthToken);
+    res.locals.auth = {
+      isAuthenticated: true,
+      userId: tokenPayload.userId,
+      token: {
+        raw: authToken,
+        payload: tokenPayload,
+      },
+    };
 
-  res.locals.auth = {
-    isAuthenticated: true,
-    userId: tokenPayload.userId,
-    token: {
-      raw: authToken,
-      payload: tokenPayload,
-    },
-  };
-
-  return next();
-};
+    return next();
+  },
+);
 
 const tokenMiddleware = wrapMiddlewareWithSafeVariant({
   strictHandler: tokenMiddlewareRequestHandler,
